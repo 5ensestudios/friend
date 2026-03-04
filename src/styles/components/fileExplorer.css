@@ -1,0 +1,149 @@
+/* File Explorer Window Content */
+.window-content {
+  flex: 1;
+  display: flex;
+  background-color: #c0c0c0;
+  overflow: hidden;
+  border: 2px solid;
+  border-color: #ffffff #808080 #808080 #ffffff;
+}
+
+/* File List */
+.file-list {
+  flex: 1;
+  padding: 15px;
+  overflow-y: auto;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+  gap: 20px;
+  background-color: #c0c0c0;
+  align-content: flex-start;
+}
+
+/* File List Item */
+.file-list-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  padding: 10px;
+  cursor: pointer;
+  border-radius: 2px;
+  transition: all 0.2s;
+  text-align: center;
+  user-select: none;
+  border: 2px solid transparent;
+  min-width: 70px;
+}
+
+.file-list-item:hover {
+  background-color: rgba(0, 0, 0, 0.05);
+}
+
+.file-list-item.selected {
+  background-color: #000080;
+  color: white;
+  border: 2px solid #dfdfdf;
+}
+
+.file-list-item.locked {
+  opacity: 0.6;
+}
+
+.item-icon {
+  font-size: 32px;
+  line-height: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+}
+
+.item-name {
+  font-family: "MS Sans Serif", Arial, sans-serif;
+  font-size: 11px;
+  word-wrap: break-word;
+  max-width: 80px;
+  line-height: 1.2;
+}
+
+.file-list-item.selected .item-name {
+  color: #ffff00;
+  font-weight: bold;
+}
+
+/* File Preview Panel */
+.file-preview {
+  width: 200px;
+  background: linear-gradient(to bottom, #dfdfdf, #c0c0c0);
+  border-left: 2px solid #999;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.preview-header {
+  background: linear-gradient(to right, #000080, #1084d7);
+  color: white;
+  padding: 4px 8px;
+  font-weight: bold;
+  font-size: 11px;
+  border-bottom: 1px solid #999;
+}
+
+.preview-content {
+  flex: 1;
+  padding: 8px;
+  overflow-y: auto;
+  font-size: 11px;
+  color: #000;
+}
+
+.preview-content p {
+  margin: 4px 0;
+  padding: 4px;
+  line-height: 1.4;
+  word-break: break-word;
+}
+
+.preview-content strong {
+  color: #000080;
+  display: block;
+  margin-top: 8px;
+}
+
+/* Scrollbar for file list */
+.file-list::-webkit-scrollbar {
+  width: 16px;
+}
+
+.file-list::-webkit-scrollbar-track {
+  background: #c0c0c0;
+  border: 1px solid #999;
+}
+
+.file-list::-webkit-scrollbar-thumb {
+  background: linear-gradient(to bottom, #dfdfdf, #808080);
+  border: 1px solid #999;
+  min-height: 40px;
+}
+
+.file-list::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(to bottom, #efefef, #909090);
+}
+
+/* Scrollbar for preview */
+.preview-content::-webkit-scrollbar {
+  width: 16px;
+}
+
+.preview-content::-webkit-scrollbar-track {
+  background: #c0c0c0;
+}
+
+.preview-content::-webkit-scrollbar-thumb {
+  background: linear-gradient(to bottom, #dfdfdf, #808080);
+  min-height: 40px;
+}
+

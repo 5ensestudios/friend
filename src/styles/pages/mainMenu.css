@@ -1,0 +1,24 @@
+body {
+    margin: 0;
+    height: 100vh;
+    background: linear-gradient(to bottom, rgba(0,0,0,1), rgba(34,34,34,0.9));
+    display: flex;
+    justify-content: flex-start; /* Align items to the left */
+    align-items: center; /* Center items vertically */
+}
+
+.menu {
+    position: absolute;
+    left: 20px; /* Positioning from the left */
+    top: 50%;
+    transform: translateY(-50%); /* Center the menu vertically */
+    color: white; /* Text color */
+    font-family: 'Arial', sans-serif; /* Using a simple font */
+}
+
+.menu-item {
+    margin: 20px 0; /* Space between menu items */
+    font-size: 24px; /* Font size for menu items */
+    text-decoration: none; /* No underline on links */
+    color: inherit; /* Inherit color from parent */
+}
