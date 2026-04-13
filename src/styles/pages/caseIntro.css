@@ -1,0 +1,75 @@
+/* ═══════════════════════════════════════════
+   Case Intro — 5ENSE Studios Brand
+   ═══════════════════════════════════════════ */
+
+.case-intro {
+  position: fixed;
+  inset: 0;
+  background: #0d0d0d;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 60px 40px;
+  animation: introFadeIn 0.8s ease-out;
+  transition: opacity 0.7s ease;
+}
+
+.case-intro--out {
+  opacity: 0;
+}
+
+@keyframes introFadeIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+.case-intro-content {
+  max-width: 760px;
+  width: 100%;
+}
+
+.case-intro-line {
+  font-family: var(--font-body);
+  font-size: 14px;
+  line-height: 1.85;
+  color: #7a7a70;
+  margin: 0 0 2px;
+  font-weight: 400;
+  white-space: pre-wrap;
+  min-height: 1.85em;
+}
+
+.case-intro-line--header {
+  font-size: 12px;
+  letter-spacing: 2px;
+  color: #3d655e;
+  font-weight: 700;
+  margin-bottom: 6px;
+}
+
+.case-intro-line:has(br) {
+  min-height: 0.9em;
+}
+
+.case-intro-proceed {
+  display: block;
+  margin-top: 48px;
+  background: transparent;
+  border: none;
+  border-bottom: 1px solid rgba(61, 101, 94, 0.4);
+  color: rgba(61, 101, 94, 1);
+  var(--font-body);
+  font-size: 14px;
+  letter-spacing: 5px;
+  text-transform: lowercase;
+  padding: 6px 0;
+  cursor: pointer;
+  animation: tapPulse 2s ease-in-out infinite;
+  transition: color 0.2s, border-color 0.2s;
+}
+
+.case-intro-proceed:hover {
+  color: #3d655e;
+  border-color: #3d655e;
+}
+

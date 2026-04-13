@@ -1,13 +1,29 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import "../styles/pages/mainMenu.css";
 
-export default function MainMenu({ onNewGame, onContinue, hasSaveData }) {
+export default function MainMenu({ onStartIntro, onContinue }) {
   const [selectedOption, setSelectedOption] = useState(0);
   const [isStarting, setIsStarting] = useState(false);
+  const audioRef = useRef(null);
+
+  useEffect(() => {
+    const audio = new Audio("/sound/Friend%20Soundtrack.mp3");
+    audio.loop = true;
+    audio.volume = 0.05;
+    audioRef.current = audio;
+    const timer = setTimeout(() => {
+      audio.play().catch(() => {});
+    }, 5000);
+    return () => {
+      clearTimeout(timer);
+      audio.pause();
+      audio.currentTime = 0;
+    };
+  }, []);
 
   const options = [
     { label: "NEW GAME", action: "new_game", disabled: false },
-    { label: "CONTINUE", action: "continue", disabled: !hasSaveData },
+    { label: "CONTINUE", action: "continue", disabled: false },
     { label: "EXIT", action: "exit", disabled: false },
   ];
 
@@ -23,7 +39,6 @@ export default function MainMenu({ onNewGame, onContinue, hasSaveData }) {
         handleSelectOption(options[selectedOption].action);
       }
     };
-
     window.addEventListener("keydown", handleKeyDown);
     return () => window.removeEventListener("keydown", handleKeyDown);
   }, [selectedOption, options]);
@@ -31,7 +46,7 @@ export default function MainMenu({ onNewGame, onContinue, hasSaveData }) {
   function handleSelectOption(action) {
     if (action === "new_game") {
       setIsStarting(true);
-      setTimeout(() => onNewGame(), 500);
+      setTimeout(() => onStartIntro(), 500);
     }
     if (action === "continue") {
       setIsStarting(true);
@@ -50,34 +65,20 @@ export default function MainMenu({ onNewGame, onContinue, hasSaveData }) {
 
       <div className="menu-container">
         <div className="menu-title">
-          <div className="title-main">THE FRIEND</div>
-          <div className="title-subtitle">CASE FILE #2016-0307-CHRIS</div>
+          <div className="title-eyebrow">CASE FILE #2016-0307-CHRIS</div>
+          <img src="/Images/The Friend Logo.png" alt="THE FRIEND" className="title-logo" />
           <div className="title-date">March 7, 2016</div>
-        </div>
-
-        <div className="menu-description">
-          <p>
-            At 02:14 AM, emergency services responded to a 911 call. Upon
-            arrival, they found the victim, Chris, unresponsive.
-          </p>
-          <p>
-            The footage has been recovered. The cloud data is yours to navigate.
-          </p>
         </div>
 
         <div className="menu-options">
           {options.map((option, idx) => (
             <button
               key={idx}
-              className={`menu-option ${selectedOption === idx ? "selected" : ""} ${
-                option.disabled ? "disabled" : ""
-              }`}
+              className={`menu-option ${selectedOption === idx ? "selected" : ""} ${option.disabled ? "disabled" : ""}`}
               onClick={() => handleSelectOption(option.action)}
               disabled={option.disabled}
             >
-              <span className="option-indicator">
-                {selectedOption === idx ? "▶" : "  "}
-              </span>
+              <span className="option-indicator">{selectedOption === idx ? "▶" : "  "}</span>
               <span className="option-text">{option.label}</span>
             </button>
           ))}
@@ -85,7 +86,6 @@ export default function MainMenu({ onNewGame, onContinue, hasSaveData }) {
 
         <div className="menu-footer">
           <p>An interactive narrative experience</p>
-          <p className="menu-version">v1.0.0</p>
         </div>
       </div>
     </div>

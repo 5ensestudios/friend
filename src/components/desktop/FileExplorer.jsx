@@ -6,6 +6,8 @@ export default function FileExplorer({
   playerProgress,
   onActSelect,
   onReturnToMenu,
+  onClose,
+  onDragMouseDown,
 }) {
   const [currentFolder, setCurrentFolder] = useState(null);
   const [selectedFile, setSelectedFile] = useState(null);
@@ -112,7 +114,7 @@ export default function FileExplorer({
   return (
     <div className="file-explorer-window">
       <div className="window-header">
-        <div className="window-title-bar">
+        <div className="window-title-bar" onMouseDown={onDragMouseDown} style={{ cursor: "grab" }}>
           <button
             className="window-nav-button"
             onClick={handleBack}
@@ -134,8 +136,8 @@ export default function FileExplorer({
         </div>
         <button
           className="window-close"
-          onClick={onReturnToMenu}
-          title="Return to Menu"
+          onClick={onClose}
+          title="Close"
         >
           ✕
         </button>

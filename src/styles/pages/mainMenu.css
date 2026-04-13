@@ -1,24 +1,188 @@
-body {
-    margin: 0;
-    height: 100vh;
-    background: linear-gradient(to bottom, rgba(0,0,0,1), rgba(34,34,34,0.9));
-    display: flex;
-    justify-content: flex-start; /* Align items to the left */
-    align-items: center; /* Center items vertically */
+/* ═══════════════════════════════════════════
+   Main Menu — 5ENSE Studios Brand
+   ═══════════════════════════════════════════ */
+
+.main-menu {
+  position: fixed;
+  inset: 0;
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  transition: opacity 0.6s ease;
+  margin: 0;
+  padding: 0;
 }
 
-.menu {
-    position: absolute;
-    left: 20px; /* Positioning from the left */
-    top: 50%;
-    transform: translateY(-50%); /* Center the menu vertically */
-    color: white; /* Text color */
-    font-family: 'Arial', sans-serif; /* Using a simple font */
+.main-menu.fade-out {
+  opacity: 0;
 }
 
-.menu-item {
-    margin: 20px 0; /* Space between menu items */
-    font-size: 24px; /* Font size for menu items */
-    text-decoration: none; /* No underline on links */
-    color: inherit; /* Inherit color from parent */
+/* Background */
+.menu-background {
+  position: fixed;
+  inset: 0;
+  background-image: url('/Images/BG%20Menu.jpeg');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  z-index: 0;
 }
+
+.menu-background-overlay {
+  position: fixed;
+  inset: 0;
+  background:
+    radial-gradient(ellipse at center, rgba(0, 0, 0, 0.85) 0%, rgba(0, 0, 0, 1) 80%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* Content wrapper */
+.menu-container {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 48px;
+  width: 100%;
+  height: 100%;
+}
+
+/* Title */
+.menu-title {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.title-eyebrow {
+  font-size: 10px;
+  letter-spacing: 5px;
+  text-transform: uppercase;
+  color: #3d655e;
+  font-weight: 600;
+  font-family: var(--font-body);
+  margin-bottom: 0px;
+}
+
+.title-logo {
+  width: auto;
+  height: 300px;
+  max-width: 800px;
+  object-fit: contain;
+  margin-bottom: 0px;
+  filter: brightness(1.05);
+}
+
+.title-subtitle {
+  font-size: 11px;
+  letter-spacing: 4px;
+  text-transform: uppercase;
+  color: #7a7a70;
+  font-weight: 400;
+  font-family: var(--font-body);
+  margin-bottom: 4px;
+}
+
+.title-date {
+  font-size: 10px;
+  letter-spacing: 3px;
+  color: #7a7a70;
+  font-weight: 300;
+  font-family: var(--font-body);
+}
+
+/* Description */
+.menu-description {
+  margin-bottom: 48px;
+  border-left: 2px solid #3d655e;
+  padding-left: 20px;
+}
+
+.menu-description p {
+  font-size: 13px;
+  line-height: 1.8;
+  color: #7a7a70;
+  margin: 0 0 8px;
+  font-weight: 300;
+  font-family: var(--font-body);
+}
+
+/* Options */
+.menu-options {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  align-items: center;
+}
+
+.menu-option {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 20px;
+  background: transparent;
+  border: none;
+  border-left: 2px solid transparent;
+  color: #7a7a70;
+  font-size: 13px;
+  text-transform: uppercase;
+  letter-spacing: 4px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-family: var(--font-body);
+  min-width: 220px;
+}
+
+.menu-option:hover:not(.disabled) {
+  color: #e8dcc8;
+  border-left-color: rgba(61, 101, 94, 0.6);
+}
+
+.menu-option.selected {
+  color: #e8dcc8;
+  border-left-color: #3d655e;
+  background: rgba(255, 255, 255, 0.02);
+}
+
+.menu-option.disabled {
+  opacity: 0.2;
+  cursor: not-allowed;
+}
+
+.option-indicator {
+  font-size: 9px;
+  color: #3d655e;
+  width: 14px;
+  display: inline-block;
+}
+
+.option-text {
+  font-weight: 400;
+}
+
+/* Footer */
+.menu-footer {
+  text-align: center;
+}
+
+.menu-footer p {
+  font-size: 9px;
+  letter-spacing: 2px;
+  color: #e8dcc8;
+  text-transform: uppercase;
+  margin: 0;
+  font-family: var(--font-body);
+}
+
+.menu-version {
+  font-size: 10px;
+  color: #403f38;
+}
+

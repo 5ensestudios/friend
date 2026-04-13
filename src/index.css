@@ -1,68 +1,107 @@
+/* ═══════════════════════════════════════════════════════════
+   THE FRIEND — Global Design Tokens
+   Edit this file to change the look of the entire game.
+   ═══════════════════════════════════════════════════════════ */
+
+/* ── Font Files ─────────────────────────────────────────── */
+@font-face {
+  font-family: 'Glacial Indifference';
+  src: url('/fonts/GlacialIndifference-Regular.otf') format('opentype');
+  font-weight: 400;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Glacial Indifference';
+  src: url('/fonts/GlacialIndifference-Bold.otf') format('opentype');
+  font-weight: 700;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Glacial Indifference';
+  src: url('/fonts/GlacialIndifference-Italic.otf') format('opentype');
+  font-weight: 400;
+  font-style: italic;
+}
+
 :root {
-  font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
+
+  /* ── Brand Colors ──────────────────────────────────────
+     Core palette. Change these to retheme the whole game. */
+  --color-primary:      #2f4b4b;  /* Main teal – panels, backgrounds */
+  --color-secondary:    #3d655e;  /* Lighter teal – borders, accents */
+  --color-accent-dark:  #0d0d0d;  /* Near-black – page background */
+  --color-accent-red:   #8b1a1a;  /* Crimson – danger / highlights */
+  --color-text-dark:    #2a2520;  /* Dark text (on light paper surfaces) */
+  --color-text-light:   #e8dcc8;  /* Cream – primary text on dark */
+  --color-muted:        #7a7a70;  /* Greyed-out / secondary text */
+  --color-accent-grey:  #7a7a70;  /* Alias for --color-muted (backwards compat) */
+
+  /* ── Surface Colors ────────────────────────────────────
+     Used for windows, cards, and UI panels. */
+  --color-surface:          #111111;          /* Deepest window background */
+  --color-surface-mid:      #1a1a1a;          /* Standard window / panel */
+  --color-surface-raised:   #2d2d2d;          /* Title bars, toolbars */
+  --color-surface-hover:    rgba(255, 255, 255, 0.05);
+  --color-border:           #444444;          /* Window / card borders */
+  --color-border-subtle:    rgba(255, 255, 255, 0.08);
+
+  /* ── Typography – Families ─────────────────────────────
+     --font-heading : titles, headings, stamps, labels
+     --font-body    : all body / UI text
+     --font-system  : OS-mimicking components (File Explorer, Notepad title bar)
+     --font-mono    : code-style / textarea content (Detective Notes) */
+  --font-heading: 'Brunson Rough', sans-serif;
+  --font-body:    'Glacial Indifference', sans-serif;
+  --font-system:  'Segoe UI', system-ui, sans-serif;
+  --font-mono:    'Consolas', 'Courier New', monospace;
+
+  /* ── Typography – Scale ────────────────────────────────
+     Consistent size ladder used across all components. */
+  --text-xs:   10px;   /* Tiny labels, timestamps, eyebrows */
+  --text-sm:   12px;   /* Small UI text, captions */
+  --text-base: 14px;   /* Default body text */
+  --text-md:   16px;   /* Slightly larger body */
+  --text-lg:   20px;   /* Section headers */
+  --text-xl:   28px;   /* Component titles */
+  --text-2xl:  36px;   /* Page-level headings */
+  --text-3xl:  48px;   /* Hero / splash text */
+
+  /* ── Transitions ───────────────────────────────────────  */
+  --transition-fast:   0.15s ease;
+  --transition-normal: 0.25s ease;
+  --transition-slow:   0.4s ease;
+
+  /* ── Border Radii ──────────────────────────────────────  */
+  --radius-sm: 4px;
+  --radius-md: 8px;
+
+  /* ── Base Styles ───────────────────────────────────────  */
+  font-family: var(--font-body);
   line-height: 1.5;
   font-weight: 400;
-
-  color-scheme: light dark;
-  color: rgba(255, 255, 255, 0.87);
-  background-color: #242424;
-
+  color: var(--color-text-light);
+  background-color: var(--color-accent-dark);
   font-synthesis: none;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
-a {
-  font-weight: 500;
-  color: #646cff;
-  text-decoration: inherit;
-}
-a:hover {
-  color: #535bf2;
+/* ── Reset / Base ───────────────────────────────────────── */
+*, *::before, *::after {
+  box-sizing: border-box;
 }
 
 body {
   margin: 0;
-  display: flex;
-  place-items: center;
   min-width: 320px;
   min-height: 100vh;
 }
 
-h1 {
-  font-size: 3.2em;
-  line-height: 1.1;
-}
-
 button {
-  border-radius: 8px;
-  border: 1px solid transparent;
-  padding: 0.6em 1.2em;
-  font-size: 1em;
-  font-weight: 500;
   font-family: inherit;
-  background-color: #1a1a1a;
   cursor: pointer;
-  transition: border-color 0.25s;
-}
-button:hover {
-  border-color: #646cff;
-}
-button:focus,
-button:focus-visible {
-  outline: 4px auto -webkit-focus-ring-color;
 }
 
-@media (prefers-color-scheme: light) {
-  :root {
-    color: #213547;
-    background-color: #ffffff;
-  }
-  a:hover {
-    color: #747bff;
-  }
-  button {
-    background-color: #f9f9f9;
-  }
-}

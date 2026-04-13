@@ -1,0 +1,102 @@
+/* ═══════════════════════════════════════════
+   Shutdown Screen — CRT Power-Off (reverse of boot)
+   ═══════════════════════════════════════════ */
+
+.shutdown-screen {
+  position: fixed;
+  inset: 0;
+  background: #0a0a0a;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+  overflow: hidden;
+}
+
+/* Scanlines — same as boot */
+.shutdown-scanlines {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  pointer-events: none;
+  background: repeating-linear-gradient(
+    to bottom,
+    transparent 0px,
+    transparent 2px,
+    rgba(0, 0, 0, 0.15) 2px,
+    rgba(0, 0, 0, 0.15) 4px
+  );
+  animation: scanlineFlicker 0.08s infinite;
+}
+
+.shutdown-scanlines::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    to bottom,
+    transparent 50%,
+    rgba(0, 0, 0, 0.04) 50%
+  );
+  background-size: 100% 4px;
+  animation: scanlineDrift 8s linear infinite;
+}
+
+/* Phase 1: bright — full screen fill */
+.shutdown-screen.shutdown-bright {
+  background: var(--color-accent-dark, #0d0d0d);
+}
+
+.shutdown-screen.shutdown-bright .shutdown-line {
+  width: 100%;
+  height: 100%;
+  background: var(--color-accent-dark, #0d0d0d);
+}
+
+/* Phase 2: collapse — screen crushes to horizontal line */
+.shutdown-screen.shutdown-collapse .shutdown-line {
+  width: 100%;
+  height: 2px;
+  background: var(--color-secondary, #3d655e);
+  box-shadow: 0 0 30px rgba(61, 101, 94, 0.6), 0 0 80px rgba(61, 101, 94, 0.3);
+  transition: height 0.6s cubic-bezier(0.7, 0, 0.84, 0), width 0.1s ease;
+}
+
+/* Phase 3: line shrinks and fades */
+.shutdown-screen.shutdown-line .shutdown-line {
+  animation: shutdownLineOut 0.8s ease-in forwards;
+}
+
+@keyframes shutdownLineOut {
+  0% {
+    width: 100%;
+    height: 2px;
+    opacity: 1;
+    background: var(--color-secondary, #3d655e);
+    box-shadow: 0 0 20px rgba(61, 101, 94, 0.5);
+  }
+  60% {
+    width: 20%;
+    height: 2px;
+    opacity: 0.8;
+  }
+  100% {
+    width: 0;
+    height: 0;
+    opacity: 0;
+    box-shadow: none;
+  }
+}
+
+/* Reuse boot scanline keyframes */
+@keyframes scanlineFlicker {
+  0%   { opacity: 0.7; }
+  50%  { opacity: 0.85; }
+  100% { opacity: 0.7; }
+}
+
+@keyframes scanlineDrift {
+  from { background-position: 0 0; }
+  to   { background-position: 0 100%; }
+}
+

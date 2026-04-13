@@ -1,0 +1,128 @@
+/* ── Notepad Window ── */
+.notepad-window {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  background: var(--color-surface-mid);
+  border: 1px solid var(--color-border);
+  border-radius: 8px 8px 0 0;
+  overflow: hidden;
+  font-family: var(--font-system);
+}
+
+.notepad-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: var(--color-surface-raised);
+  padding: 6px 12px;
+  border-bottom: 1px solid var(--color-border);
+  user-select: none;
+  cursor: default;
+}
+
+.notepad-title-bar {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.notepad-title-icon {
+  font-size: 14px;
+}
+
+.notepad-title {
+  font-size: 12px;
+  color: #cccccc;
+  font-weight: 400;
+}
+
+.notepad-controls {
+  display: flex;
+  gap: 2px;
+}
+
+.notepad-btn {
+  width: 36px;
+  height: 28px;
+  border: none;
+  background: transparent;
+  color: #999;
+  font-size: 12px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 4px;
+  transition: background 0.15s, color 0.15s;
+  padding: 0;
+}
+
+.notepad-btn:hover {
+  background: var(--color-surface-hover);
+  color: #fff;
+}
+
+.notepad-close:hover {
+  background: #e81123;
+  color: #fff;
+}
+
+.notepad-menubar {
+  display: flex;
+  gap: 0;
+  background: var(--color-surface-raised);
+  padding: 0 8px;
+  border-bottom: 1px solid var(--color-border);
+}
+
+.notepad-menu-item {
+  padding: 4px 10px;
+  font-size: 12px;
+  color: #bbb;
+  cursor: default;
+  border-radius: 3px;
+  user-select: none;
+}
+
+.notepad-menu-item:hover {
+  background: var(--color-surface-hover);
+  color: #fff;
+}
+
+.notepad-body {
+  flex: 1;
+  display: flex;
+  overflow: hidden;
+}
+
+.notepad-textarea {
+  flex: 1;
+  background: #1a1a1a;
+  color: #d4d4d4;
+  border: none;
+  padding: 16px 20px;
+  font-family: var(--font-mono);
+  font-size: 14px;
+  line-height: 1.6;
+  resize: none;
+  outline: none;
+}
+
+.notepad-textarea::placeholder {
+  color: #555;
+  font-style: italic;
+}
+
+.notepad-statusbar {
+  display: flex;
+  justify-content: space-between;
+  padding: 3px 12px;
+  background: var(--color-surface-raised);
+  border-top: 1px solid var(--color-border);
+  font-size: 11px;
+  color: #777;
+}
+
+

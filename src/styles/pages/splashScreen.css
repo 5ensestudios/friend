@@ -1,0 +1,115 @@
+.splash-screen {
+  position: fixed;
+  inset: 0;
+  background: #000;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+  cursor: pointer;
+  transition: opacity 0.7s ease;
+}
+
+.splash-in  { opacity: 0; animation: splashFadeIn  0.7s ease forwards; }
+.splash-hold { opacity: 1; }
+.splash-out { opacity: 1; animation: splashFadeOut 0.7s ease forwards; }
+
+@keyframes splashFadeIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+@keyframes splashFadeOut {
+  from { opacity: 1; }
+  to   { opacity: 0; }
+}
+
+/* Content wrapper */
+.splash-content {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex: 1;
+  width: 100%;
+}
+
+/* Studio logo slide — white card on black */
+.splash-logo-wrap {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 18px;
+}
+
+.splash-logo-studio .splash-logo-img-studio {
+  width: 300px;
+  height: auto;
+}
+
+/* Game title logo slide — dark, larger */
+.splash-logo-title .splash-logo-img-title {
+  width: 520px;
+  max-width: 80vw;
+  height: auto;
+  filter: brightness(1.0);
+}
+
+.splash-sub {
+  font-family: 'Glacial Indifference', sans-serif;
+  font-size: 10px;
+  letter-spacing: 5px;
+  text-transform: uppercase;
+  color: #555;
+  margin: 0;
+}
+
+/* Notice / copyright slide */
+.splash-notice {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 14px;
+  max-width: 560px;
+  text-align: center;
+  padding: 0 24px;
+}
+
+.splash-notice-title {
+  font-family: 'Brunson Rough', sans-serif;
+  font-size: 50px;
+  letter-spacing: 10px;
+  color: #e8dcc8;
+  margin: 0 0 6px;
+}
+
+.splash-notice-line {
+  font-family: 'Glacial Indifference', sans-serif;
+  font-size: 11px;
+  letter-spacing: 1.5px;
+  color: #555;
+  margin: 0;
+  line-height: 1.7;
+}
+
+.splash-notice-fullscreen {
+  font-family: 'Glacial Indifference', sans-serif;
+  font-size: 11px;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: #3d655e;
+  margin: 12px 0 0;
+  border: 1px solid rgba(61, 101, 94, 0.4);
+  padding: 8px 20px;
+}
+
+/* Skip hint */
+.splash-skip {
+  font-family: 'Glacial Indifference', sans-serif;
+  font-size: 9px;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: #333;
+  margin: 0 0 20px;
+}
+
