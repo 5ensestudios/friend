@@ -1,6 +1,5 @@
 ﻿import { useEffect, useState, useRef } from "react";
 import "../../styles/components/dialogue.css";
-import { set } from "mongoose";
 
 /* ── Characters ── */
 const CHARACTERS = [
