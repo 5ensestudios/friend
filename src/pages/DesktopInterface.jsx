@@ -6,13 +6,16 @@ import EvidenceFolder from "../components/desktop/EvidenceFolder";
 import EvidencePopup from "../components/desktop/EvidencePopup";
 import SuspectSelect from "../components/desktop/SuspectSelect";
 import SceneView from "../components/dialouge/SceneView";
+import ActIntro from "./ActIntro";
 import { useDraggable } from "../hooks/useDraggable";
 import { saveProgress } from "../firebase/progress";
 import "../styles/pages/desktop.css";
 
 export default function DesktopInterface({ playerData, onReturnToMenu, onAct3Start }) {
-  const [view, setView] = useState("desktop"); // 'desktop' or 'scene'
+  const [view, setView] = useState("desktop"); // 'desktop', 'act-intro', or 'scene'
   const [currentAct, setCurrentAct] = useState(null);
+  // Track which acts have already seen the intro in this session
+  const [seenActIntro, setSeenActIntro] = useState(() => ({}));
   const [playerProgress, setPlayerProgress] = useState(playerData.progress);
   const [openWindows, setOpenWindows] = useState([]); // ['files', 'notes', 'evidence']
   const [activeWindow, setActiveWindow] = useState(null);
@@ -48,13 +51,34 @@ export default function DesktopInterface({ playerData, onReturnToMenu, onAct3Sta
   }
 
   function handleActSelect(actNumber) {
-    if (actNumber === 3) {
-      // Act 3 — show suspect select first
-      setShowSuspectSelect(true);
-      return;
-    }
     setCurrentAct(actNumber);
-    setView("scene");
+    // Only show ActIntro if no scenes have been played yet in this act
+    const actKey = `act${actNumber}`;
+    const actScenes = playerProgress?.scenes_visited?.[actKey];
+    const hasPlayedScene = actScenes && (
+      (Array.isArray(actScenes.introCompleted) && actScenes.introCompleted.length > 0) ||
+      (typeof actScenes.qIdx === "number" && actScenes.qIdx > 0)
+    );
+    if (!hasPlayedScene) {
+      setView("act-intro");
+    } else {
+      if (actNumber === 3) {
+        setShowSuspectSelect(true);
+        setView("desktop");
+      } else {
+        setView("scene");
+      }
+    }
+  }
+
+  function handleActIntroDone() {
+    setSeenActIntro(prev => ({ ...prev, [currentAct]: true }));
+    if (currentAct === 3) {
+      setShowSuspectSelect(true);
+      setView("desktop");
+    } else {
+      setView("scene");
+    }
   }
 
   function handleSuspectChosen(suspectId) {
@@ -119,6 +143,42 @@ export default function DesktopInterface({ playerData, onReturnToMenu, onAct3Sta
 
   function focusWindow(windowId) {
     setActiveWindow(windowId);
+  }
+
+
+  if (view === "act-intro") {
+    // You can customize lines per act here
+    const actLines = [
+      [
+        { text: "INTRODUCTORY — The First Interviews", delay: 0 },
+        { text: "", delay: 900 },
+        { text: "Interview each suspect to establish the facts.", delay: 1400 },
+        { text: "", delay: 200 },
+        { text: "Pay attention to their first impressions.", delay: 200 },
+      ],
+      [
+        { text: "ACT I — The Incident", delay: 0 },
+        { text: "", delay: 900 },
+        { text: "The night took a turn no one expected. Each suspect holds a piece of the truth.", delay: 1400 },
+        { text: "", delay: 200 },
+        { text: "Listen carefully. Motive hides in the details.", delay: 200 },
+      ],
+      [
+        { text: "ACT II — The Motives", delay: 0 },
+        { text: "", delay: 900 },
+        { text: "Motives begin to surface. The truth is layered beneath their words.", delay: 1400 },
+        { text: "", delay: 200 },
+        { text: "Who had reason to want Chris gone?", delay: 200 },
+      ],
+      [
+        { text: "ACT III — The Truth", delay: 0 },
+        { text: "", delay: 900 },
+        { text: "This is the final confrontation. The truth will be revealed.", delay: 1400 },
+        { text: "", delay: 200 },
+        { text: "Choose wisely.", delay: 200 },
+      ],
+    ];
+    return <ActIntro lines={actLines[currentAct] || actLines[0]} onDone={handleActIntroDone} />;
   }
 
   if (view === "scene") {

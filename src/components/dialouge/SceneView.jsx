@@ -1,5 +1,6 @@
 ﻿import { useEffect, useState, useRef } from "react";
 import "../../styles/components/dialogue.css";
+import { set } from "mongoose";
 
 /* ── Characters ── */
 const CHARACTERS = [
@@ -10,7 +11,7 @@ const CHARACTERS = [
 ];
 
 /* ── Shared ambient loop (plays while detective types the question) ── */
-const LOOP_VIDEO = "/videos/Loop-1.mp4";
+const LOOP_VIDEO = "https://res.cloudinary.com/dknhgcjpf/video/upload/q_auto:good,f_auto/v1776172439/Loop-1_ixjhfu.mp4";
 
 /* ── Act display titles ── */
 const ACT_TITLES = {
@@ -24,25 +25,25 @@ const ACT_TITLES = {
    ══════════════════════════════════════════════════════════ */
 const ACT0 = {
   louis: [
-    { question: "Detective: Before we start, for the record, can you state your name.", clips: ["/videos/Louis/Louis Intro/Louis Intro 1.mp4"] },
-    { question: "Detective: Do you have any idea why we're here?", clips: ["/videos/Louis/Louis Intro/Louis Intro 2.mp4"] },
-    { question: "Detective: Your friend has passed away.", clips: ["/videos/Louis/Louis Intro/Louis Intro 3.mp4"] },
+    { question: "Detective: Before we start, for the record, can you state your name.", clips: ["https://res.cloudinary.com/dknhgcjpf/video/upload/q_auto:good,f_auto/v1776172842/Louis_Intro_1_hcnsmh.mp4"] },
+    { question: "Detective: Do you have any idea why we're here?", clips: ["https://res.cloudinary.com/dknhgcjpf/video/upload/q_auto:good,f_auto/v1776172848/Louis_Intro_2_jlmhxg.mp4"] },
+    { question: "Detective: Your friend has passed away.", clips: ["https://res.cloudinary.com/dknhgcjpf/video/upload/q_auto:good,f_auto/v1776172856/Louis_Intro_3_m77jia.mp4"] },
   ],
   may: [
-    { question: "Detective: Before we start, for the record, can you state your name.", clips: ["/videos/May/May Intro/May Intro 1.mp4"] },
-    { question: "Detective: Do you have any idea why we're here?", clips: ["/videos/May/May Intro/May Intro 2.mp4"] },
-    { question: "Detective: Your friend has passed away.", clips: ["/videos/May/May Intro/May Intro 3.mp4"] },
+    { question: "Detective: Before we start, for the record, can you state your name.", clips: ["https://res.cloudinary.com/dknhgcjpf/video/upload/q_auto:good,f_auto/v1776172759/May_Intro_1_pybdgw.mp4"] },
+    { question: "Detective: Do you have any idea why we're here?", clips: ["https://res.cloudinary.com/dknhgcjpf/video/upload/q_auto:good,f_auto/v1776172763/May_Intro_2_bp5ptj.mp4"] },
+    { question: "Detective: Your friend has passed away.", clips: ["https://res.cloudinary.com/dknhgcjpf/video/upload/q_auto:good,f_auto/v1776172761/May_Intro_3_eedt7s.mp4"] },
   ],
   johnny: [
-    { question: "Detective: Before we start, for the record, can you state your name.", clips: ["/videos/Johnny/Johnny Intro/Johnny Intro 1.mp4"] },
-    { question: "Detective: Just state your name.", clips: ["/videos/Johnny/Johnny Intro/Johnny Intro 2.mp4"] },
-    { question: "Detective: Do you have any idea why we're here?", clips: ["/videos/Johnny/Johnny Intro/Johnny Intro 3.mp4"] },
-    { question: "Detective: Your friend has passed away.", clips: ["/videos/Johnny/Johnny Intro/Johnny Intro 4.mp4"] },
+    { question: "Detective: Before we start, for the record, can you state your name.", clips: ["https://res.cloudinary.com/dknhgcjpf/video/upload/q_auto:good,f_auto/v1776172887/Johnny_Intro_1_d5oe7i.mp4"] },
+    { question: "Detective: Just state your name.", clips: ["https://res.cloudinary.com/dknhgcjpf/video/upload/q_auto:good,f_auto/v1776172884/Johnny_Intro_2_yhwrvn.mp4"] },
+    { question: "Detective: Do you have any idea why we're here?", clips: ["https://res.cloudinary.com/dknhgcjpf/video/upload/q_auto:good,f_auto/v1776172890/Johnny_Intro_3_kociav.mp4"] },
+    { question: "Detective: Your friend has passed away.", clips: ["https://res.cloudinary.com/dknhgcjpf/video/upload/q_auto:good,f_auto/v1776172895/Johnny_Intro_4_unxvca.mp4"] },
   ],
   richard: [
-    { question: "Detective: Before we start, for the record, can you state your name.", clips: ["/videos/Richard/Richie Intro/Richie Intro 1.mp4"] },
-    { question: "Detective: Do you have any idea why we're here?", clips: ["/videos/Richard/Richie Intro/Richie Intro 2.mp4"] },
-    { question: "Detective: Your friend has passed away.", clips: ["/videos/Richard/Richie Intro/Richie Intro 3.mp4"] },
+    { question: "Detective: Before we start, for the record, can you state your name.", clips: ["https://res.cloudinary.com/dknhgcjpf/video/upload/q_auto:good,f_auto/v1776172814/Richie_Intro_1_nxscml.mp4"] },
+    { question: "Detective: Do you have any idea why we're here?", clips: ["https://res.cloudinary.com/dknhgcjpf/video/upload/q_auto:good,f_auto/v1776172818/Richie_Intro_2_gdmq2h.mp4"] },
+    { question: "Detective: Your friend has passed away.", clips: ["https://res.cloudinary.com/dknhgcjpf/video/upload/q_auto:good,f_auto/v1776172814/Richie_Intro_3_anhig1.mp4"] },
   ],
 };
 
@@ -58,49 +59,50 @@ const ACTS = {
         label: "What happened last night?",
         characters: {
           may: [
-            { question: "Detective: What happened last night?", clips: ["/videos/May/May Act 1/May Act 1 - 1.1.mp4"], skipPause: true },
-            { question: "Detective: Can we continue?", clips: ["/videos/May/May Act 1/May Act 1 - 1.2.mp4"] },
-            { question: "Detective: What was the prank?", clips: ["/videos/May/May Act 1/May Act 1 - 1.3.mp4"] },
+            { question: "Detective: What happened last night?", clips: ["https://res.cloudinary.com/dknhgcjpf/video/upload/q_auto:good,f_auto/v1776172755/May_Act_1_-_1.1_wkh6dx.mp4"], skipPause: true },
+            { question: "Detective: Can we continue?", clips: ["https://res.cloudinary.com/dknhgcjpf/video/upload/q_auto:good,f_auto/v1776172754/May_Act_1_-_1.2_sbgp4p.mp4"] },
+            { question: "Detective: What was the prank?", clips: ["https://res.cloudinary.com/dknhgcjpf/video/upload/q_auto:good,f_auto/v1776172761/May_Act_1_-_1.3_q0eqlr.mp4"] },
           ],
           johnny: [
-            { question: "Detective: What happened last night?", clips: ["/videos/Johnny/Johnny Act 1/Johnny Act 1 - 1.1.mp4"] },
-            { question: "Detective: Payback for what?", clips: ["/videos/Johnny/Johnny Act 1/Johnny Act 1 - 1.2.mp4"] },
+            { question: "Detective: What happened last night?", clips: ["https://res.cloudinary.com/dknhgcjpf/video/upload/q_auto:good,f_auto/v1776172892/Johnny_Act_1_-_1.1_e7vlbq.mp4"] },
+            { question: "Detective: Payback for what?", clips: ["https://res.cloudinary.com/dknhgcjpf/video/upload/q_auto:good,f_auto/v1776172885/Johnny_Act_1_-_1.2_n0rrw2.mp4"] },
           ],
           louis: [
-            { question: "Detective: What happened last night?", clips: ["/videos/Louis/Louis Act 1/Louis Act 1 - 1.1.mp4"] },
-            { question: "Detective: What did she suggest?", clips: ["/videos/Louis/Louis Act 1/Louis Act 1 - 1.2.mp4", "/videos/Louis/Louis Act 1/Louis Act 1 - 1.3.mp4"] },
+            { question: "Detective: Are you okay?", clips: ["https://res.cloudinary.com/dknhgcjpf/video/upload/q_auto:good,f_auto/v1776172843/Louis_Act_1_-_1.1_snx0zw.mp4"] },
+            { question: "Detective: What happened last night?", clips: ["https://res.cloudinary.com/dknhgcjpf/video/upload/q_auto:good,f_auto/v1776172851/Louis_Act_1_-_1.2_ayj4xx.mp4"] },
+            { question: "Detective: What did she suggest?", clips: ["https://res.cloudinary.com/dknhgcjpf/video/upload/q_auto:good,f_auto/v1776172842/Louis_Act_1_-_1.3_eogg24.mp4"] },
           ],
           richard: [
-            { question: "Detective: What happened last night?", clips: ["/videos/Richard/Richie Act 1/Richie Act 1 - 1.1.mp4"] },
-            { question: "Detective: Who came up with the idea?", clips: ["/videos/Richard/Richie Act 1/Richie Act 1 - 1.2.mp4"] },
+            { question: "Detective: What happened last night?", clips: ["https://res.cloudinary.com/dknhgcjpf/video/upload/q_auto:good,f_auto/v1776172824/Richie_Act_1_-_1.1_bokofh.mp4"] },
+            { question: "Detective: Who came up with the idea?", clips: ["https://res.cloudinary.com/dknhgcjpf/video/upload/q_auto:good,f_auto/v1776172812/Richie_Act_1_-_1.2_ed2zgl.mp4"] },
           ],
         },
       },
       {
         label: "The pills found at the crime scene — where did they come from?",
         characters: {
-          may:     [{ question: "Detective: The pills found at the crime scene — where did they come from?", clips: ["/videos/May/May Act 1/May Act 1 - 2.mp4"] }],
-          johnny:  [{ question: "Detective: The pills found at the crime scene — where did they come from?", clips: ["/videos/Johnny/Johnny Act 1/Johnny Act 1 - 2.mp4"] }],
-          louis:   [{ question: "Detective: The pills found at the crime scene — where did they come from?", clips: ["/videos/Louis/Louis Act 1/Louis Act 1 - 2.mp4"] }],
-          richard: [{ question: "Detective: The pills found at the crime scene — where did they come from?", clips: ["/videos/Richard/Richie Act 1/Richie Act 1 - 2.mp4"] }],
+          may:     [{ question: "Detective: The pills found at the crime scene — where did they come from?", clips: ["https://res.cloudinary.com/dknhgcjpf/video/upload/q_auto:good,f_auto/v1776172762/May_Act_1_-_2_u81pqp.mp4"] }],
+          johnny:  [{ question: "Detective: The pills found at the crime scene — where did they come from?", clips: ["https://res.cloudinary.com/dknhgcjpf/video/upload/q_auto:good,f_auto/v1776172892/Johnny_Act_1_-_2_kefchu.mp4"] }],
+          louis:   [{ question: "Detective: The pills found at the crime scene — where did they come from?", clips: ["https://res.cloudinary.com/dknhgcjpf/video/upload/q_auto:good,f_auto/v1776172847/Louis_Act_1_-_2_ry5txz.mp4"] }],
+          richard: [{ question: "Detective: The pills found at the crime scene — where did they come from?", clips: ["https://res.cloudinary.com/dknhgcjpf/video/upload/q_auto:good,f_auto/v1776172819/Richie_Act_1_-_2_y8cnrt.mp4"] }],
         },
       },
       {
         label: "Can you recount the whole night for me?",
         characters: {
-          may:     [{ question: "Detective: Can you recount the whole night for me?", clips: ["/videos/May/May Act 1/May Act 1 - 3.mp4"] }],
-          johnny:  [{ question: "Detective: Can you recount the whole night for me?", clips: ["/videos/Johnny/Johnny Act 1/Johnny Act 1 - 3.mp4"] }],
-          louis:   [{ question: "Detective: Can you recount the whole night for me?", clips: ["/videos/Louis/Louis Act 1/Louis Act 1 - 3.mp4"] }],
-          richard: [{ question: "Detective: Can you recount the whole night for me?", clips: ["/videos/Richard/Richie Act 1/Richie Act 1 - 3.mp4"] }],
+          may:     [{ question: "Detective: Can you recount the whole night for me?", clips: ["https://res.cloudinary.com/dknhgcjpf/video/upload/q_auto:good,f_auto/v1776183534/May_Act_1_-_3_1_jxmmka.mp4"] }],
+          johnny:  [{ question: "Detective: Can you recount the whole night for me?", clips: ["https://res.cloudinary.com/dknhgcjpf/video/upload/q_auto:good,f_auto/v1776172903/Johnny_Act_1_-_3_s7zcyh.mp4"] }],
+          louis:   [{ question: "Detective: Can you recount the whole night for me?", clips: ["https://res.cloudinary.com/dknhgcjpf/video/upload/q_auto:good,f_auto/v1776172871/Louis_Act_1_-_3_iss1xd.mp4"] }],
+          richard: [{ question: "Detective: Can you recount the whole night for me?", clips: ["https://res.cloudinary.com/dknhgcjpf/video/upload/q_auto:good,f_auto/v1776172835/Richie_Act_1_-_3_nxx6yu.mp4"] }],
         },
       },
       {
         label: "Do you think any one of you could have had the intention to want this?",
         characters: {
-          may:     [{ question: "Detective: Do you think any one of you could have had the intention to want this?", clips: ["/videos/May/May Act 1/May Act 1 - 4.mp4"] }],
-          johnny:  [{ question: "Detective: Do you think any one of you could have had the intention to want this?", clips: ["/videos/Johnny/Johnny Act 1/Johnny Act 1 - 4.mp4"] }],
-          louis:   [{ question: "Detective: Do you think any one of you could have had the intention to want this?", clips: ["/videos/Louis/Louis Act 1/Louis Act 1 - 4.mp4"] }],
-          richard: [{ question: "Detective: Do you think any one of you could have had the intention to want this?", clips: ["/videos/Richard/Richie Act 1/Richie Act 1 - 4.mp4"] }],
+          may:     [{ question: "Detective: Do you think any one of you could have had the intention to want this?", clips: ["https://res.cloudinary.com/dknhgcjpf/video/upload/q_auto:good,f_auto/v1776172760/May_Act_1_-_4_dtuaje.mp4"] }],
+          johnny:  [{ question: "Detective: Do you think any one of you could have had the intention to want this?", clips: ["https://res.cloudinary.com/dknhgcjpf/video/upload/q_auto:good,f_auto/v1776172888/Johnny_Act_1_-_4_mymvj2.mp4"] }],
+          louis:   [{ question: "Detective: Do you think any one of you could have had the intention to want this?", clips: ["https://res.cloudinary.com/dknhgcjpf/video/upload/q_auto:good,f_auto/v1776172845/Louis_Act_1_-_4_ugcjgu.mp4"] }],
+          richard: [{ question: "Detective: Do you think any one of you could have had the intention to want this?", clips: ["https://res.cloudinary.com/dknhgcjpf/video/upload/q_auto:good,f_auto/v1776172812/Richie_Act_1_-_4_kr8byp.mp4"] }],
         },
       },
     ],
@@ -110,28 +112,66 @@ const ACTS = {
       {
         label: "What did Chris do?",
         characters: {
-          may:     [{ question: "Detective: What did Chris do?", clips: ["/videos/May/May Act 2/May Act 2 - 1.mp4"] }],
-          johnny:  [{ question: "Detective: What did Chris do?", clips: ["/videos/Johnny/Johnny Act 2/Johnny Act 2 - 1.1.mp4", "/videos/Johnny/Johnny Act 2/Johnny Act 2 - 1.2.mp4", "/videos/Johnny/Johnny Act 2/Johnny Act 2 - 1.3.mp4"] }],
-          louis:   [{ question: "Detective: What did Chris do?", clips: ["/videos/Louis/Louis Act 2/Louis Act 2 - 1.1.mp4", "/videos/Louis/Louis Act 2/Louis Act 2 - 1.2.mp4"] }],
-          richard: [{ question: "Detective: What did Chris do?", clips: ["/videos/Richard/Richie Act 2/Richie Act 2 - 1.1.mp4", "/videos/Richard/Richie Act 2/Richie Act 2 - 1.2.mp4"] }],
-        },
+          may:     [{ question: "Detective: What did Chris do?", clips: ["https://res.cloudinary.com/dknhgcjpf/video/upload/q_auto:good,f_auto/v1776172765/May_Act_2_-_1_laeik2.mp4"] }],
+          johnny:  [
+            { 
+              question: "Detective: What did Chris do?", 
+              clips: ["https://res.cloudinary.com/dknhgcjpf/video/upload/q_auto:good,f_auto/v1776172886/Johnny_Act_2_-_1.1_opsrh4.mp4"]
+             },
+             {
+              question: "Detective: What do you mean by that?",
+              clips: ["https://res.cloudinary.com/dknhgcjpf/video/upload/q_auto:good,f_auto/v1776172897/Johnny_Act_2_-_1.2_ikito2.mp4"]
+             },
+             {
+              question: "Detective: Anything else?",
+              clips: ["https://res.cloudinary.com/dknhgcjpf/video/upload/q_auto:good,f_auto/v1776172893/Johnny_Act_2_-_1.3_wbvejo.mp4"]
+             }
+            ],
+          louis:   [
+            { 
+              question: "Detective: What did Chris do?", 
+              clips: ["https://res.cloudinary.com/dknhgcjpf/video/upload/q_auto:good,f_auto/v1776172847/Louis_Act_2_-_1.1_ksi5cc.mp4"] 
+            },
+            {
+              question: "Detective: In what way?",
+              clips: ["https://res.cloudinary.com/dknhgcjpf/video/upload/q_auto:good,f_auto/v1776172849/Louis_Act_2_-_1.2_ghrd9c.mp4"]
+            }
+          ],
+          richard: [
+            { question: "Detective: What did Chris do?", 
+              clips: ["https://res.cloudinary.com/dknhgcjpf/video/upload/q_auto:good,f_auto/v1776172815/Richie_Act_2_-_1.1_v0bpkx.mp4"]
+            },
+            {
+              question: "Detective: Did you notice this on anyone else?",
+              clips: ["https://res.cloudinary.com/dknhgcjpf/video/upload/q_auto:good,f_auto/v1776172828/Richie_Act_2_-_1.2_dkevvs.mp4"]
+            }
+            ],
+       },
       },
       {
         label: "What is the group usually like with Chris around?",
         characters: {
-          may:     [{ question: "Detective: What is the group usually like with Chris around?", clips: ["/videos/May/May Act 2/May Act 2 - 2.mp4"] }],
-          johnny:  [{ question: "Detective: What is the group usually like with Chris around?", clips: ["/videos/Johnny/Johnny Act 2/Johnny Act 2 - 2.mp4"] }],
-          louis:   [{ question: "Detective: What is the group usually like with Chris around?", clips: ["/videos/Louis/Louis Act 2/Louis Act 2 - 2.mp4"] }],
-          richard: [{ question: "Detective: What is the group usually like with Chris around?", clips: ["/videos/Richard/Richie Act 2/Richie Act 2 - 2.mp4"] }],
+          may:     [{ question: "Detective: What is the group usually like with Chris around?", clips: ["https://res.cloudinary.com/dknhgcjpf/video/upload/q_auto:good,f_auto/v1776172767/May_Act_2_-_2_tu5xvt.mp4"] }],
+          johnny:  [{ question: "Detective: What is the group usually like with Chris around?", clips: ["https://res.cloudinary.com/dknhgcjpf/video/upload/q_auto:good,f_auto/v1776172891/Johnny_Act_2_-_2_l14aym.mp4"] }],
+          louis:   [{ question: "Detective: What is the group usually like with Chris around?", clips: ["https://res.cloudinary.com/dknhgcjpf/video/upload/q_auto:good,f_auto/v1776172848/Louis_Act_2_-_2_dxdii1.mp4"] }],
+          richard: [{ question: "Detective: What is the group usually like with Chris around?", clips: ["https://res.cloudinary.com/dknhgcjpf/video/upload/q_auto:good,f_auto/v1776172833/Richie_Act_2_-_2_y6kjk5.mp4"] }],
         },
       },
       {
         label: "What is your relationship like with Chris?",
         characters: {
-          may:     [{ question: "Detective: What is your relationship like with Chris?", clips: ["/videos/May/May Act 2/May Act 2 - 3.mp4"] }],
-          johnny:  [{ question: "Detective: What is your relationship like with Chris?", clips: ["/videos/Johnny/Johnny Act 2/Johnny Act 2 - 3.1.mp4", "/videos/Johnny/Johnny Act 2/Johnny Act 2 - 3.2.mp4"] }],
-          louis:   [{ question: "Detective: What is your relationship like with Chris?", clips: ["/videos/Louis/Louis Act 2/Louis Act 2 - 3.mp4"] }],
-          richard: [{ question: "Detective: What is your relationship like with Chris?", clips: ["/videos/Richard/Richie Act 2/Richie Act 2 - 3.mp4"] }],
+          may:     [{ question: "Detective: What is your relationship like with Chris?", clips: ["https://res.cloudinary.com/dknhgcjpf/video/upload/q_auto:good,f_auto/v1776172768/May_Act_2_-_3_cnx6o8.mp4"] }],
+          johnny:  [
+            { question: "Detective: What is your relationship like with Chris?", 
+              clips: ["https://res.cloudinary.com/dknhgcjpf/video/upload/q_auto:good,f_auto/v1776172895/Johnny_Act_2_-_3.1_dtekyv.mp4"] 
+            },
+            {
+              question: "Detective: Like that night?",
+              clips: ["https://res.cloudinary.com/dknhgcjpf/video/upload/q_auto:good,f_auto/v1776172889/Johnny_Act_2_-_3.2_ftvjje.mp4"]
+            }
+          ],
+          louis:   [{ question: "Detective: What is your relationship like with Chris?", clips: ["https://res.cloudinary.com/dknhgcjpf/video/upload/q_auto:good,f_auto/v1776172854/Louis_Act_2_-_3_lrb22a.mp4"] }],
+          richard: [{ question: "Detective: What is your relationship like with Chris?", clips: ["https://res.cloudinary.com/dknhgcjpf/video/upload/q_auto:good,f_auto/v1776172835/Richie_Act_2_-_3_ijox6c.mp4"] }],
         },
       },
     ],
@@ -203,47 +243,108 @@ function TypewriterLine({ text, speed = 55, onDone, paused = false }) {
   return <>{text.slice(0, index)}</>;
 }
 
-/* ════════════════════════════════════
-   VideoSequence
-   Plays an array of clips in order.
-   onEnded fires only after the last clip finishes.
-   ════════════════════════════════════ */
-function VideoSequence({ clips, autoPlay = false, controls = false, loop = false, onEnded, paused = false }) {
-  const [clipIndex, setClipIndex] = useState(0);
+// Preload a video and report when it's ready to play through
+function useVideoPreload(src) {
+  const [ready, setReady] = useState(false);
   const videoRef = useRef(null);
-
   useEffect(() => {
-    setClipIndex(0);
-  }, [clips]);
+    if (!src) return;
+    setReady(false);
+    const el = document.createElement('video');
+    el.src = src;
+    el.preload = 'auto';
+    el.muted = true;
+    el.playsInline = true;
+    const onReady = () => setReady(true);
+    el.addEventListener('canplaythrough', onReady, { once: true });
+    el.load();
+    videoRef.current = el;
+    return () => {
+      el.removeEventListener('canplaythrough', onReady);
+      el.src = '';
+      videoRef.current = null;
+    };
+  }, [src]);
+  return ready;
+}
 
+// CinematicStage: handles loop video, preloading, and seamless transition
+function CinematicStage({ loopSrc, actSrc, question, onDone, paused }) {
+  const [typingDone, setTypingDone] = useState(false);
+  const [showAct, setShowAct] = useState(false);
+  const [actStarted, setActStarted] = useState(false);
+  const loopRef = useRef(null);
+  const actRef = useRef(null);
+  const actReady = useVideoPreload(actSrc);
+
+
+
+  // When both typing and actReady, show act video
   useEffect(() => {
-    if (!videoRef.current) return;
-    if (paused) videoRef.current.pause();
-    else videoRef.current.play().catch(() => {});
-  }, [paused]);
+    if (!typingDone) return;
 
-  function handleClipEnded() {
-    const next = clipIndex + 1;
-    if (next < clips.length) {
-      setClipIndex(next);
-    } else {
-      onEnded?.();
+    const timer = setTimeout(() => {
+      setShowAct(true);
+    }, 2000); // Delay before showing act video
+    
+    return () => clearTimeout(timer);
+
+  }, [typingDone]);
+
+  // When act video is shown, play it
+  useEffect(() => {
+    if (showAct && actRef.current && !actStarted) {
+      setActStarted(true);
+      actRef.current.play().catch(() => {});
     }
-  }
+  }, [showAct, actStarted]);
 
-  const src = clips?.[clipIndex] ?? "";
+  // Reset state if actSrc changes
+  useEffect(() => {
+    setTypingDone(false);
+    setShowAct(false);
+    setActStarted(false);
+  }, [actSrc, question]);
 
   return (
-    <video
-      ref={videoRef}
-      key={src}
-      src={src}
-      autoPlay={autoPlay}
-      controls={controls}
-      loop={loop}
-      playsInline
-      onEnded={handleClipEnded}
-    />
+    <div className="video-stage" style={{ position: 'relative' }}>
+      {/* Loop video: visible until act is ready */}
+      {!showAct && (
+        <video
+          ref={loopRef}
+          src={loopSrc}
+          autoPlay
+          loop
+          muted
+          playsInline
+        />
+      )}
+      {/* Act video: only shown when ready */}
+      {showAct && (
+        <video
+          ref={actRef}
+          src={actSrc}
+          autoPlay
+          controls={false}
+          playsInline
+          onEnded={onDone}
+        />
+      )}
+      {/* Question overlay: only during loop phase */}
+      {!showAct && (
+        <div className="question-overlay">
+          <p className="question-text">
+            <TypewriterLine
+              key={question}
+              text={question}
+              speed={55}
+              onDone={() => setTypingDone(true)}
+              paused={paused}
+            />
+          </p>
+        </div>
+      )}
+    </div>
   );
 }
 
@@ -418,6 +519,18 @@ export default function SceneView({ actNumber, playerProgress, onClose, onActCom
   const pickExchanges = currentQ && activePick ? currentQ.characters[activePick] : null;
   const pickExchange = pickExchanges?.[pickSubIdx];
   /* ── Unavailable fallback ── */
+
+  useEffect(() => {
+    if (!pickExchange?.clips?.[0]) return;
+    const video = document.createElement("video");
+    video.src = pickExchange.clips[0];
+    video.preload = "auto";
+    video.muted = true;
+    video.playsInline = true;
+    video.load();
+    return () => { video.src = ""; };
+  }, [pickExchange]);
+
   if (!isAct0 && !hasActData) {
     return (
       <div className="scene-view">
@@ -463,42 +576,18 @@ export default function SceneView({ actNumber, playerProgress, onClose, onActCom
           </div>
         ) : introChar ? (
           <div className="scene-content scene-content--cinematic">
-            <div className={`video-stage${phase === "pending" ? " video-stage--pending" : ""}`}>
-              {phase === "question" && (
-                <>
-                  <VideoSequence clips={[LOOP_VIDEO]} autoPlay controls={false} loop paused={paused} />
-                  <video className="question-bg-video" src={LOOP_VIDEO} autoPlay loop muted playsInline />
-                  <div className="question-overlay">
-                    <p className="question-text">
-                      <TypewriterLine
-                        key={`intro-${introChar}-${introExIdx}`}
-                        text={introExchange?.question || ""}
-                        speed={55}
-                        onDone={() => setIsTypingDone(true)}
-                        paused={paused}
-                      />
-                    </p>
-                  </div>
-                </>
-              )}
-              {(phase === "answer" || phase === "pending") && (
-                <>
-                  <VideoSequence
-                    key={`intro-ans-${introChar}-${introExIdx}`}
-                    clips={introExchange?.clips || []}
-                    autoPlay
-                    controls={false}
-                    onEnded={handleIntroAnswerEnded}
-                    paused={paused || phase === "pending"}
-                  />
-                  {phase === "pending" && (
-                    <div className={`pending-overlay${tapFading ? " fading" : ""}`} onClick={handleTapToContinue}>
-                      <span className="tap-to-continue">tap to continue</span>
-                    </div>
-                  )}
-                </>
-              )}
-            </div>
+            <CinematicStage
+              loopSrc={LOOP_VIDEO}
+              actSrc={introExchange?.clips?.[0]}
+              question={introExchange?.question || ""}
+              onDone={handleIntroAnswerEnded}
+              paused={paused}
+            />
+            {phase === "pending" && (
+              <div className={`pending-overlay${tapFading ? " fading" : ""}`} onClick={handleTapToContinue}>
+                <span className="tap-to-continue">tap to continue</span>
+              </div>
+            )}
           </div>
         ) : (
           <div className="scene-content">
@@ -532,42 +621,18 @@ export default function SceneView({ actNumber, playerProgress, onClose, onActCom
           </div>
         ) : activePick ? (
           <div className="scene-content scene-content--cinematic">
-            <div className={`video-stage${phase === "pending" ? " video-stage--pending" : ""}`}>
-              {phase === "question" && (
-                <>
-                  <VideoSequence clips={[LOOP_VIDEO]} autoPlay controls={false} loop paused={paused} />
-                  <video className="question-bg-video" src={LOOP_VIDEO} autoPlay loop muted playsInline />
-                  <div className="question-overlay">
-                    <p className="question-text">
-                      <TypewriterLine
-                        key={`act${actNumber}-${qIdx}-${activePick}-${pickSubIdx}`}
-                        text={pickExchange?.question || ""}
-                        speed={55}
-                        onDone={() => setIsTypingDone(true)}
-                        paused={paused}
-                      />
-                    </p>
-                  </div>
-                </>
-              )}
-              {(phase === "answer" || phase === "pending") && (
-                <>
-                  <VideoSequence
-                    key={`act${actNumber}-ans-${qIdx}-${activePick}-${pickSubIdx}`}
-                    clips={pickExchange?.clips || []}
-                    autoPlay
-                    controls={false}
-                    onEnded={handlePickAnswerEnded}
-                    paused={paused || phase === "pending"}
-                  />
-                  {phase === "pending" && (
-                    <div className={`pending-overlay${tapFading ? " fading" : ""}`} onClick={handleTapToContinue}>
-                      <span className="tap-to-continue">tap to continue</span>
-                    </div>
-                  )}
-                </>
-              )}
-            </div>
+            <CinematicStage
+              loopSrc={LOOP_VIDEO}
+              actSrc={pickExchange?.clips?.[0]}
+              question={pickExchange?.question || ""}
+              onDone={handlePickAnswerEnded}
+              paused={paused}
+            />
+            {phase === "pending" && (
+              <div className={`pending-overlay${tapFading ? " fading" : ""}`} onClick={handleTapToContinue}>
+                <span className="tap-to-continue">tap to continue</span>
+              </div>
+            )}
           </div>
         ) : (
           <div className="scene-content">
