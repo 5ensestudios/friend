@@ -1,0 +1,133 @@
+.music-player-window {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  background: #1f1f21;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 8px;
+  overflow: hidden;
+  color: #f0f0f0;
+}
+
+.music-player-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 12px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  background: linear-gradient(180deg, #2a2a2c 0%, #242426 100%);
+}
+
+.music-player-title-wrap {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.music-player-dot {
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: #9c2f2f;
+  box-shadow: inset 0 0 0 2px rgba(255, 255, 255, 0.08);
+}
+
+.music-player-title {
+  font-size: 12px;
+  font-weight: 600;
+  color: #f0f0f0;
+}
+
+.music-player-close {
+  width: 30px;
+  height: 24px;
+  border: 0;
+  background: transparent;
+  color: #8f8f8f;
+  cursor: pointer;
+  border-radius: 4px;
+}
+
+.music-player-close:hover {
+  background: #e81123;
+  color: #fff;
+}
+
+.music-player-list-head {
+  display: grid;
+  grid-template-columns: 1fr 40px;
+  align-items: center;
+  padding: 8px 14px;
+  color: #dcdcdc;
+  font-size: 12px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.music-player-list {
+  flex: 1;
+  overflow-y: auto;
+  background: #1a1a1c;
+}
+
+.music-player-row {
+  width: 100%;
+  display: grid;
+  grid-template-columns: 1fr 82px;
+  align-items: center;
+  padding: 13px 14px;
+  text-align: left;
+  border: 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  background: transparent;
+  color: #f0f0f0;
+  cursor: pointer;
+}
+
+.music-player-row:hover,
+.music-player-row.active {
+  background: #3c3c3c;
+}
+
+.music-player-track-name {
+  font-size: 12px;
+  font-weight: 600;
+  color: #f0f0f0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.music-player-track-length {
+  font-size: 10px;
+  color: #d0d0d0;
+  text-align: right;
+}
+
+.music-player-controls {
+  display: grid;
+  grid-template-columns: 42px 1fr;
+  gap: 10px;
+  align-items: center;
+  padding: 10px 14px;
+  background: #2a2a2c;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.music-player-play {
+  width: 32px;
+  height: 24px;
+  border: 0;
+  background: transparent;
+  color: #f0f0f0;
+  cursor: pointer;
+  font-size: 20px;
+  line-height: 1;
+  padding: 0;
+}
+
+.music-player-timeline {
+  width: 100%;
+  accent-color: #b33838;
+  cursor: pointer;
+}

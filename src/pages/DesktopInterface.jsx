@@ -1,27 +1,138 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import FileExplorer from "../components/desktop/FileExplorer";
+import EmailModal from "../components/desktop/EmailModal";
+import MusicPlayer from "../components/desktop/MusicPlayer";
+import DinoGameModal from "../components/desktop/DinoGameModal";
+import BrunsonGallery from "../components/desktop/BrunsonGallery";
+import SummerGallery from "../components/desktop/SummerGallery";
+import TrashGallery from "../components/desktop/TrashGallery";
 import Notepad from "../components/desktop/Notepad";
 import CaseDocument from "../components/desktop/CaseDocument";
 import EvidenceFolder from "../components/desktop/EvidenceFolder";
-import EvidencePopup from "../components/desktop/EvidencePopup";
 import SuspectSelect from "../components/desktop/SuspectSelect";
 import SceneView from "../components/dialouge/SceneView";
 import ActIntro from "./ActIntro";
 import { useDraggable } from "../hooks/useDraggable";
+import { useSound } from "../hooks/useSound";
 import { saveProgress } from "../firebase/progress";
 import "../styles/pages/desktop.css";
 
-export default function DesktopInterface({ playerData, onReturnToMenu, onAct3Start }) {
+const WISHLIST_DEFAULT_TEXT = `1.Ergonomic lumbar support pillow (current chair is killing my back)
+2. Nespresso pods (Bulk, Dark Roast)
+3. Noise-canceling headphones 
+4. Blue-light blocking glasses
+5. New running shoes (still haven't used the last ones, but maybe these will work)`;
+
+const REDDIT_DRAFT_TEXT = `Title: 2016 overdose case (needs better title)
+
+hey, i've been looking into a closed case from 2016 (ruled accidental overdose, but something doesn’t make sense).
+
+I managed to get some of the digital files, but the main folder is totally corrupted. does anyone know a way to bypass a (idk)`;
+
+const DESKTOP_MAILS = {
+  firstDesktop: {
+    id: "firstDesktop",
+    from: "Pr0xy",
+    subject: "Watch this",
+    attachment: "1 File",
+    lines: [
+      "Hey, I managed to recover one of the files you sent. Watch it carefully though. The data is unstable, and I think the file could get corrupted again after a few viewings.",
+      "",
+      "It’s on your local drive now.",
+    ],
+  },
+  afterIntro: {
+    id: "afterIntro",
+    from: "Pr0xy",
+    subject: "Found more",
+    attachment: "1 File",
+    lines: [
+      "I dug deeper and recovered more files. It’s crazy, these files are even more unstable than the first.",
+      "",
+      "You’re going to want to be really careful with this one. Use the note files you have there if you can.",
+    ],
+  },
+  afterAct1: {
+    id: "afterAct1",
+    from: "Pr0xy",
+    subject: "Good news",
+    attachment: "1 File",
+    lines: [
+      "It’s your lucky day. I’ve managed to pull some data from this folder. Though I can see that the files are being corrupted in real time?",
+      "",
+      "Goodluck, I guess.",
+    ],
+  },
+  afterAct2: {
+    id: "afterAct2",
+    from: "Pr0xy",
+    subject: "URGENT!!",
+    attachment: "2 Files",
+    lines: [
+      "The bit rot is aggressively eating what's left of everything. I’ve managed to crack the final folder, but it is the most turbulent file yet. The data is practically tearing itself apart.",
+      "",
+      "Once you open this, this entire system is going to flatline permanently. There’s no re-watching on this one at all.",
+      "",
+      "I'm also sending something else. I got into the archive and pulled ACTUAL evidence logs before it wiped. They’re attached below.",
+      "",
+      "Do NOT open the final file until you've checked them.",
+    ],
+  },
+};
+
+const DESKTOP_MAIL_ORDER = [
+  "firstDesktop",
+  "afterIntro",
+  "afterAct1",
+  "afterAct2",
+];
+
+function getNextDesktopMail(progress) {
+  const actsCompleted = progress?.acts_completed || [];
+  const seen = progress?.desktop_mail_seen || {};
+
+  if (!seen.firstDesktop && !actsCompleted.includes(0)) {
+    return DESKTOP_MAILS.firstDesktop;
+  }
+  if (!seen.afterIntro && actsCompleted.includes(0)) {
+    return DESKTOP_MAILS.afterIntro;
+  }
+  if (!seen.afterAct1 && actsCompleted.includes(1)) {
+    return DESKTOP_MAILS.afterAct1;
+  }
+  if (!seen.afterAct2 && actsCompleted.includes(2)) {
+    return DESKTOP_MAILS.afterAct2;
+  }
+
+  return null;
+}
+
+function getSeenDesktopMails(progress) {
+  const seen = progress?.desktop_mail_seen || {};
+  return DESKTOP_MAIL_ORDER
+    .filter(mailId => seen[mailId] && DESKTOP_MAILS[mailId])
+    .map(mailId => DESKTOP_MAILS[mailId]);
+}
+
+export default function DesktopInterface({ playerData, onReturnToMenu, onAct3Start, onShutdownToMenu }) {
   const [view, setView] = useState("desktop"); // 'desktop', 'act-intro', or 'scene'
   const [currentAct, setCurrentAct] = useState(null);
+  const [currentQuestion, setCurrentQuestion] = useState(null);
+  const { play } = useSound();
   // Track which acts have already seen the intro in this session
   const [seenActIntro, setSeenActIntro] = useState(() => ({}));
-  const [playerProgress, setPlayerProgress] = useState(playerData.progress);
+  const [playerProgress, setPlayerProgress] = useState(() => ({
+    ...playerData.progress,
+    desktop_mail_seen: playerData.progress?.desktop_mail_seen || {},
+  }));
   const [openWindows, setOpenWindows] = useState([]); // ['files', 'notes', 'evidence']
   const [activeWindow, setActiveWindow] = useState(null);
   const [clock, setClock] = useState(new Date());
-  const [showEvidencePopup, setShowEvidencePopup] = useState(false);
   const [showSuspectSelect, setShowSuspectSelect] = useState(false);
+  const [mailPopup, setMailPopup] = useState(null);
+  const [showStartMenu, setShowStartMenu] = useState(false);
+  const [showVolumePopup, setShowVolumePopup] = useState(false);
+  const [desktopVolume, setDesktopVolume] = useState(74);
   const [evidenceVisible, setEvidenceVisible] = useState(
     playerData.progress.acts_completed.includes(2)
   );
@@ -29,11 +140,41 @@ export default function DesktopInterface({ playerData, onReturnToMenu, onAct3Sta
   const filesDrag = useDraggable({ x: 60, y: 40 });
   const notesDrag = useDraggable({ x: 120, y: 80 });
   const evidenceDrag = useDraggable({ x: 90, y: 60 });
+  const brunsonDrag = useDraggable({ x: 180, y: 70 });
+  const summerDrag = useDraggable({ x: 210, y: 95 });
+  const trashDrag = useDraggable({ x: 78, y: 210 });
+  const redditDraftDrag = useDraggable({ x: 138, y: 150 });
+  const musicDrag = useDraggable({ x: 230, y: 120 });
+  const dinoDrag = useDraggable({ x: 190, y: 90 });
+  const volumePopupRef = useRef(null);
 
   useEffect(() => {
     const interval = setInterval(() => setClock(new Date()), 1000);
     return () => clearInterval(interval);
   }, []);
+
+  useEffect(() => {
+    function handleOutsideClick(event) {
+      if (!showVolumePopup) return;
+      if (volumePopupRef.current && !volumePopupRef.current.contains(event.target)) {
+        setShowVolumePopup(false);
+      }
+    }
+
+    document.addEventListener("mousedown", handleOutsideClick);
+    return () => document.removeEventListener("mousedown", handleOutsideClick);
+  }, [showVolumePopup]);
+
+  useEffect(() => {
+    function handleKeyDown(event) {
+      if (event.key === "Escape") {
+        setShowStartMenu(prev => !prev);
+      }
+    }
+
+    document.addEventListener("keydown", handleKeyDown);
+    return () => document.removeEventListener("keydown", handleKeyDown);
+  }, [showStartMenu]);
 
   function persistProgress(nextProgress) {
     setPlayerProgress(nextProgress);
@@ -43,6 +184,7 @@ export default function DesktopInterface({ playerData, onReturnToMenu, onAct3Sta
       acts_completed: nextProgress.acts_completed,
       scenes_visited: nextProgress.scenes_visited,
       locked_scenes: nextProgress.locked_scenes,
+      desktop_mail_seen: nextProgress.desktop_mail_seen,
       progress: nextProgress,
     };
 
@@ -50,14 +192,50 @@ export default function DesktopInterface({ playerData, onReturnToMenu, onAct3Sta
     saveProgress(playerData.id, updatedData).catch(() => {});
   }
 
-  function handleActSelect(actNumber) {
+  function markMailAsSeen(mailId) {
+    const seen = {
+      ...(playerProgress.desktop_mail_seen || {}),
+      [mailId]: true,
+    };
+
+    persistProgress({
+      ...playerProgress,
+      desktop_mail_seen: seen,
+    });
+  }
+
+  useEffect(() => {
+    if (view !== "desktop") return;
+
+    const nextMail = getNextDesktopMail(playerProgress);
+    if (!nextMail) return;
+
+    const delay = nextMail.id === "firstDesktop" ? 3000 : 800;
+    const timer = setTimeout(() => {
+      setMailPopup(nextMail);
+      markMailAsSeen(nextMail.id);
+    }, delay);
+
+    return () => clearTimeout(timer);
+  }, [view]);
+
+  function handleActSelect(actNumber, questionIndex = null) {
     setCurrentAct(actNumber);
+    setCurrentQuestion(typeof questionIndex === "number" ? questionIndex : null);
+
+    // Act 1/2 question folders already have per-question title screens in SceneView.
+    // Skip the legacy act-intro page to avoid duplicate intros.
+    if (typeof questionIndex === "number" && (actNumber === 1 || actNumber === 2)) {
+      setView("scene");
+      return;
+    }
+
     // Only show ActIntro if no scenes have been played yet in this act
     const actKey = `act${actNumber}`;
     const actScenes = playerProgress?.scenes_visited?.[actKey];
     const hasPlayedScene = actScenes && (
       (Array.isArray(actScenes.introCompleted) && actScenes.introCompleted.length > 0) ||
-      (typeof actScenes.qIdx === "number" && actScenes.qIdx > 0)
+      (Array.isArray(actScenes.completedQuestions) && actScenes.completedQuestions.length > 0)
     );
     if (!hasPlayedScene) {
       setView("act-intro");
@@ -89,6 +267,29 @@ export default function DesktopInterface({ playerData, onReturnToMenu, onAct3Sta
   function handleCloseScene() {
     setView("desktop");
     setCurrentAct(null);
+    setCurrentQuestion(null);
+  }
+
+  function handleQuestionComplete(actNumber, questionIndex, completedQuestions) {
+    const actKey = `act${actNumber}`;
+    const previousAct = playerProgress.scenes_visited?.[actKey] || {};
+    const updatedCompleted = Array.isArray(completedQuestions)
+      ? completedQuestions
+      : Array.from(new Set([...(previousAct.completedQuestions || []), questionIndex]));
+
+    const newProgress = {
+      ...playerProgress,
+      scenes_visited: {
+        ...playerProgress.scenes_visited,
+        [actKey]: {
+          ...previousAct,
+          completedQuestions: updatedCompleted,
+        },
+      },
+    };
+
+    persistProgress(newProgress);
+    handleCloseScene();
   }
 
   function handleActComplete(actNumber) {
@@ -105,11 +306,10 @@ export default function DesktopInterface({ playerData, onReturnToMenu, onAct3Sta
     persistProgress(newProgress);
     handleCloseScene();
 
-    // After Act 2, show evidence icon + popup after 5 seconds
+    // After Act 2, reveal the evidence folder and show the mail with the evidence preview.
     if (actNumber === 2) {
       setTimeout(() => {
         setEvidenceVisible(true);
-        setShowEvidencePopup(true);
       }, 5000);
     }
   }
@@ -125,6 +325,21 @@ export default function DesktopInterface({ playerData, onReturnToMenu, onAct3Sta
     };
 
     persistProgress(newProgress);
+  }
+
+  function handleOpenMail() {
+    const seenMails = getSeenDesktopMails(playerProgress);
+
+    if (seenMails.length > 0) {
+      setMailPopup(seenMails[seenMails.length - 1]);
+      return;
+    }
+
+    const nextMail = getNextDesktopMail(playerProgress);
+    if (nextMail) {
+      setMailPopup(nextMail);
+      markMailAsSeen(nextMail.id);
+    }
   }
 
   function openWindow(windowId) {
@@ -185,9 +400,11 @@ export default function DesktopInterface({ playerData, onReturnToMenu, onAct3Sta
     return (
       <SceneView
         actNumber={currentAct}
+        questionIndex={currentQuestion}
         playerProgress={playerProgress}
         onClose={handleCloseScene}
         onActComplete={handleActComplete}
+        onQuestionComplete={handleQuestionComplete}
         onProgressUpdate={handleProgressUpdate}
       />
     );
@@ -204,72 +421,241 @@ export default function DesktopInterface({ playerData, onReturnToMenu, onAct3Sta
       <div className="desktop-icons">
         <button
           className="desktop-icon"
-          onDoubleClick={() => openWindow("files")}
-          onClick={() => openWindow("files")}
+          style={{ left: "clamp(64px, 5vw, 96px)", top: "clamp(36px, 7vh, 64px)" }}
+          onDoubleClick={() => {
+            play("click");
+            openWindow("files");
+          }}
+          onClick={() => {
+            play("click");
+            openWindow("files");
+          }}
+          onMouseEnter={() => play("hover")}
         >
           <div className="desktop-icon-img">
-            <svg viewBox="0 0 48 48" width="48" height="48">
-              <path d="M4 8h16l4 4h20v28H4V8z" fill="#e8a735" />
-              <path d="M4 14h40v26H4V14z" fill="#ffc34d" />
-              <path d="M4 14h40v4H4z" fill="#e8a735" opacity="0.5" />
-            </svg>
+            <img src="/icons/Folder.png" alt="Case Files" />
           </div>
-          <span className="desktop-icon-label">Case Files</span>
+          <span className="desktop-icon-label">#2016-0307-CHRIS Footage</span>
         </button>
 
         <button
           className="desktop-icon"
-          onDoubleClick={() => openWindow("notes")}
-          onClick={() => openWindow("notes")}
+          style={{ left: "clamp(224px, 16vw, 320px)", top: "clamp(36px, 7vh, 64px)" }}
+          onDoubleClick={() => {
+            play("click");
+            openWindow("casedoc");
+          }}
+          onClick={() => {
+            play("click");
+            openWindow("casedoc");
+          }}
+          onMouseEnter={() => play("hover")}
         >
           <div className="desktop-icon-img">
-            <svg viewBox="0 0 48 48" width="48" height="48">
-              <rect x="8" y="4" width="32" height="40" rx="2" fill="#fff9e6" />
-              <rect x="8" y="4" width="32" height="6" fill="#7eb8da" />
-              <line x1="14" y1="18" x2="34" y2="18" stroke="#c0c0c0" strokeWidth="1" />
-              <line x1="14" y1="24" x2="34" y2="24" stroke="#c0c0c0" strokeWidth="1" />
-              <line x1="14" y1="30" x2="34" y2="30" stroke="#c0c0c0" strokeWidth="1" />
-              <line x1="14" y1="36" x2="28" y2="36" stroke="#c0c0c0" strokeWidth="1" />
-            </svg>
+            <img src="/icons/Document.png" alt="Case File" />
           </div>
-          <span className="desktop-icon-label">Detective Notes</span>
+          <span className="desktop-icon-label">#2016-0307-CHRIS Case File.pdf</span>
         </button>
 
         <button
           className="desktop-icon"
-          onDoubleClick={() => openWindow("casedoc")}
-          onClick={() => openWindow("casedoc")}
+          style={{ left: "clamp(64px, 5vw, 96px)", top: "clamp(184px, 29vh, 300px)" }}
+          onDoubleClick={() => {
+            play("click");
+            openWindow("notes");
+          }}
+          onClick={() => {
+            play("click");
+            openWindow("notes");
+          }}
+          onMouseEnter={() => play("hover")}
         >
           <div className="desktop-icon-img">
-            <svg viewBox="0 0 48 48" width="48" height="48">
-              <rect x="6" y="2" width="28" height="38" rx="2" fill="#e8dcc8" />
-              <rect x="14" y="8" width="28" height="38" rx="2" fill="#f5f0e6" />
-              <rect x="18" y="14" width="20" height="2" fill="#ccc" />
-              <rect x="18" y="20" width="20" height="2" fill="#ccc" />
-              <rect x="18" y="26" width="14" height="2" fill="#ccc" />
-              <rect x="18" y="32" width="18" height="2" fill="#ccc" />
-              <rect x="16" y="10" width="10" height="3" rx="1" fill="#8b2020" opacity="0.6" />
-            </svg>
+            <img src="/icons/Notes.png" alt="Case Notes" />
           </div>
-          <span className="desktop-icon-label">Case Brief</span>
+          <span className="desktop-icon-label">Case Notes.txt</span>
         </button>
 
         {evidenceVisible && (
           <button
             className="desktop-icon"
-            onDoubleClick={() => openWindow("evidence")}
-            onClick={() => openWindow("evidence")}
+            style={{ left: "clamp(64px, 5vw, 96px)", top: "clamp(320px, 47vh, 468px)" }}
+            onDoubleClick={() => {
+              play("click");
+              openWindow("evidence");
+            }}
+            onClick={() => {
+              play("click");
+              openWindow("evidence");
+            }}
+            onMouseEnter={() => play("hover")}
           >
             <div className="desktop-icon-img">
-              <svg viewBox="0 0 48 48" width="48" height="48">
-                <path d="M4 10h16l4 4h20v26H4V10z" fill="#e8a735" />
-                <path d="M4 16h40v24H4V16z" fill="#ffc34d" />
-                <path d="M4 16h40v4H4z" fill="#e8a735" opacity="0.5" />
-              </svg>
+              <img src="/icons/Lock.png" alt="Evidence" />
             </div>
             <span className="desktop-icon-label">Evidence</span>
           </button>
         )}
+
+        <button
+          className="desktop-icon"
+          style={{ left: "clamp(64px, 5vw, 96px)", top: "clamp(440px, 63vh, 640px)" }}
+          onDoubleClick={() => {
+            play("click");
+            openWindow("trash");
+          }}
+          onClick={() => {
+            play("click");
+            openWindow("trash");
+          }}
+          onMouseEnter={() => play("hover")}
+          type="button"
+        >
+          <div className="desktop-icon-img">
+            <img src="/icons/Bin.png" alt="Trash" />
+          </div>
+          <span className="desktop-icon-label">Trash</span>
+        </button>
+
+        <button
+          className="desktop-icon"
+          style={{ right: "clamp(360px, 28vw, 452px)", top: "clamp(36px, 7vh, 64px)" }}
+          onDoubleClick={() => {
+            play("click");
+            openWindow("wishlist");
+          }}
+          onClick={() => {
+            play("click");
+            openWindow("wishlist");
+          }}
+          onMouseEnter={() => play("hover")}
+          type="button"
+        >
+          <div className="desktop-icon-img">
+            <img src="/icons/Notes.png" alt="Wishlist" />
+          </div>
+          <span className="desktop-icon-label">Wishlist.txt</span>
+        </button>
+
+        <button
+          className="desktop-icon"
+          style={{ right: "clamp(212px, 16vw, 304px)", top: "clamp(36px, 7vh, 64px)" }}
+          onDoubleClick={() => {
+            play("click");
+            openWindow("brunson");
+          }}
+          onClick={() => {
+            play("click");
+            openWindow("brunson");
+          }}
+          onMouseEnter={() => play("hover")}
+          type="button"
+        >
+          <div className="desktop-icon-img">
+            <img src="/icons/Folder.png" alt="Brunson" />
+          </div>
+          <span className="desktop-icon-label">Brunson</span>
+        </button>
+
+        <button
+          className="desktop-icon"
+          style={{ right: "clamp(64px, 5vw, 156px)", top: "clamp(36px, 7vh, 64px)" }}
+          onDoubleClick={() => {
+            play("click");
+            openWindow("summer");
+          }}
+          onClick={() => {
+            play("click");
+            openWindow("summer");
+          }}
+          onMouseEnter={() => play("hover")}
+          type="button"
+        >
+          <div className="desktop-icon-img">
+            <img src="/icons/Folder.png" alt="Summer 2021" />
+          </div>
+          <span className="desktop-icon-label">Summer 2021</span>
+        </button>
+
+        <button
+          className="desktop-icon desktop-icon--round"
+          style={{ right: "clamp(212px, 16vw, 304px)", top: "clamp(184px, 29vh, 300px)" }}
+          onDoubleClick={() => {
+            play("click");
+            handleOpenMail();
+          }}
+          onClick={() => {
+            play("click");
+            handleOpenMail();
+          }}
+          onMouseEnter={() => play("hover")}
+          type="button"
+        >
+          <div className="desktop-icon-img">
+            <img src="/icons/Mail.png" alt="Mail" />
+          </div>
+          <span className="desktop-icon-label">Mail</span>
+        </button>
+
+        <button
+          className="desktop-icon desktop-icon--round"
+          style={{ right: "clamp(64px, 5vw, 156px)", top: "clamp(184px, 29vh, 300px)" }}
+          onDoubleClick={() => {
+            play("click");
+            openWindow("music");
+          }}
+          onClick={() => {
+            play("click");
+            openWindow("music");
+          }}
+          onMouseEnter={() => play("hover")}
+          type="button"
+        >
+          <div className="desktop-icon-img">
+            <img src="/icons/Music Player.png" alt="Music Player" />
+          </div>
+          <span className="desktop-icon-label">Music Player</span>
+        </button>
+
+        <button
+          className="desktop-icon"
+          style={{ right: "clamp(64px, 5vw, 156px)", top: "clamp(320px, 47vh, 468px)" }}
+          onDoubleClick={() => {
+            play("click");
+            openWindow("redditDraft");
+          }}
+          onClick={() => {
+            play("click");
+            openWindow("redditDraft");
+          }}
+          onMouseEnter={() => play("hover")}
+          type="button"
+        >
+          <div className="desktop-icon-img">
+            <img src="/icons/Notes.png" alt="Reddit Draft" />
+          </div>
+          <span className="desktop-icon-label">Reddit Draft.txt</span>
+        </button>
+
+        <button
+          className="desktop-icon"
+          style={{ right: "clamp(212px, 16vw, 304px)", top: "clamp(320px, 47vh, 468px)" }}
+          onDoubleClick={() => {
+            play("click");
+            openWindow("dino");
+          }}
+          onClick={() => {
+            play("click");
+            openWindow("dino");
+          }}
+          onMouseEnter={() => play("hover")}
+          type="button"
+        >
+          <div className="desktop-icon-img">
+            <img src="/icons/Image.png" alt="Browser" />
+          </div>
+          <span className="desktop-icon-label">Browser?.exe</span>
+        </button>
       </div>
 
       {/* Windows */}
@@ -311,6 +697,54 @@ export default function DesktopInterface({ playerData, onReturnToMenu, onAct3Sta
         </div>
       )}
 
+      {openWindows.includes("wishlist") && (
+        <div
+          className={`desktop-window desktop-window--notes ${activeWindow === "wishlist" ? "active" : ""}`}
+          onClick={() => focusWindow("wishlist")}
+          style={{
+            zIndex: activeWindow === "wishlist" ? 200 : 100,
+            transform: `translate(${notesDrag.pos.x}px, ${notesDrag.pos.y}px)`,
+            position: "fixed",
+            top: 0,
+            left: 0,
+          }}
+        >
+          <Notepad
+            onClose={() => closeWindow("wishlist")}
+            onDragMouseDown={notesDrag.onMouseDown}
+            title="Wishlist - Notepad"
+            iconSrc="/icons/Document.png"
+            storageKey="friEND_wishlist"
+            initialText={WISHLIST_DEFAULT_TEXT}
+            placeholder=""
+          />
+        </div>
+      )}
+
+      {openWindows.includes("redditDraft") && (
+        <div
+          className={`desktop-window desktop-window--notes ${activeWindow === "redditDraft" ? "active" : ""}`}
+          onClick={() => focusWindow("redditDraft")}
+          style={{
+            zIndex: activeWindow === "redditDraft" ? 200 : 100,
+            transform: `translate(${redditDraftDrag.pos.x}px, ${redditDraftDrag.pos.y}px)`,
+            position: "fixed",
+            top: 0,
+            left: 0,
+          }}
+        >
+          <Notepad
+            onClose={() => closeWindow("redditDraft")}
+            onDragMouseDown={redditDraftDrag.onMouseDown}
+            title="Reddit Draft - Notepad"
+            iconSrc="/icons/Notes.png"
+            storageKey="friEND_reddit_draft"
+            initialText={REDDIT_DRAFT_TEXT}
+            placeholder=""
+          />
+        </div>
+      )}
+
       {openWindows.includes("casedoc") && (
         <CaseDocument onClose={() => closeWindow("casedoc")} />
       )}
@@ -334,8 +768,99 @@ export default function DesktopInterface({ playerData, onReturnToMenu, onAct3Sta
         </div>
       )}
 
-      {showEvidencePopup && (
-        <EvidencePopup onDismiss={() => setShowEvidencePopup(false)} />
+      {openWindows.includes("brunson") && (
+        <div
+          className={`desktop-window desktop-window--brunson ${activeWindow === "brunson" ? "active" : ""}`}
+          onClick={() => focusWindow("brunson")}
+          style={{
+            zIndex: activeWindow === "brunson" ? 200 : 100,
+            transform: `translate(${brunsonDrag.pos.x}px, ${brunsonDrag.pos.y}px)`,
+            position: "fixed",
+            top: 0,
+            left: 0,
+          }}
+        >
+          <BrunsonGallery
+            onClose={() => closeWindow("brunson")}
+            onDragMouseDown={brunsonDrag.onMouseDown}
+          />
+        </div>
+      )}
+
+      {openWindows.includes("summer") && (
+        <div
+          className={`desktop-window desktop-window--brunson ${activeWindow === "summer" ? "active" : ""}`}
+          onClick={() => focusWindow("summer")}
+          style={{
+            zIndex: activeWindow === "summer" ? 200 : 100,
+            transform: `translate(${summerDrag.pos.x}px, ${summerDrag.pos.y}px)`,
+            position: "fixed",
+            top: 0,
+            left: 0,
+          }}
+        >
+          <SummerGallery
+            onClose={() => closeWindow("summer")}
+            onDragMouseDown={summerDrag.onMouseDown}
+          />
+        </div>
+      )}
+
+      {openWindows.includes("trash") && (
+        <div
+          className={`desktop-window desktop-window--brunson ${activeWindow === "trash" ? "active" : ""}`}
+          onClick={() => focusWindow("trash")}
+          style={{
+            zIndex: activeWindow === "trash" ? 200 : 100,
+            transform: `translate(${trashDrag.pos.x}px, ${trashDrag.pos.y}px)`,
+            position: "fixed",
+            top: 0,
+            left: 0,
+          }}
+        >
+          <TrashGallery
+            onClose={() => closeWindow("trash")}
+            onDragMouseDown={trashDrag.onMouseDown}
+          />
+        </div>
+      )}
+
+      <div
+        className={`desktop-window desktop-window--music ${activeWindow === "music" ? "active" : ""}`}
+        onClick={() => focusWindow("music")}
+        style={{
+          zIndex: activeWindow === "music" ? 200 : 100,
+          transform: `translate(${musicDrag.pos.x}px, ${musicDrag.pos.y}px)`,
+          position: "fixed",
+          top: 0,
+          left: 0,
+          display: openWindows.includes("music") ? "block" : "none",
+        }}
+      >
+        <MusicPlayer
+          onClose={() => closeWindow("music")}
+          masterVolume={desktopVolume / 100}
+          onDragMouseDown={musicDrag.onMouseDown}
+        />
+      </div>
+
+      {openWindows.includes("dino") && (
+        <div
+          className={`desktop-window desktop-window--dino ${activeWindow === "dino" ? "active" : ""}`}
+          onClick={() => focusWindow("dino")}
+          style={{
+            zIndex: activeWindow === "dino" ? 200 : 100,
+            transform: `translate(${dinoDrag.pos.x}px, ${dinoDrag.pos.y}px)`,
+            position: "fixed",
+            top: 0,
+            left: 0,
+          }}
+        >
+          <DinoGameModal
+            onClose={() => closeWindow("dino")}
+            onDragMouseDown={dinoDrag.onMouseDown}
+          />
+        </div>
       )}
 
       {showSuspectSelect && (
@@ -345,13 +870,51 @@ export default function DesktopInterface({ playerData, onReturnToMenu, onAct3Sta
         />
       )}
 
+      {mailPopup && (
+        <EmailModal
+          emails={getSeenDesktopMails(playerProgress)}
+          activeMailId={mailPopup.id}
+          onClose={() => setMailPopup(null)}
+        />
+      )}
+
       {/* Taskbar */}
       <div className="taskbar">
         <div className="taskbar-left">
-          <button className="taskbar-start" onClick={onReturnToMenu}>
-            <span className="start-icon">⊞</span>
-            <span className="start-text">START</span>
-          </button>
+          <div className="taskbar-start-wrap">
+            {showStartMenu && (
+              <div className="taskbar-start-menu" role="menu" aria-label="Start menu">
+                <button
+                  className="taskbar-start-menu-item"
+                  type="button"
+                  onClick={() => setShowStartMenu(false)}
+                >
+                  Back
+                </button>
+                <button
+                  className="taskbar-start-menu-item"
+                  type="button"
+                  onClick={() => {
+                    setShowStartMenu(false);
+                    onShutdownToMenu?.();
+                  }}
+                >
+                  Shut Down
+                </button>
+              </div>
+            )}
+
+            <button
+              className="taskbar-start"
+              type="button"
+              onClick={() => setShowStartMenu(prev => !prev)}
+              aria-expanded={showStartMenu}
+              aria-label="Open start menu"
+            >
+              <img src="/icons/PC.png" alt="Start" className="start-icon-img" />
+              <span className="start-text">MENU</span>
+            </button>
+          </div>
           <div className="taskbar-divider"></div>
           {openWindows.map(w => (
             <button
@@ -359,14 +922,91 @@ export default function DesktopInterface({ playerData, onReturnToMenu, onAct3Sta
               className={`taskbar-window-btn ${activeWindow === w ? "active" : ""}`}
               onClick={() => focusWindow(w)}
             >
-              {w === "files" ? "📁 Case Files" : w === "notes" ? "📝 Notes" : w === "evidence" ? "🔒 Evidence" : "📄 Case Brief"}
+              {w === "files" ? (
+                <>
+                  <img src="/icons/Folder.png" alt="" className="taskbar-window-icon" />
+                  <span>Case Files</span>
+                </>
+              ) : w === "notes" ? (
+                <>
+                  <img src="/icons/Notes.png" alt="" className="taskbar-window-icon" />
+                  <span>Notes</span>
+                </>
+              ) : w === "wishlist" ? (
+                <>
+                  <img src="/icons/Document.png" alt="" className="taskbar-window-icon" />
+                  <span>Wishlist</span>
+                </>
+              ) : w === "evidence" ? (
+                <>
+                  <img src="/icons/Lock.png" alt="" className="taskbar-window-icon" />
+                  <span>Evidence</span>
+                </>
+              ) : w === "brunson" ? (
+                <>
+                  <img src="/icons/Folder.png" alt="" className="taskbar-window-icon" />
+                  <span>Brunson</span>
+                </>
+              ) : w === "summer" ? (
+                <>
+                  <img src="/icons/Folder.png" alt="" className="taskbar-window-icon" />
+                  <span>Summer 2021</span>
+                </>
+              ) : w === "trash" ? (
+                <>
+                  <img src="/icons/Bin.png" alt="" className="taskbar-window-icon" />
+                  <span>Trash</span>
+                </>
+              ) : w === "redditDraft" ? (
+                <>
+                  <img src="/icons/Notes.png" alt="" className="taskbar-window-icon" />
+                  <span>Reddit Draft</span>
+                </>
+              ) : w === "music" ? (
+                <>
+                  <img src="/icons/Music Player.png" alt="" className="taskbar-window-icon" />
+                  <span>Music Player</span>
+                </>
+              ) : w === "dino" ? (
+                <>
+                  <img src="/icons/Image.png" alt="" className="taskbar-window-icon" />
+                  <span>Browser Game</span>
+                </>
+              ) : (
+                <>
+                  <img src="/icons/Document.png" alt="" className="taskbar-window-icon" />
+                  <span>Case Brief</span>
+                </>
+              )}
             </button>
           ))}
         </div>
         <div className="taskbar-right">
           <div className="taskbar-tray">
-            <span className="tray-icon">🔊</span>
-            <span className="tray-icon">🔌</span>
+            <div className="taskbar-volume-wrap" ref={volumePopupRef}>
+              {showVolumePopup && (
+                <div className="taskbar-volume-popup" role="dialog" aria-label="Volume control">
+                  <input
+                    type="range"
+                    min="0"
+                    max="100"
+                    value={desktopVolume}
+                    onChange={(event) => setDesktopVolume(Number(event.target.value))}
+                    className="taskbar-volume-slider"
+                    aria-label="Volume"
+                  />
+                </div>
+              )}
+              <button
+                className="tray-icon tray-icon-btn"
+                type="button"
+                aria-label="Toggle volume slider"
+                onClick={() => setShowVolumePopup(prev => !prev)}
+              >
+                <img src="/icons/Volume.png" alt="Volume" className="tray-icon-img" />
+              </button>
+            </div>
+            <span className="tray-icon"><img src="/icons/Battery.png" alt="Battery" className="tray-icon-img" /></span>
           </div>
           <div className="taskbar-clock">
             <div className="clock-time">{clock.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</div>

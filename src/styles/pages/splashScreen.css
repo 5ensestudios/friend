@@ -1,7 +1,7 @@
 .splash-screen {
   position: fixed;
   inset: 0;
-  background: #000;
+  background: #141414;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -11,9 +11,10 @@
   transition: opacity 0.7s ease;
 }
 
-.splash-in  { opacity: 0; animation: splashFadeIn  0.7s ease forwards; }
+
+.splash-in  { opacity: 0; animation: splashFadeIn 1.2s cubic-bezier(0.4,0,0.2,1) forwards; }
 .splash-hold { opacity: 1; }
-.splash-out { opacity: 1; animation: splashFadeOut 0.7s ease forwards; }
+.splash-out { opacity: 1; animation: splashFadeOut 1.2s cubic-bezier(0.4,0,0.2,1) forwards; }
 
 @keyframes splashFadeIn {
   from { opacity: 0; }
@@ -34,7 +35,8 @@
   width: 100%;
 }
 
-/* Studio logo slide — white card on black */
+/* ───────── LOGO SLIDES ───────── */
+
 .splash-logo-wrap {
   display: flex;
   flex-direction: column;
@@ -42,74 +44,60 @@
   gap: 18px;
 }
 
-.splash-logo-studio .splash-logo-img-studio {
-  width: 300px;
+.splash-logo-img-studio,
+.splash-logo-img-title {
+  width: var(--logo-splash-width);
+  max-width: var(--logo-splash-max);
   height: auto;
 }
 
-/* Game title logo slide — dark, larger */
-.splash-logo-title .splash-logo-img-title {
-  width: 520px;
-  max-width: 80vw;
-  height: auto;
-  filter: brightness(1.0);
-}
 
-.splash-sub {
-  font-family: 'Glacial Indifference', sans-serif;
-  font-size: 10px;
-  letter-spacing: 5px;
-  text-transform: uppercase;
-  color: #555;
-  margin: 0;
-}
+/* ───────── TEXT SLIDES ───────── */
 
-/* Notice / copyright slide */
-.splash-notice {
+.splash-text {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 14px;
-  max-width: 560px;
+  gap: 20px;
+  max-width: 800px;
   text-align: center;
   padding: 0 24px;
 }
 
-.splash-notice-title {
-  font-family: 'Brunson Rough', sans-serif;
-  font-size: 50px;
-  letter-spacing: 10px;
-  color: #e8dcc8;
-  margin: 0 0 6px;
-}
-
-.splash-notice-line {
+.splash-text-line {
   font-family: 'Glacial Indifference', sans-serif;
-  font-size: 11px;
-  letter-spacing: 1.5px;
-  color: #555;
+  font-size: 20px;
+  letter-spacing: 0;
+  line-height: 1.4;
+  color: white;
   margin: 0;
-  line-height: 1.7;
+  text-transform: none;
 }
 
-.splash-notice-fullscreen {
+/* Legal slide */
+.splash-text-legal {
+  opacity: 0.9;
+}
+
+/* Fullscreen slide */
+.splash-text-fullscreen {
   font-family: 'Glacial Indifference', sans-serif;
-  font-size: 11px;
-  letter-spacing: 3px;
-  text-transform: uppercase;
-  color: #3d655e;
-  margin: 12px 0 0;
-  border: 1px solid rgba(61, 101, 94, 0.4);
-  padding: 8px 20px;
+  font-size: 20px;
+  letter-spacing: 0;
+  line-height: 1.4;
+  color: white;
+
+  border: none;
+  padding: 0;
+  animation: subtlePulse 2.5s ease-in-out infinite;
 }
 
-/* Skip hint */
-.splash-skip {
-  font-family: 'Glacial Indifference', sans-serif;
-  font-size: 9px;
-  letter-spacing: 3px;
-  text-transform: uppercase;
-  color: #333;
-  margin: 0 0 20px;
+/* subtle cinematic pulse */
+@keyframes subtlePulse {
+  0%, 100% { opacity: 0.6; }
+  50% { opacity: 1; }
 }
 
+.splash-experience {
+  background: var(--color-primary);
+}

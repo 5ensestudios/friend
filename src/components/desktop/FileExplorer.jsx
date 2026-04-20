@@ -2,6 +2,48 @@ import { useState, useEffect } from "react";
 import FileItem from "./FileItem";
 import "../../styles/components/fileExplorer.css";
 
+const FILE_TYPE_LABEL = "File folder";
+
+const ACT_QUESTIONS = {
+  1: [
+    "#1",
+    "#2",
+    "#3",
+    "#4",
+  ],
+  2: [
+    "#1",
+    "#2",
+    "#3",
+  ],
+};
+
+const QUESTION_FILE_SIZES = {
+  1: ["512 MB", "128 MB", "256 MB", "128 MB"],
+  2: ["150 MB", "210 MB", "240 MB"],
+};
+
+function buildQuestionFolders(actNumber) {
+  const questions = ACT_QUESTIONS[actNumber] || [];
+  const sizes = QUESTION_FILE_SIZES[actNumber] || [];
+  return questions.map((label, index) => ({
+    id: `act${actNumber}_q${index + 1}`,
+    name: `${label}`,
+    type: "folder",
+    icon: "/icons/Folder.png",
+    act_number: actNumber,
+    question_index: index,
+    
+    t: actNumber,
+    required_question: index > 0 ? index - 1 : undefined,
+    unlocks_after_question: index > 0 ? index - 1 : undefined,
+    file_type: FILE_TYPE_LABEL,
+    file_size: sizes[index] || "128 MB",
+    created_date: "2016-03-07",
+    description: label,
+  }));
+}
+
 export default function FileExplorer({
   playerProgress,
   onActSelect,
@@ -17,85 +59,129 @@ export default function FileExplorer({
     loadFileSystem();
   }, []);
 
+  useEffect(() => {
+    const items = currentFolder?.children || fileStructure?.rootFolders || [];
+    if (!items.length) {
+      setSelectedFile(null);
+      return;
+    }
+
+    const stillVisible = selectedFile && items.some(item => item.id === selectedFile.id);
+    if (!stillVisible) {
+      setSelectedFile(items[0]);
+    }
+  }, [currentFolder, fileStructure, selectedFile]);
+
   async function loadFileSystem() {
     // Hardcoded file structure for now
     const structure = {
       rootFolders: [
         {
-          id: "acts_folder",
-          name: "CASE FILES",
+          id: "introductory_act",
+          name: "4:00:37 AM",
+          type: "file",
+          icon: "/icons/Folder.png",
+          required_act: 0,
+          act_number: 0,
+          file_type: FILE_TYPE_LABEL,
+          property_name: "4:00:37 AM",
+          file_size: "400 MB",
+          created_date: "2016-03-07",
+          description: "Initial interview statements from all suspects",
+        },
+        {
+          id: "act1_folder",
+          name: "4:12:10 AM",
           type: "folder",
-          icon: "📁",
-          locked: false,
-          children: [
-            {
-              id: "introductory_act",
-              name: "INTRODUCTORY - The First Interviews",
-              type: "file",
-              icon: "📄",
-              locked: false,
-              required_act: 0,
-              act_number: 0,
-              file_size: "2.4 MB",
-              created_date: "2016-03-07",
-              description: "Initial interview statements from all suspects",
-            },
-            {
-              id: "act1_file",
-              name: "ACT I - The Incident",
-              type: "file",
-              icon: "📄",
-              locked: playerProgress.current_act < 1,
-              required_act: 1,
-              unlocks_after_act: 0,
-              act_number: 1,
-              file_size: "5.8 MB",
-              created_date: "2016-03-07",
-              description: "Detailed recounts of what happened last night",
-            },
-            {
-              id: "act2_file",
-              name: "ACT II - The Motives",
-              type: "file",
-              icon: "📄",
-              locked: playerProgress.current_act < 2,
-              required_act: 2,
-              unlocks_after_act: 1,
-              act_number: 2,
-              file_size: "4.2 MB",
-              created_date: "2016-03-07",
-              description: "Background and motivations of each suspect",
-            },
-            {
-              id: "act3_file",
-              name: "ACT III - The Truth",
-              type: "file",
-              icon: "📄",
-              locked: playerProgress.current_act < 3,
-              required_act: 3,
-              unlocks_after_act: 2,
-              act_number: 3,
-              file_size: "3.1 MB",
-              created_date: "2016-03-07",
-              description: "Confrontation and truth revelation",
-            },
-          ],
+          icon: "/icons/Folder.png",
+          required_act: 1,
+          unlocks_after_act: 0,
+          act_number: 1,
+          file_type: FILE_TYPE_LABEL,
+          property_name: "4:12:10 AM",
+          file_size: "1 GB",
+          created_date: "2016-03-07",
+          description: "Detailed recounts of what happened last night",
+          children: buildQuestionFolders(1),
+        },
+        {
+          id: "act2_folder",
+          name: "5:08:07 AM",
+          type: "folder",
+          icon: "/icons/Folder.png",
+          required_act: 2,
+          unlocks_after_act: 1,
+          act_number: 2,
+          file_type: FILE_TYPE_LABEL,
+          property_name: "5:08:07 AM",
+          file_size: "600 MB",
+          created_date: "2016-03-07",
+          description: "Background and motivations of each suspect",
+          children: buildQuestionFolders(2),
+        },
+        {
+          id: "act3_file",
+          name: "???",
+          type: "file",
+          icon: "/icons/Document.png",
+          required_act: 3,
+          unlocks_after_act: 2,
+          act_number: 3,
+          file_type: FILE_TYPE_LABEL,
+          property_name: "????",
+          file_size: "300 MB",
+          created_date: "2016-03-07",
+          description: "Confrontation and truth revelation",
         },
       ],
     };
     setFileStructure(structure);
   }
 
+  function getCompletedQuestions(actNumber) {
+    return playerProgress?.scenes_visited?.[`act${actNumber}`]?.completedQuestions || [];
+  }
+
   function isFileLocked(file) {
-    if (file.required_act === undefined) return false;
-    return playerProgress.current_act < file.required_act;
+    if (file.required_act !== undefined && playerProgress.current_act < file.required_act) {
+      return true;
+    }
+
+    if (file.required_question !== undefined && file.act_number !== undefined) {
+      const completedQuestions = getCompletedQuestions(file.act_number);
+      return !completedQuestions.includes(file.required_question);
+    }
+
+    return false;
+  }
+
+  function getLockMessage(file) {
+    if (file.required_act !== undefined && playerProgress.current_act < file.required_act) {
+      const requiredAct = file.unlocks_after_act ?? Math.max(0, file.required_act - 1);
+      return `⚠️ LOCKED\n\nYou must complete ACT ${requiredAct} first.`;
+    }
+
+    if (file.required_question !== undefined && file.act_number !== undefined) {
+      const completedQuestions = getCompletedQuestions(file.act_number);
+      if (completedQuestions.includes(file.required_question)) {
+        return null;
+      }
+      const requiredQuestion = file.required_question + 1;
+      return `⚠️ LOCKED\n\nYou must complete Question #${requiredQuestion} first.`;
+    }
+
+    return null;
   }
 
   function handleFileClick(file) {
     if (isFileLocked(file)) {
-      alert(
-        `⚠️ LOCKED\n\nYou must complete ACT ${file.unlocks_after_act} first.`
-      );
+      const lockMessage = getLockMessage(file);
+      alert(lockMessage);
+      return;
+    }
+
+    if (file.question_index !== undefined && file.act_number !== undefined) {
+      onActSelect(file.act_number, file.question_index);
       return;
     }
 
@@ -131,7 +217,7 @@ export default function FileExplorer({
             →
           </button>
           <span className="window-title">
-            {currentFolder ? currentFolder.name : "CASE FILES"}
+            {currentFolder ? currentFolder.name : "#2016-0307-CHRIS Footage"}
           </span>
         </div>
         <button
@@ -159,31 +245,35 @@ export default function FileExplorer({
           )}
         </div>
 
-        {selectedFile && (
-          <div className="file-preview">
-            <div className="preview-header">Properties</div>
-            <div className="preview-content">
-              <p>
-                <strong>Name:</strong> {selectedFile.name}
-              </p>
-              {selectedFile.file_size && (
+        <div className="file-preview">
+          <div className="preview-header">Properties</div>
+          <div className="preview-content">
+            {selectedFile ? (
+              <>
                 <p>
-                  <strong>Size:</strong> {selectedFile.file_size}
+                  <span className="preview-label">Name:</span> <span className="preview-value">{selectedFile.property_name || selectedFile.name}</span>
                 </p>
-              )}
-              {selectedFile.created_date && (
-                <p>
-                  <strong>Date:</strong> {selectedFile.created_date}
-                </p>
-              )}
-              {selectedFile.description && (
-                <p>
-                  <strong>Description:</strong> {selectedFile.description}
-                </p>
-              )}
-            </div>
+                {selectedFile.created_date && (
+                  <p>
+                    <span className="preview-label">Date Modified:</span> <span className="preview-value">{selectedFile.created_date}</span>
+                  </p>
+                )}
+                {(selectedFile.file_type || selectedFile.type) && (
+                  <p>
+                    <span className="preview-label">File Type:</span> <span className="preview-value">{selectedFile.file_type || selectedFile.type}</span>
+                  </p>
+                )}
+                {selectedFile.file_size && (
+                  <p>
+                    <span className="preview-label">Size:</span> <span className="preview-value">{selectedFile.file_size}</span>
+                  </p>
+                )}
+              </>
+            ) : (
+              <p>Select a folder to view its properties.</p>
+            )}
           </div>
-        )}
+        </div>
       </div>
     </div>
   );

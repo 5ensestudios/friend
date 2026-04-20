@@ -10,7 +10,7 @@
   align-items: center;
   justify-content: center;
   padding: 60px 40px;
-  animation: introFadeIn 0.8s ease-out;
+  animation: introFadeIn 1.8s ease-out;
   transition: opacity 0.7s ease;
 }
 
@@ -23,53 +23,144 @@
   to   { opacity: 1; }
 }
 
+/* ═══════════════════════════════════════════
+   Content Wrapper
+   ═══════════════════════════════════════════ */
+
 .case-intro-content {
   max-width: 760px;
   width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
 }
+
+/* ═══════════════════════════════════════════
+   Slide System (NEW)
+   ═══════════════════════════════════════════ */
+
+.case-intro-slide {
+  opacity: 0;
+  transform: translateY(10px) scale(0.98);
+  filter: blur(8px);
+  transition:
+    opacity 1.2s ease,
+    transform 1.4s cubic-bezier(0.22, 1, 0.36, 1),
+    filter 1.4s ease;
+}
+
+.case-intro-slide.fade-in {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+  filter: blur(0);
+}
+
+.case-intro-slide.fade-out {
+  opacity: 0;
+}
+
+/* ═══════════════════════════════════════════
+   Text Styles
+   ═══════════════════════════════════════════ */
+
 
 .case-intro-line {
   font-family: var(--font-body);
-  font-size: 14px;
-  line-height: 1.85;
-  color: #7a7a70;
+  font-size: 22px;
+  line-height: 1.4;
+  color: white;
   margin: 0 0 2px;
   font-weight: 400;
-  white-space: pre-wrap;
-  min-height: 1.85em;
+  white-space: pre-line;
+  min-height: 1.4em;
+  letter-spacing: 0;
+
+  text-align: left; /* KEY CHANGE */
 }
 
-.case-intro-line--header {
-  font-size: 12px;
-  letter-spacing: 2px;
-  color: #3d655e;
-  font-weight: 700;
-  margin-bottom: 6px;
+/* Fixed title card */
+.case-intro-title {
+  margin: 0 0 16px;
+  font-family: var(--font-heading);
+  font-size: clamp(64px, 12vw, 140px);
+  letter-spacing: 0.08em;
+  line-height: 1;
+  color: #ffffff;
 }
 
-.case-intro-line:has(br) {
-  min-height: 0.9em;
+.case-intro-subtitle {
+  margin: 0 0 12px;
+  font-family: var(--font-body);
+  font-size: clamp(18px, 2.4vw, 24px);
+  line-height: 1.4;
+  color: #ffffff;
+  opacity: 0.9;
 }
 
-.case-intro-proceed {
-  display: block;
-  margin-top: 48px;
-  background: transparent;
-  border: none;
-  border-bottom: 1px solid rgba(61, 101, 94, 0.4);
-  color: rgba(61, 101, 94, 1);
-  var(--font-body);
-  font-size: 14px;
-  letter-spacing: 5px;
-  text-transform: lowercase;
-  padding: 6px 0;
-  cursor: pointer;
-  animation: tapPulse 2s ease-in-out infinite;
-  transition: color 0.2s, border-color 0.2s;
+.case-intro-desc {
+  margin: 0;
+  font-family: var(--font-body);
+  font-size: clamp(14px, 2vw, 18px);
+  line-height: 1.4;
+  color: #ffffff;
+  opacity: 0.85;
 }
 
-.case-intro-proceed:hover {
-  color: #3d655e;
-  border-color: #3d655e;
+
+/* Title Slide (Slide 1) */
+.case-intro-line.title {
+  font-family: var(--font-heading);
+  font-size: 140px;
+  letter-spacing: 0.3em;
+  text-align: center;
+  color: white;
+  opacity: 0;
+  transform: translateY(32px);
+  animation: titleFadeIn 1.6s cubic-bezier(0.4,0,0.2,1) forwards;
 }
 
+@keyframes titleFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(32px);
+  }
+  60% {
+    opacity: 1;
+    transform: translateY(-4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+
+
+.case-intro--title {
+  background: linear-gradient(90deg, #2f4b4b, #1f3434);
+}
+
+.case-intro--dark {
+  background: #141414;
+}
+
+/* Optional: Case file feel (Slide 4 subtle tweak) */
+.case-intro-line:last-child {
+  opacity: 0.85;
+  letter-spacing: 0.04em;
+}
+
+
+/* ═══════════════════════════════════════════
+   Pulse Animation
+   ═══════════════════════════════════════════ */
+
+@keyframes tapPulse {
+  0%, 100% {
+    opacity: 0.6;
+  }
+  50% {
+    opacity: 1;
+  }
+}

@@ -6,6 +6,9 @@ export default function FileItem({
   isLocked,
 }) {
   const isFolder = file.type === "folder";
+  const iconSrc = isLocked
+    ? "/icons/Lock.png"
+    : file.icon || (isFolder ? "/icons/Folder.png" : "/icons/Document.png");
 
   return (
     <div
@@ -17,7 +20,7 @@ export default function FileItem({
       title={file.description || file.name}
     >
       <div className="item-icon">
-        {isLocked ? "🔒" : file.icon || (isFolder ? "📁" : "📄")}
+        <img src={iconSrc} alt="" className="item-icon-img" />
       </div>
       <div className="item-name">{file.name}</div>
     </div>

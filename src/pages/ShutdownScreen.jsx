@@ -1,10 +1,15 @@
 import { useEffect, useState } from "react";
+import { useSound } from "../hooks/useSound";
 import "../styles/pages/shutdownScreen.css";
 
 export default function ShutdownScreen({ onDone }) {
   const [phase, setPhase] = useState("bright"); // 'bright' | 'collapse' | 'line' | 'done'
+  const { play } = useSound();
 
   useEffect(() => {
+    // Play boot screen OFF sound when shutdown starts
+    play("bootScreenOff");
+
     // Phase 1: bright hold with scanlines (0.4s)
     const t1 = setTimeout(() => setPhase("collapse"), 400);
     // Phase 2: collapse to horizontal line (0.8s)
@@ -17,7 +22,7 @@ export default function ShutdownScreen({ onDone }) {
       clearTimeout(t2);
       clearTimeout(t3);
     };
-  }, [onDone]);
+  }, [onDone, play]);
 
   return (
     <div className={`shutdown-screen shutdown-${phase}`}>

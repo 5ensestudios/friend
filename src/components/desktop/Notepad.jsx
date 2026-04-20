@@ -1,26 +1,39 @@
 import { useState, useEffect } from "react";
 import "../../styles/components/notepad.css";
 
-export default function Notepad({ onClose, onDragMouseDown }) {
+export default function Notepad({
+  onClose,
+  onDragMouseDown,
+  title = "Detective Notes - Notepad",
+  iconSrc = "/icons/Notes.png",
+  storageKey = "friEND_notes",
+  initialText = "",
+  placeholder = "Write your investigation notes here...",
+}) {
   const [text, setText] = useState("");
 
   useEffect(() => {
-    const saved = localStorage.getItem("friEND_notes");
-    if (saved) setText(saved);
-  }, []);
+    const saved = localStorage.getItem(storageKey);
+    if (saved !== null) {
+      setText(saved);
+      return;
+    }
+    setText(initialText);
+    localStorage.setItem(storageKey, initialText);
+  }, [storageKey, initialText]);
 
   function handleChange(e) {
     const value = e.target.value;
     setText(value);
-    localStorage.setItem("friEND_notes", value);
+    localStorage.setItem(storageKey, value);
   }
 
   return (
     <div className="notepad-window">
       <div className="notepad-header">
         <div className="notepad-title-bar" onMouseDown={onDragMouseDown} style={{ cursor: "grab" }}>
-          <span className="notepad-title-icon">📝</span>
-          <span className="notepad-title">Detective Notes - Notepad</span>
+          <span className="notepad-title-icon"><img src={iconSrc} alt="Notes" className="notepad-title-icon-img" /></span>
+          <span className="notepad-title">{title}</span>
         </div>
         <div className="notepad-controls">
           <button className="notepad-btn notepad-minimize">─</button>
@@ -40,7 +53,7 @@ export default function Notepad({ onClose, onDragMouseDown }) {
           className="notepad-textarea"
           value={text}
           onChange={handleChange}
-          placeholder="Write your investigation notes here..."
+          placeholder={placeholder}
           spellCheck={false}
         />
       </div>

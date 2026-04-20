@@ -129,7 +129,7 @@ export default function LoginScreen({
               <input
                 className="login-input"
                 type="text"
-                placeholder="In-Game Name (IGN)"
+                placeholder="Username"
                 value={ign}
                 onChange={e => { setIgn(e.target.value); setError(""); }}
                 maxLength={20}
@@ -137,7 +137,7 @@ export default function LoginScreen({
               <input
                 className="login-input"
                 type="email"
-                placeholder="Email"
+                placeholder="E-mail"
                 value={email}
                 onChange={e => { setEmail(e.target.value); setError(""); }}
               />
@@ -151,7 +151,7 @@ export default function LoginScreen({
             </div>
             {error && <p className="login-error">{error}</p>}
             <button className="login-signin-btn" onClick={handleSubmit} disabled={isLoading}>
-              {isLoading ? "Creating..." : "Start Game"}
+              {isLoading ? "Creating..." : "Continue"}
             </button>
           </>
         ) : (
@@ -180,7 +180,7 @@ export default function LoginScreen({
             </div>
             {error && <p className="login-error">{error}</p>}
             <button className="login-signin-btn" onClick={handleSubmit} disabled={isLoading}>
-              {isLoading ? "Signing In..." : "Sign In"}
+              {isLoading ? "Signing In..." : "Continue"}
             </button>
           </>
         )}

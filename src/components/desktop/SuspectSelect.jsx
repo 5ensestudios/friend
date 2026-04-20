@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useSound } from "../../hooks/useSound";
 import "../../styles/components/suspectSelect.css";
 
 const SUSPECTS = [
@@ -11,9 +12,11 @@ const SUSPECTS = [
 export default function SuspectSelect({ onSelect, onCancel }) {
   const [selected, setSelected] = useState(null);
   const [confirming, setConfirming] = useState(false);
+  const { play } = useSound();
 
   function handleConfirm() {
     if (!selected) return;
+    play("click");
     setConfirming(true);
     setTimeout(() => onSelect(selected), 600);
   }
@@ -29,7 +32,14 @@ export default function SuspectSelect({ onSelect, onCancel }) {
             <button
               key={s.id}
               className={`suspect-card${selected === s.id ? " selected" : ""}`}
-              onClick={() => setSelected(s.id)}
+              onClick={() => {
+                play("click");
+                setSelected(s.id);
+              }}
+              onMouseEnter={() => {
+                play("hover");
+                setSelected(s.id);
+              }}
             >
               <div className="suspect-card-inner">
                 <img src={s.img} alt={s.name} />
@@ -40,7 +50,15 @@ export default function SuspectSelect({ onSelect, onCancel }) {
         </div>
 
         <div className="suspect-select-actions">
-          <button className="suspect-cancel-btn" onClick={onCancel}>GO BACK</button>
+          <button
+            className="suspect-cancel-btn"
+            onClick={() => {
+              play("click");
+              onCancel();
+            }}
+          >
+            GO BACK
+          </button>
           <button
             className={`suspect-confirm-btn${selected ? " enabled" : ""}`}
             onClick={handleConfirm}

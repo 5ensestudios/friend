@@ -1,0 +1,80 @@
+/* ═══════════════════════════════════════════
+   Mobile Warning Screen
+   ═══════════════════════════════════════════ */
+
+.mobile-warning {
+  position: fixed;
+  inset: 0;
+  background: linear-gradient(90deg, #2f4b4b, #1f3434);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 40px 20px;
+  z-index: 9999;
+  animation: mobileWarningFadeIn 0.8s ease-out;
+}
+
+@keyframes mobileWarningFadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.mobile-warning-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 30spx;
+  max-width: 600px;
+  width: 100%;
+}
+
+/* ───────── LOGO ───────── */
+
+.mobile-warning-logo-wrap {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+}
+
+.mobile-warning-logo {
+  width: var(--logo-splash-width);
+  max-width: var(--logo-splash-max);
+  height: auto;
+}
+
+/* ───────── TEXT ───────── */
+
+.mobile-warning-text-wrap {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  width: 100%;
+}
+
+.mobile-warning-text-large {
+  font-family: 'Glacial Indifference', sans-serif;
+  font-size: 20px;
+  line-height: 1.4;
+  letter-spacing: 0;
+  color: white;
+  text-align: center;
+  margin: 0;
+}
+
+.mobile-warning-text-small {
+  font-family: 'Glacial Indifference', sans-serif;
+  font-size: 15px;
+  line-height: 1.4;
+  letter-spacing: 0;
+  color: white;
+  text-align: center;
+  margin-top: 20px;
+}

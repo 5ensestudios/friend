@@ -12,11 +12,13 @@ export function createDefaultGameState(userId, username = "Detective") {
     scenes_visited: {},
     locked_scenes: {},
     choices_made: [],
+    desktop_mail_seen: {},
     progress: {
       current_act: 0,
       acts_completed: [],
       scenes_visited: {},
       locked_scenes: {},
+      desktop_mail_seen: {},
     },
   };
 }

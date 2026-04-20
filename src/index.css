@@ -68,6 +68,10 @@
   --text-2xl:  36px;   /* Page-level headings */
   --text-3xl:  48px;   /* Hero / splash text */
 
+  /* ── Branding – Logo Sizing ─────────────────────────── */
+  --logo-splash-width: 420px;
+  --logo-splash-max: 80vw;
+
   /* ── Transitions ───────────────────────────────────────  */
   --transition-fast:   0.15s ease;
   --transition-normal: 0.25s ease;

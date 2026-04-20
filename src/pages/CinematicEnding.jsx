@@ -2,10 +2,10 @@ import { useRef, useState, useEffect } from "react";
 import "../styles/pages/cinematicEnding.css";
 
 const SUSPECT_VIDEOS = {
-  louis: "https://res.cloudinary.com/dknhgcjpf/video/upload/q_auto/f_auto/v1776172844/Louis_Act_3_ameapn.mp4",
-  may: "https://res.cloudinary.com/dknhgcjpf/video/upload/q_auto/f_auto/v1776172758/May_Act_3_e8gkxj.mp4",
-  johnny: "https://res.cloudinary.com/dknhgcjpf/video/upload/q_auto/f_auto/v1776172888/Johnny_Act_3_pnnvdb.mp4",
-  richard: "https://res.cloudinary.com/dknhgcjpf/video/upload/q_auto/f_auto/v1776172813/Richard_Act_3_srtgnb.mp4",
+  louis: "https://res.cloudinary.com/dknhgcjpf/video/upload/q_auto:,f_auto/v1776172844/Louis_Act_3_ameapn.mp4",
+  may: "https://res.cloudinary.com/dknhgcjpf/video/upload/q_auto:,f_auto/v1776172758/May_Act_3_e8gkxj.mp4",
+  johnny: "https://res.cloudinary.com/dknhgcjpf/video/upload/q_auto:,f_auto/v1776172888/Johnny_Act_3_pnnvdb.mp4",
+  richard: "https://res.cloudinary.com/dknhgcjpf/video/upload/q_auto:,f_auto/v1776172813/Richard_Act_3_srtgnb.mp4",
 };
 
 export default function CinematicEnding({ suspect, onDone }) {

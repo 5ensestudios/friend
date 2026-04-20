@@ -132,13 +132,13 @@
 }
 
 .file-list-item:hover {
-  background: rgba(255, 255, 255, 0.05);
-  border-color: rgba(255, 255, 255, 0.08);
+  background: #3c3c3c;
+  border-color: transparent;
 }
 
 .file-list-item.selected {
-  background: rgba(65, 135, 220, 0.15);
-  border-color: rgba(65, 135, 220, 0.4);
+  background: #3c3c3c;
+  border-color: transparent;
 }
 
 .file-list-item.locked {
@@ -155,6 +155,13 @@
   width: 44px;
   height: 44px;
   filter: drop-shadow(0 2px 4px rgba(0,0,0,0.3));
+}
+
+.item-icon-img {
+  width: 36px;
+  height: 36px;
+  object-fit: contain;
+  display: block;
 }
 
 .item-name {
@@ -205,13 +212,21 @@
   word-break: break-word;
 }
 
+.file-explorer-window .preview-label {
+  color: #489292;
+  font-weight: 600;
+}
+
+.file-explorer-window .preview-value {
+  color: #ffffff;
+}
+
 .preview-content strong {
-  color: #5b9bd5;
+  color: var(--color-primary);
   display: block;
   margin-top: 10px;
   font-size: 10px;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
+  letter-spacing: 0px;
 }
 
 /* Scrollbar styling */

@@ -1,0 +1,57 @@
+.asset-preloader {
+  position: fixed;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  background: linear-gradient(90deg, #2d4c4f 0%, #19373f 100%);
+  overflow: hidden;
+}
+
+.asset-preloader::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: repeating-linear-gradient(
+    90deg,
+    rgba(255, 255, 255, 0.03) 0,
+    rgba(255, 255, 255, 0.03) 1px,
+    transparent 1px,
+    transparent 54px
+  );
+  pointer-events: none;
+}
+
+.asset-preloader-container {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2rem;
+}
+
+.asset-preloader-value {
+  font-family: var(--font-heading);
+  font-size: clamp(48px, 12vw, 120px);
+  line-height: 1;
+  letter-spacing: 0.02em;
+  color: #f7f7f0;
+  text-shadow: 0 2px 18px rgba(0, 0, 0, 0.3);
+  user-select: none;
+}
+
+.asset-preloader-bar-container {
+  width: 300px;
+  height: 8px;
+  background: rgba(0, 0, 0, 0.3);
+  border-radius: 4px;
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.asset-preloader-bar {
+  height: 100%;
+  background: linear-gradient(90deg, #00d4ff, #00a8cc);
+  transition: width 0.3s ease;
+  border-radius: 4px;
+}
