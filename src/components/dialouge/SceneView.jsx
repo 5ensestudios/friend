@@ -15,7 +15,7 @@ const LOOP_VIDEO = "https://res.cloudinary.com/dknhgcjpf/video/upload/q_auto:goo
 
 /* ── Act display titles ── */
 const ACT_TITLES = {
-  0: "INTRODUCTORY — The First Interviews",
+  0: "INTRODUCTION",
   1: "ACT I — The Incident",
   2: "ACT II — The Motives",
 };

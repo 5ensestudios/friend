@@ -7,7 +7,7 @@ const MUSIC_TRACKS = [
   { id: "track_3", title: "Mascara", artist: "Deftones", src: "/music player/Mascara.mp3" },
   { id: "track_4", title: "10AM Save The World", artist: "Metro Boomin", src: "/music player/Metro Boomin - 10AMSave The World (Instrumental) (1).mp3" },
   { id: "track_5", title: "Eventually", artist: "Tame Impala", src: "/music player/Tame Impala - Eventually (Audio).mp3" },
-];
+  { id: "track_6", title: "Come As You Are", artist: "Nirvana", src: "/music player/Nirvana - Come As You Are (Lyrics).mp3" },];
 
 function normalizeTrackSrc(path) {
   const base = import.meta.env.BASE_URL || "/";
