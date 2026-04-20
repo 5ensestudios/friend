@@ -1,0 +1,107 @@
+.email-notification-overlay {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9200;
+  background: rgba(0, 0, 0, 0.52);
+}
+
+.email-notification {
+  position: fixed;
+  width: min(92vw, 350px);
+  background: var(--color-surface-mid);
+  border: 1px solid var(--color-border);
+  border-radius: 8px;
+  box-shadow: 0 18px 40px rgba(0, 0, 0, 0.5);
+  padding: 0;
+  color: #ccc;
+  overflow: hidden;
+}
+
+.email-notification-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: var(--color-surface-raised);
+  border-bottom: 1px solid var(--color-border);
+  padding: 6px 12px;
+  gap: 8px;
+}
+
+.email-notification-title-wrap {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.email-notification-icon {
+  width: 16px;
+  height: 16px;
+  object-fit: contain;
+}
+
+.email-notification-title {
+  font-size: 12px;
+  color: #ccc;
+  letter-spacing: 0.3px;
+}
+
+.email-notification-close {
+  width: 36px;
+  height: 28px;
+  border: none;
+  background: transparent;
+  color: #999;
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  border-radius: 4px;
+  transition: background 0.15s, color 0.15s;
+}
+
+.email-notification-close:hover {
+  background: #e81123;
+  color: #fff;
+}
+
+.email-notification-from {
+  margin: 0;
+  padding: 0;
+  font-size: 12px;
+  color: #f3f3f3;
+  line-height: 1.45;
+}
+
+.email-notification-subject {
+  margin: 0;
+  padding: 0;
+  font-size: 13px;
+  color: #f3f3f3;
+  line-height: 1.45;
+}
+
+.email-notification-body {
+  padding: 14px;
+}
+
+.email-notification-subject,
+.email-notification-line,
+.email-notification-attachment {
+  margin-top: 12px;
+}
+
+.email-notification-line,
+.email-notification-attachment {
+  margin-bottom: 0;
+  font-size: 12px;
+  color: #f3f3f3;
+  line-height: 1.45;
+}
+
+.email-notification-gap {
+  height: 10px;
+}

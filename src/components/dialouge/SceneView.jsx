@@ -95,21 +95,21 @@ const ACTS = {
         label: "What happened last night?",
         characters: {
           may: [
-            { question: "Detective: I need you to walk me through the evening, from when everyone got together to when the paramedics arrived. What exactly happened that night?", clips: ["https://res.cloudinary.com/dknhgcjpf/video/upload/q_auto:good,f_auto/v1776172755/May_Act_1_-_1.1_wkh6dx.mp4"], skipPause: true },
+            { question: "Detective: I need you to walk me through the evening. From the moment you all got together to the moment the paramedics arrived-what exactly happened that night?", clips: ["https://res.cloudinary.com/dknhgcjpf/video/upload/q_auto:good,f_auto/v1776172755/May_Act_1_-_1.1_wkh6dx.mp4"], skipPause: true },
             { question: "Detective: Can we continue?", clips: ["https://res.cloudinary.com/dknhgcjpf/video/upload/q_auto:good,f_auto/v1776172754/May_Act_1_-_1.2_sbgp4p.mp4"] },
             { question: "Detective: What was the prank?", clips: ["https://res.cloudinary.com/dknhgcjpf/video/upload/q_auto:good,f_auto/v1776172761/May_Act_1_-_1.3_q0eqlr.mp4"] },
           ],
           johnny: [
-            { question: "Detective: Start at the beginning and walk me through it, from when you all met up to when the paramedics got there. What happened that night?", clips: ["https://res.cloudinary.com/dknhgcjpf/video/upload/q_auto:good,f_auto/v1776172892/Johnny_Act_1_-_1.1_e7vlbq.mp4"] },
+            { question: "Detective: I need you to walk me through the evening. From the moment you all got together to the moment the paramedics arrived-what exactly happened that night?", clips: ["https://res.cloudinary.com/dknhgcjpf/video/upload/q_auto:good,f_auto/v1776172892/Johnny_Act_1_-_1.1_e7vlbq.mp4"] },
             { question: "Detective: Payback for what?", clips: ["https://res.cloudinary.com/dknhgcjpf/video/upload/q_auto:good,f_auto/v1776172885/Johnny_Act_1_-_1.2_n0rrw2.mp4"] },
           ],
           louis: [
-            { question: "Detective: Are you okay?", clips: ["https://res.cloudinary.com/dknhgcjpf/video/upload/q_auto:good,f_auto/v1776172843/Louis_Act_1_-_1.1_snx0zw.mp4"] },
+            { question: "Detective: I need you to walk me through the evening. From the moment you all got together to the moment the paramedics arrived-what exactly happened that night?", clips: ["https://res.cloudinary.com/dknhgcjpf/video/upload/q_auto:good,f_auto/v1776172843/Louis_Act_1_-_1.1_snx0zw.mp4"] },
             { question: "Detective: I need a full timeline from when everyone gathered to the moment paramedics arrived. What exactly happened that night?", clips: ["https://res.cloudinary.com/dknhgcjpf/video/upload/q_auto:good,f_auto/v1776172851/Louis_Act_1_-_1.2_ayj4xx.mp4"] },
             { question: "Detective: What did she suggest?", clips: ["https://res.cloudinary.com/dknhgcjpf/video/upload/q_auto:good,f_auto/v1776172842/Louis_Act_1_-_1.3_eogg24.mp4"] },
           ],
           richard: [
-            { question: "Detective: Give me a complete account of the evening, from the get-together to when emergency responders arrived. What happened that night?", clips: ["https://res.cloudinary.com/dknhgcjpf/video/upload/q_auto:good,f_auto/v1776172824/Richie_Act_1_-_1.1_bokofh.mp4"] },
+            { question: "Detective: I need you to walk me through the evening. From the moment you all got together to the moment the paramedics arrived-what exactly happened that night?", clips: ["https://res.cloudinary.com/dknhgcjpf/video/upload/q_auto:good,f_auto/v1776172824/Richie_Act_1_-_1.1_bokofh.mp4"] },
             { question: "Detective: Who came up with the idea?", clips: ["https://res.cloudinary.com/dknhgcjpf/video/upload/q_auto:good,f_auto/v1776172812/Richie_Act_1_-_1.2_ed2zgl.mp4"] },
           ],
         },
@@ -117,28 +117,28 @@ const ACTS = {
       {
         label: "The pills found at the crime scene — where did they come from?",
         characters: {
-          may:     [{ question: "Detective: The pills were a heavy sedative. They didn’t just appear on the counter. Someone brought them, and someone crushed them. Where did those pills actually come from?", clips: ["https://res.cloudinary.com/dknhgcjpf/video/upload/q_auto:good,f_auto/v1776172762/May_Act_1_-_2_u81pqp.mp4"] }],
-          johnny:  [{ question: "Detective: Those pills were a strong sedative. They didn’t magically show up. Someone brought them in, and someone crushed them. So where did they come from?", clips: ["https://res.cloudinary.com/dknhgcjpf/video/upload/q_auto:good,f_auto/v1776172892/Johnny_Act_1_-_2_kefchu.mp4"] }],
-          louis:   [{ question: "Detective: We’re talking about a heavy sedative. It didn’t just appear on that counter. Someone brought it, and someone crushed it. Where did those pills come from?", clips: ["https://res.cloudinary.com/dknhgcjpf/video/upload/q_auto:good,f_auto/v1776172847/Louis_Act_1_-_2_ry5txz.mp4"] }],
-          richard: [{ question: "Detective: The pills were a potent sedative. They weren’t random. Someone brought them, and someone crushed them. Tell me where those pills actually came from.", clips: ["https://res.cloudinary.com/dknhgcjpf/video/upload/q_auto:good,f_auto/v1776172819/Richie_Act_1_-_2_y8cnrt.mp4"] }],
+          may:     [{ question: "Detective: The pills. It was a heavy sedative. It didn't just appear on the counter. Someone brought it, and someone crushed it. So, where did those pills actually come from?", clips: ["https://res.cloudinary.com/dknhgcjpf/video/upload/q_auto:good,f_auto/v1776172762/May_Act_1_-_2_u81pqp.mp4"] }],
+          johnny:  [{ question: "Detective: The pills. It was a heavy sedative. It didn't just appear on the counter. Someone brought it, and someone crushed it. So, where did those pills actually come from?", clips: ["https://res.cloudinary.com/dknhgcjpf/video/upload/q_auto:good,f_auto/v1776172892/Johnny_Act_1_-_2_kefchu.mp4"] }],
+          louis:   [{ question: "Detective: The pills. It was a heavy sedative. It didn't just appear on the counter. Someone brought it, and someone crushed it. So, where did those pills actually come from?", clips: ["https://res.cloudinary.com/dknhgcjpf/video/upload/q_auto:good,f_auto/v1776172847/Louis_Act_1_-_2_ry5txz.mp4"] }],
+          richard: [{ question: "Detective: The pills. It was a heavy sedative. It didn't just appear on the counter. Someone brought it, and someone crushed it. So, where did those pills actually come from?", clips: ["https://res.cloudinary.com/dknhgcjpf/video/upload/q_auto:good,f_auto/v1776172819/Richie_Act_1_-_2_y8cnrt.mp4"] }],
         },
       },
       {
         label: "Can you recount the whole night for me?",
         characters: {
-          may:     [{ question: "Detective: From your perspective, I need every detail you can remember. Recount the whole night and leave nothing out.", clips: ["https://res.cloudinary.com/dknhgcjpf/video/upload/q_auto:good,f_auto/v1776183534/May_Act_1_-_3_1_jxmmka.mp4"] }],
-          johnny:  [{ question: "Detective: I want your full version of the night, step by step, with every detail you remember. Don’t skip anything.", clips: ["https://res.cloudinary.com/dknhgcjpf/video/upload/q_auto:good,f_auto/v1776172903/Johnny_Act_1_-_3_s7zcyh.mp4"] }],
-          louis:   [{ question: "Detective: Give me your perspective in full. Recount the entire night with as much detail as you can, and don’t leave anything out.", clips: ["https://res.cloudinary.com/dknhgcjpf/video/upload/q_auto:good,f_auto/v1776172871/Louis_Act_1_-_3_iss1xd.mp4"] }],
-          richard: [{ question: "Detective: I need a complete recount from your point of view. Include every detail you can remember, and leave nothing out.", clips: ["https://res.cloudinary.com/dknhgcjpf/video/upload/q_auto:good,f_auto/v1776172835/Richie_Act_1_-_3_nxx6yu.mp4"] }],
+          may:     [{ question: "Detective: From your perspective-and I want every detail you can remember-please recount the whole night. Don't leave anything out.", clips: ["https://res.cloudinary.com/dknhgcjpf/video/upload/q_auto:good,f_auto/v1776183534/May_Act_1_-_3_1_jxmmka.mp4"] }],
+          johnny:  [{ question: "Detective: From your perspective-and I want every detail you can remember-please recount the whole night. Don't leave anything out.", clips: ["https://res.cloudinary.com/dknhgcjpf/video/upload/q_auto:good,f_auto/v1776172903/Johnny_Act_1_-_3_s7zcyh.mp4"] }],
+          louis:   [{ question: "Detective: From your perspective-and I want every detail you can remember-please recount the whole night. Don't leave anything out.", clips: ["https://res.cloudinary.com/dknhgcjpf/video/upload/q_auto:good,f_auto/v1776172871/Louis_Act_1_-_3_iss1xd.mp4"] }],
+          richard: [{ question: "Detective: From your perspective-and I want every detail you can remember-please recount the whole night. Don't leave anything out.", clips: ["https://res.cloudinary.com/dknhgcjpf/video/upload/q_auto:good,f_auto/v1776172835/Richie_Act_1_-_3_nxx6yu.mp4"] }],
         },
       },
       {
         label: "Do you think any one of you could have had the intention to want this?",
         characters: {
-          may:     [{ question: "Detective: Looking back, do you think any of your friends could have intended this outcome? Is anyone in that group capable of turning a prank into something fatal?", clips: ["https://res.cloudinary.com/dknhgcjpf/video/upload/q_auto:good,f_auto/v1776172760/May_Act_1_-_4_dtuaje.mp4"] }],
-          johnny:  [{ question: "Detective: Thinking back now, do you believe anyone in your group might have wanted this to happen? Who could have pushed a prank into something deadly?", clips: ["https://res.cloudinary.com/dknhgcjpf/video/upload/q_auto:good,f_auto/v1776172888/Johnny_Act_1_-_4_mymvj2.mp4"] }],
-          louis:   [{ question: "Detective: In hindsight, do you think one of your friends had the intention for this? Is there anyone you believe could have let a prank become fatal?", clips: ["https://res.cloudinary.com/dknhgcjpf/video/upload/q_auto:good,f_auto/v1776172845/Louis_Act_1_-_4_ugcjgu.mp4"] }],
-          richard: [{ question: "Detective: Looking back on that night, do you think anyone in your group was capable of wanting this? Could someone have deliberately turned a prank into a fatal incident?", clips: ["https://res.cloudinary.com/dknhgcjpf/video/upload/q_auto:good,f_auto/v1776172812/Richie_Act_1_-_4_kr8byp.mp4"] }],
+          may:     [{ question: "Detective: Looking back, do you think any one of your friends could have had the intention to have wanted this? Is there anyone in that group you think was capable of turning a prank into something fatal?", clips: ["https://res.cloudinary.com/dknhgcjpf/video/upload/q_auto:good,f_auto/v1776172760/May_Act_1_-_4_dtuaje.mp4"] }],
+          johnny:  [{ question: "Detective: Looking back, do you think any one of your friends could have had the intention to have wanted this? Is there anyone in that group you think was capable of turning a prank into something fatal?", clips: ["https://res.cloudinary.com/dknhgcjpf/video/upload/q_auto:good,f_auto/v1776172888/Johnny_Act_1_-_4_mymvj2.mp4"] }],
+          louis:   [{ question: "Detective: Looking back, do you think any one of your friends could have had the intention to have wanted this? Is there anyone in that group you think was capable of turning a prank into something fatal?", clips: ["https://res.cloudinary.com/dknhgcjpf/video/upload/q_auto:good,f_auto/v1776172845/Louis_Act_1_-_4_ugcjgu.mp4"] }],
+          richard: [{ question: "Detective: Looking back, do you think any one of your friends could have had the intention to have wanted this? Is there anyone in that group you think was capable of turning a prank into something fatal?", clips: ["https://res.cloudinary.com/dknhgcjpf/video/upload/q_auto:good,f_auto/v1776172812/Richie_Act_1_-_4_kr8byp.mp4"] }],
         },
       },
     ],
@@ -148,10 +148,10 @@ const ACTS = {
       {
         label: "What did Chris do?",
         characters: {
-          may:     [{ question: "Detective: Let's talk about Chris, specifically his behavior. What exactly did he do that night, or any other night, that made the group feel like a prank was the only way to deal with him?", clips: ["https://res.cloudinary.com/dknhgcjpf/video/upload/q_auto:good,f_auto/v1776172765/May_Act_2_-_1_laeik2.mp4"] }],
+          may:     [{ question: "Detective: Let’s talk about Chris. Specifically, his behavior. What exactly did he do that night—or any other night—that made the group feel like a 'prank' was the only way to deal with him?", clips: ["https://res.cloudinary.com/dknhgcjpf/video/upload/q_auto:good,f_auto/v1776172765/May_Act_2_-_1_laeik2.mp4"] }],
           johnny:  [
             { 
-              question: "Detective: Let's talk about Chris and the way he acted. What exactly did he do that night, or before that, that made the group think a prank was the only way to handle him?", 
+              question: "Detective: Let’s talk about Chris. Specifically, his behavior. What exactly did he do that night—or any other night—that made the group feel like a 'prank' was the only way to deal with him?", 
               clips: ["https://res.cloudinary.com/dknhgcjpf/video/upload/q_auto:good,f_auto/v1776172886/Johnny_Act_2_-_1.1_opsrh4.mp4"]
              },
              {
@@ -165,7 +165,7 @@ const ACTS = {
             ],
           louis:   [
             { 
-              question: "Detective: I want to focus on Chris's behavior. What did he do, that night or before, that made everyone feel a prank was the only option left?", 
+              question: "Detective: Let’s talk about Chris. Specifically, his behavior. What exactly did he do that night—or any other night—that made the group feel like a 'prank' was the only way to deal with him?", 
               clips: ["https://res.cloudinary.com/dknhgcjpf/video/upload/q_auto:good,f_auto/v1776172847/Louis_Act_2_-_1.1_ksi5cc.mp4"] 
             },
             {
@@ -174,7 +174,7 @@ const ACTS = {
             }
           ],
           richard: [
-            { question: "Detective: Let's talk about Chris. What exactly did he do that night, or on other nights, that made the group think a prank was the only way to deal with him?", 
+            { question: "Detective: Let’s talk about Chris. Specifically, his behavior. What exactly did he do that night—or any other night—that made the group feel like a 'prank' was the only way to deal with him?", 
               clips: ["https://res.cloudinary.com/dknhgcjpf/video/upload/q_auto:good,f_auto/v1776172815/Richie_Act_2_-_1.1_v0bpkx.mp4"]
             },
             {
@@ -187,18 +187,18 @@ const ACTS = {
       {
         label: "What is the group usually like with Chris around?",
         characters: {
-          may:     [{ question: "Detective: You all call yourselves friends. I want to know what that was actually like.", clips: ["https://res.cloudinary.com/dknhgcjpf/video/upload/q_auto:good,f_auto/v1776172767/May_Act_2_-_2_tu5xvt.mp4"] }],
-          johnny:  [{ question: "Detective: So you all call yourselves friends... tell me what that was really like.", clips: ["https://res.cloudinary.com/dknhgcjpf/video/upload/q_auto:good,f_auto/v1776172891/Johnny_Act_2_-_2_l14aym.mp4"] }],
-          louis:   [{ question: "Detective: You describe each other as friends. I need to understand what that dynamic was actually like.", clips: ["https://res.cloudinary.com/dknhgcjpf/video/upload/q_auto:good,f_auto/v1776172848/Louis_Act_2_-_2_dxdii1.mp4"] }],
-          richard: [{ question: "Detective: You all say you were friends. Walk me through what that was like inside the group.", clips: ["https://res.cloudinary.com/dknhgcjpf/video/upload/q_auto:good,f_auto/v1776172833/Richie_Act_2_-_2_y6kjk5.mp4"] }],
+          may:     [{ question: "Detective: So, you all call yourselves friends... I want to know what that was like.", clips: ["https://res.cloudinary.com/dknhgcjpf/video/upload/q_auto:good,f_auto/v1776172767/May_Act_2_-_2_tu5xvt.mp4"] }],
+          johnny:  [{ question: "Detective: So, you all call yourselves friends... I want to know what that was like.", clips: ["https://res.cloudinary.com/dknhgcjpf/video/upload/q_auto:good,f_auto/v1776172891/Johnny_Act_2_-_2_l14aym.mp4"] }],
+          louis:   [{ question: "Detective: So, you all call yourselves friends... I want to know what that was like.", clips: ["https://res.cloudinary.com/dknhgcjpf/video/upload/q_auto:good,f_auto/v1776172848/Louis_Act_2_-_2_dxdii1.mp4"] }],
+          richard: [{ question: "Detective: So, you all call yourselves friends... I want to know what that was like.", clips: ["https://res.cloudinary.com/dknhgcjpf/video/upload/q_auto:good,f_auto/v1776172833/Richie_Act_2_-_2_y6kjk5.mp4"] }],
         },
       },
       {
         label: "What is your relationship like with Chris?",
         characters: {
-          may:     [{ question: "Detective: I want to move away from the group for a second. Tell me about your personal relationship with him, one-on-one.", clips: ["https://res.cloudinary.com/dknhgcjpf/video/upload/q_auto:good,f_auto/v1776172768/May_Act_2_-_3_cnx6o8.mp4"] }],
+          may:     [{ question: "Detective: I want to move away from the group for a second. Tell me about your personal relationship with him. One-on-one.", clips: ["https://res.cloudinary.com/dknhgcjpf/video/upload/q_auto:good,f_auto/v1776172768/May_Act_2_-_3_cnx6o8.mp4"] }],
           johnny:  [
-            { question: "Detective: Let's step away from the group. Tell me about your one-on-one relationship with Chris.", 
+            { question: "Detective: I want to move away from the group for a second. Tell me about your personal relationship with him. One-on-one.", 
               clips: ["https://res.cloudinary.com/dknhgcjpf/video/upload/q_auto:good,f_auto/v1776172895/Johnny_Act_2_-_3.1_dtekyv.mp4"] 
             },
             {
@@ -206,8 +206,8 @@ const ACTS = {
               clips: ["https://res.cloudinary.com/dknhgcjpf/video/upload/q_auto:good,f_auto/v1776172889/Johnny_Act_2_-_3.2_ftvjje.mp4"]
             }
           ],
-          louis:   [{ question: "Detective: I want to focus just on you and Chris. What was your personal relationship with him like, one-on-one?", clips: ["https://res.cloudinary.com/dknhgcjpf/video/upload/q_auto:good,f_auto/v1776172854/Louis_Act_2_-_3_lrb22a.mp4"] }],
-          richard: [{ question: "Detective: Forget the group for a moment. Tell me about your personal relationship with Chris, one-on-one.", clips: ["https://res.cloudinary.com/dknhgcjpf/video/upload/q_auto:good,f_auto/v1776172835/Richie_Act_2_-_3_ijox6c.mp4"] }],
+          louis:   [{ question: "Detective: I want to move away from the group for a second. Tell me about your personal relationship with him. One-on-one.", clips: ["https://res.cloudinary.com/dknhgcjpf/video/upload/q_auto:good,f_auto/v1776172854/Louis_Act_2_-_3_lrb22a.mp4"] }],
+          richard: [{ question: "Detective: I want to move away from the group for a second. Tell me about your personal relationship with him. One-on-one.", clips: ["https://res.cloudinary.com/dknhgcjpf/video/upload/q_auto:good,f_auto/v1776172835/Richie_Act_2_-_3_ijox6c.mp4"] }],
         },
       },
     ],

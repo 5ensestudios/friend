@@ -1,20 +1,10 @@
-import { useEffect, useState, useRef } from "react";
-import { useSound } from "../../hooks/useSound";
+import { useEffect, useState } from "react";
 import "../../styles/components/emailModal.css";
 
 export default function EmailModal({ emails = [], activeMailId = null, onClose }) {
   const sortedEmails = Array.isArray(emails) ? emails : [];
 
   const [selectedMailId, setSelectedMailId] = useState(() => activeMailId ?? null);
-  const { play } = useSound();
-  const popupPlayedRef = useRef(false);
-
-  useEffect(() => {
-    if (!popupPlayedRef.current && sortedEmails.length > 0) {
-      play("emailPopup");
-      popupPlayedRef.current = true;
-    }
-  }, [play, sortedEmails.length]);
 
   useEffect(() => {
     if (!sortedEmails.length) return;

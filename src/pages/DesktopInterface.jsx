@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from "react";
 import FileExplorer from "../components/desktop/FileExplorer";
 import EmailModal from "../components/desktop/EmailModal";
+import EmailNotificationPopup from "../components/desktop/EmailNotificationPopup";
 import MusicPlayer from "../components/desktop/MusicPlayer";
 import DinoGameModal from "../components/desktop/DinoGameModal";
 import BrunsonGallery from "../components/desktop/BrunsonGallery";
@@ -129,7 +130,8 @@ export default function DesktopInterface({ playerData, onReturnToMenu, onAct3Sta
   const [activeWindow, setActiveWindow] = useState(null);
   const [clock, setClock] = useState(new Date());
   const [showSuspectSelect, setShowSuspectSelect] = useState(false);
-  const [mailPopup, setMailPopup] = useState(null);
+  const [mailNotification, setMailNotification] = useState(null);
+  const [mailInboxActiveId, setMailInboxActiveId] = useState(null);
   const [showStartMenu, setShowStartMenu] = useState(false);
   const [showVolumePopup, setShowVolumePopup] = useState(false);
   const [desktopVolume, setDesktopVolume] = useState(74);
@@ -212,7 +214,7 @@ export default function DesktopInterface({ playerData, onReturnToMenu, onAct3Sta
 
     const delay = nextMail.id === "firstDesktop" ? 3000 : 800;
     const timer = setTimeout(() => {
-      setMailPopup(nextMail);
+      setMailNotification(nextMail);
       markMailAsSeen(nextMail.id);
     }, delay);
 
@@ -329,17 +331,11 @@ export default function DesktopInterface({ playerData, onReturnToMenu, onAct3Sta
 
   function handleOpenMail() {
     const seenMails = getSeenDesktopMails(playerProgress);
+    if (!seenMails.length) return;
 
-    if (seenMails.length > 0) {
-      setMailPopup(seenMails[seenMails.length - 1]);
-      return;
-    }
-
-    const nextMail = getNextDesktopMail(playerProgress);
-    if (nextMail) {
-      setMailPopup(nextMail);
-      markMailAsSeen(nextMail.id);
-    }
+    setMailNotification(null);
+    setMailInboxActiveId(seenMails[seenMails.length - 1].id);
+    openWindow("mail");
   }
 
   function openWindow(windowId) {
@@ -870,11 +866,18 @@ export default function DesktopInterface({ playerData, onReturnToMenu, onAct3Sta
         />
       )}
 
-      {mailPopup && (
+      {openWindows.includes("mail") && (
         <EmailModal
           emails={getSeenDesktopMails(playerProgress)}
-          activeMailId={mailPopup.id}
-          onClose={() => setMailPopup(null)}
+          activeMailId={mailInboxActiveId}
+          onClose={() => closeWindow("mail")}
+        />
+      )}
+
+      {mailNotification && (
+        <EmailNotificationPopup
+          mail={mailNotification}
+          onClose={() => setMailNotification(null)}
         />
       )}
 
@@ -966,6 +969,11 @@ export default function DesktopInterface({ playerData, onReturnToMenu, onAct3Sta
                 <>
                   <img src="/icons/Music Player.png" alt="" className="taskbar-window-icon" />
                   <span>Music Player</span>
+                </>
+              ) : w === "mail" ? (
+                <>
+                  <img src="/icons/Mail.png" alt="" className="taskbar-window-icon" />
+                  <span>Inbox</span>
                 </>
               ) : w === "dino" ? (
                 <>
