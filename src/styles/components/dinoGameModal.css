@@ -1,22 +1,62 @@
 .dino-modal {
   width: 100%;
-  height: 100%;
+  height: 500px;
   display: flex;
   flex-direction: column;
-  background: #1e1f20;
+  background: linear-gradient(180deg, #262728 0%, #1a1b1c 100%);
   border: 1px solid rgba(255, 255, 255, 0.12);
-  border-radius: 8px;
+  border-radius: 10px;
   overflow: hidden;
   color: #eef1ec;
 }
 
 .dino-modal-header {
   display: flex;
+  gap: 10px;
   align-items: center;
   justify-content: space-between;
-  padding: 8px 12px;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-  background: linear-gradient(180deg, #2e2f30 0%, #262728 100%);
+  padding: 8px 10px 7px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  background: linear-gradient(180deg, #343536 0%, #2a2b2c 100%);
+}
+
+.dino-modal-browser-tabs {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-width: 0;
+  flex: 1;
+}
+
+.dino-modal-tab {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 120px;
+  max-width: 170px;
+  height: 26px;
+  padding: 0 12px;
+  border-radius: 8px 8px 0 0;
+  background: rgba(255, 255, 255, 0.07);
+  color: #b9c3bf;
+  font-size: 11px;
+  letter-spacing: 0.04em;
+}
+
+.dino-modal-tab--active {
+  background: linear-gradient(180deg, #404243 0%, #313233 100%);
+  color: #f2f5f0;
+}
+
+.dino-modal-tab-icon {
+  font-size: 10px;
+  opacity: 0.9;
+}
+
+.dino-modal-tab-text {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .dino-modal-title-wrap {
@@ -53,28 +93,104 @@
   color: #fff;
 }
 
-.dino-modal-hud {
+.dino-modal-toolbar {
   display: flex;
-  justify-content: space-between;
   align-items: center;
-  padding: 6px 12px;
+  gap: 10px;
+  padding: 8px 12px;
+  background: linear-gradient(180deg, #222324 0%, #1c1d1e 100%);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.dino-modal-nav-group {
+  display: inline-flex;
+  gap: 6px;
+}
+
+.dino-modal-nav-btn {
+  width: 26px;
+  height: 26px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 6px;
+  background: rgba(255, 255, 255, 0.06);
+  color: #c7cfca;
+  font-size: 12px;
+}
+
+.dino-modal-address-bar {
+  flex: 1;
+  min-width: 0;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  padding: 0 12px;
+  border-radius: 999px;
+  background: rgba(10, 10, 10, 0.6);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  color: #d6dfd7;
+  font-size: 11px;
+  letter-spacing: 0.02em;
+}
+
+.dino-modal-toolbar-chip {
+  flex: 0 0 auto;
+  height: 26px;
+  display: inline-flex;
+  align-items: center;
+  padding: 0 10px;
+  border-radius: 999px;
+  background: rgba(61, 101, 94, 0.18);
+  border: 1px solid rgba(61, 101, 94, 0.35);
+  color: #dcebe4;
+  font-size: 10px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.dino-modal-hud {
+  display: grid;
+  grid-template-columns: 1fr auto auto;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 12px;
   font-size: 11px;
   color: #d6dfd7;
   border-bottom: 1px solid rgba(255, 255, 255, 0.08);
   background: #202224;
 }
 
+.dino-modal-hint {
+  color: #aeb8b1;
+  text-align: right;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.dino-modal-canvas-shell {
+  flex: 1;
+  padding: 12px;
+  background: radial-gradient(circle at 50% 0%, rgba(255,255,255,0.04), transparent 60%), #161718;
+}
+
 .dino-modal-canvas-wrapper {
   position: relative;
   width: 100%;
-  flex: 1;
+  height: 100%;
+  border-radius: 10px;
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.35);
 }
 
 .dino-modal-canvas {
   width: 100%;
-  height: auto;
+  height: 100%;
   display: block;
   background: #ddece1;
+  object-fit: cover;
   image-rendering: pixelated;
 }
 

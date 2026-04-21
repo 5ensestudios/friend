@@ -123,8 +123,7 @@ export default function App() {
 
   function handleAct3Start(suspectId) {
     setChosenSuspect(suspectId);
-    setShutdownTarget("ending");
-    setCurrentPage("shutting-down");
+    setCurrentPage("ending");
   }
 
   function handleDesktopShutdown() {
@@ -142,7 +141,8 @@ export default function App() {
   }
 
   function handleEndingDone() {
-    setCurrentPage("menu");
+    setShutdownTarget("menu");
+    setCurrentPage("shutting-down");
   }
 
   return (

@@ -13,6 +13,8 @@ import EvidenceFolder from "../components/desktop/EvidenceFolder";
 import SuspectSelect from "../components/desktop/SuspectSelect";
 import SceneView from "../components/dialouge/SceneView";
 import ActIntro from "./ActIntro";
+import Act3Prelude from "./Act3Prelude";
+import IntroPrelude from "./IntroPrelude";
 import { useDraggable } from "../hooks/useDraggable";
 import { useSound } from "../hooks/useSound";
 import { saveProgress } from "../firebase/progress";
@@ -81,6 +83,43 @@ const DESKTOP_MAILS = {
   },
 };
 
+const STATIC_INBOX_MAILS = [
+  {
+    id: "static_proxy_reply",
+    from: "Me",
+    subject: "Re: Corrupted files",
+    attachment: "None",
+    previewMeta: { label: "From", value: "pr0xy@securemail.net" },
+    lines: [
+      "I took a look at the data in the attachment you sent.",
+      "",
+      "Your IT people weren't lying to you, but they weren't being helpful either. The files aren't broken; they’re suffering from severe bit rot. It’s like trying to read a book that’s been sitting in a puddle for ten years. Most people wouldn't bother.",
+      "",
+      "Lucky for you, I’m not most people. I can stabilize this, but it’s going to take time. I’ll start with the first file.",
+      "",
+      "Don't worry about the price yet. Let's see if there’s actually anything worth watching in there first.",
+      "",
+      "Stand by.",
+    ],
+  },
+  {
+    id: "static_detective_reply",
+    from: "Me",
+    subject: "Re: Corrupted files",
+    attachment: "None",
+    previewMeta: { label: "To", value: "pr0xy@securemail.net" },
+    lines: [
+      "That’s fine, just let me know.",
+      "",
+      "Honestly, I’ve been staring at that error message for weeks, so anything you can pull out of there is better than what I have now.",
+      "",
+      "Thank you so much for helping me with this, seriously. Just send over whatever you manage to recover.",
+      "",
+      "I’ll be around.",
+    ],
+  },
+];
+
 const DESKTOP_MAIL_ORDER = [
   "firstDesktop",
   "afterIntro",
@@ -110,9 +149,11 @@ function getNextDesktopMail(progress) {
 
 function getSeenDesktopMails(progress) {
   const seen = progress?.desktop_mail_seen || {};
-  return DESKTOP_MAIL_ORDER
+  const unlockedProgressMails = DESKTOP_MAIL_ORDER
     .filter(mailId => seen[mailId] && DESKTOP_MAILS[mailId])
     .map(mailId => DESKTOP_MAILS[mailId]);
+
+  return [...STATIC_INBOX_MAILS, ...unlockedProgressMails];
 }
 
 export default function DesktopInterface({ playerData, onReturnToMenu, onAct3Start, onShutdownToMenu }) {
@@ -224,6 +265,13 @@ export default function DesktopInterface({ playerData, onReturnToMenu, onAct3Sta
   function handleActSelect(actNumber, questionIndex = null) {
     setCurrentAct(actNumber);
     setCurrentQuestion(typeof questionIndex === "number" ? questionIndex : null);
+
+    // Act 3 should always play the slideshow prelude before suspect selection.
+    if (actNumber === 3) {
+      setShowSuspectSelect(false);
+      setView("act-intro");
+      return;
+    }
 
     // Act 1/2 question folders already have per-question title screens in SceneView.
     // Skip the legacy act-intro page to avoid duplicate intros.
@@ -358,10 +406,18 @@ export default function DesktopInterface({ playerData, onReturnToMenu, onAct3Sta
 
 
   if (view === "act-intro") {
+    if (currentAct === 0) {
+      return <IntroPrelude onDone={handleActIntroDone} />;
+    }
+
+    if (currentAct === 3) {
+      return <Act3Prelude onDone={handleActIntroDone} />;
+    }
+
     // You can customize lines per act here
     const actLines = [
       [
-        { text: "INTRODUCTORY — The First Interviews", delay: 0 },
+        { text: "INTRODUCTION", delay: 0 },
         { text: "", delay: 900 },
         { text: "Interview each suspect to establish the facts.", delay: 1400 },
         { text: "", delay: 200 },

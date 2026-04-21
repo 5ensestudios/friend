@@ -10,7 +10,6 @@ const SUSPECT_VIDEOS = {
 
 export default function CinematicEnding({ suspect, onDone }) {
   const videoRef = useRef(null);
-  const [ended, setEnded] = useState(false);
   const [ready, setReady] = useState(false);
 
   const videoSrc = SUSPECT_VIDEOS[suspect] || "/videos/Act 3 placeholder.mp4";
@@ -24,11 +23,9 @@ export default function CinematicEnding({ suspect, onDone }) {
   }, []);
 
   function handleEnded() {
-    setEnded(true);
-  }
-
-  function handleFinish() {
-    onDone();
+    setTimeout(() => {
+      onDone?.();
+    }, 750);
   }
 
   return (
@@ -41,13 +38,6 @@ export default function CinematicEnding({ suspect, onDone }) {
         onEnded={handleEnded}
       />
       {!ready && <div className="cinematic-black-hold" />}
-      {ended && (
-        <div className="cinematic-end-overlay">
-          <button className="cinematic-end-btn" onClick={handleFinish}>
-            RETURN TO MENU
-          </button>
-        </div>
-      )}
     </div>
   );
 }

@@ -166,7 +166,7 @@ export default function CaseIntro({ onDone }) {
     <div
       className={`case-intro ${
         slideIdx === 0 ? "case-intro--title" : "case-intro--dark"
-      } ${screenFade ? "case-intro--out" : ""}`}
+      } ${slideIdx > 0 ? "case-intro--siren" : ""} ${screenFade ? "case-intro--out" : ""}`}
     >
       <div className="case-intro-content">
 
@@ -190,8 +190,8 @@ export default function CaseIntro({ onDone }) {
               )}
 
             </p>
-
           </div>
+          
         )}
 
       </div>

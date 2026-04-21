@@ -65,9 +65,9 @@ export default function SplashScreen({ onDone }) {
   const slide = SLIDES[slideIndex];
 
   return (
-    <div className={`splash-screen splash-${phase || "in"} splash-${slide.id}`}
+    <div className={`splash-screen splash-${slide.id}`}
       onClick={onDone}>
-      <div className="splash-content">
+      <div className={`splash-content splash-content-${phase || "in"}`}>
         {slide.type === "logo" ? (
           <div className={`splash-logo-wrap splash-logo-${slide.id}`}>
             <img

@@ -34,7 +34,7 @@
 .menu-background-overlay {
   position: fixed;
   inset: 0;
-  background: rgba(20, 20, 20, 0.97);
+  background: rgba(20, 20, 20, 0.95);
   pointer-events: none;
   z-index: 0;
 }

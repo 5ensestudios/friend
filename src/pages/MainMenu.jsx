@@ -16,7 +16,7 @@ export default function MainMenu({ onStartIntro, onContinue }) {
 
     const timer = setTimeout(() => {
       audio.play().catch(() => {});
-    }, 5000);
+    }, 2000);
 
     return () => {
       clearTimeout(timer);

@@ -3,69 +3,42 @@ import { useSound } from "../../hooks/useSound";
 import "../../styles/components/suspectSelect.css";
 
 const SUSPECTS = [
-  { id: "louis", name: "Louis", img: "/Images/Louis Card.png" },
-  { id: "may", name: "May", img: "/Images/May Card.png" },
-  { id: "johnny", name: "Johnny", img: "/Images/Johnny Card.png" },
-  { id: "richard", name: "Richard", img: "/Images/Richie Card.png" },
+  { id: "louis", name: "Louis", role: "", img: "/Images/Louis Card.png" },
+  { id: "may", name: "May", role: "", img: "/Images/May Card.png" },
+  { id: "johnny", name: "Johnny", role: "", img: "/Images/Johnny Card.png" },
+  { id: "richard", name: "Richard", role: "", img: "/Images/Richie Card.png" },
 ];
 
-export default function SuspectSelect({ onSelect, onCancel }) {
-  const [selected, setSelected] = useState(null);
+export default function SuspectSelect({ onSelect }) {
   const [confirming, setConfirming] = useState(false);
   const { play } = useSound();
 
-  function handleConfirm() {
-    if (!selected) return;
+  function handleSelect(id) {
+    if (confirming) return;
     play("click");
     setConfirming(true);
-    setTimeout(() => onSelect(selected), 600);
+    setTimeout(() => onSelect(id), 420);
   }
 
   return (
-    <div className={`suspect-select-overlay${confirming ? " confirming" : ""}`}>
-      <div className="suspect-select-panel">
-        <h2 className="suspect-select-title">WHO IS GUILTY?</h2>
-        <p className="suspect-select-subtitle">Select who you believe is responsible for Chris's death.</p>
-
-        <div className="suspect-cards">
+    <div className={`suspect-select-overlay${confirming ? " confirming" : ""}`} role="dialog" aria-label="Act 3 character selection">
+      <div className="suspect-select-content">
+        <div className="suspect-select-grid">
           {SUSPECTS.map(s => (
             <button
               key={s.id}
-              className={`suspect-card${selected === s.id ? " selected" : ""}`}
-              onClick={() => {
-                play("click");
-                setSelected(s.id);
-              }}
-              onMouseEnter={() => {
-                play("hover");
-                setSelected(s.id);
-              }}
+              className="suspect-select-card"
+              onClick={() => handleSelect(s.id)}
+              onMouseEnter={() => play("hover")}
+              disabled={confirming}
             >
-              <div className="suspect-card-inner">
-                <img src={s.img} alt={s.name} />
+              <img src={s.img} alt={s.name} className="suspect-card-img" />
+              <div className="suspect-card-info">
+                <strong>{s.name}</strong>
+                <span>{s.role}</span>
               </div>
-              <span className="suspect-card-name">{s.name}</span>
             </button>
           ))}
-        </div>
-
-        <div className="suspect-select-actions">
-          <button
-            className="suspect-cancel-btn"
-            onClick={() => {
-              play("click");
-              onCancel();
-            }}
-          >
-            GO BACK
-          </button>
-          <button
-            className={`suspect-confirm-btn${selected ? " enabled" : ""}`}
-            onClick={handleConfirm}
-            disabled={!selected}
-          >
-            CONFIRM ACCUSATION
-          </button>
         </div>
       </div>
     </div>

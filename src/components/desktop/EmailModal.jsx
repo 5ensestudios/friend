@@ -25,6 +25,9 @@ export default function EmailModal({ emails = [], activeMailId = null, onClose }
     sortedEmails[sortedEmails.length - 1] ||
     null;
 
+  const previewMetaLabel = selectedMail?.previewMeta?.label || "To";
+  const previewMetaValue = selectedMail?.previewMeta?.value || "pr0xy@unusual.net";
+
   if (!selectedMail) return null;
 
   return (
@@ -63,7 +66,7 @@ export default function EmailModal({ emails = [], activeMailId = null, onClose }
         <div className="email-modal-preview">
           <div className="email-modal-preview-header">Corrupted files</div>
           <div className="email-modal-preview-body">
-            <p><strong>To:</strong> pr0xy@unusual.net</p>
+            <p><strong>{previewMetaLabel}:</strong> {previewMetaValue}</p>
             <p><strong>{selectedMail.subject}</strong></p>
 
             {selectedMail.lines.map((line, index) => (

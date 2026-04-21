@@ -1,0 +1,60 @@
+.act3-prelude {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  z-index: 1300;
+  padding: 3rem clamp(1rem, 4vw, 4rem);
+  color: #f6f0ee;
+  opacity: 0;
+  transition: opacity 0.8s ease;
+}
+
+.act3-prelude--title {
+  background: linear-gradient(135deg, #662020 0%, #220b0b 100%);
+}
+
+.act3-prelude--text {
+  background: #141414;
+}
+
+.act3-prelude--in,
+.act3-prelude--hold {
+  opacity: 1;
+}
+
+.act3-prelude--out {
+  opacity: 0;
+}
+
+.act3-prelude-title {
+  margin: 0;
+  font-family: var(--font-heading);
+  font-size: clamp(4rem, 11vw, 10rem);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  text-shadow: 0 8px 30px rgba(0, 0, 0, 0.45);
+}
+
+.act3-prelude-text-content {
+  max-width: 980px;
+  text-align: start;
+}
+
+.act3-prelude-text-content p {
+  margin: 0;
+  font-family: var(--font-body);
+  font-size: clamp(1.05rem, 2.2vw, 1.45rem);
+  line-height: 1.55;
+  color: #f4e8e3;
+}
+
+.act3-prelude-text-content p + p {
+  margin-top: 1rem;
+}
+
+.act3-prelude-gap {
+  height: 1.1rem;
+}

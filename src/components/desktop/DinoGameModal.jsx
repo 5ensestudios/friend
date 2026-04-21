@@ -278,21 +278,41 @@ export default function DinoGameModal({ onClose, onDragMouseDown }) {
   return (
     <div className="dino-modal" role="dialog" aria-label="Dino Browser Game">
       <div className="dino-modal-header" onMouseDown={onDragMouseDown}>
-        <div className="dino-modal-title-wrap">
-          <span className="dino-modal-dot" aria-hidden="true" />
-          <span className="dino-modal-title">Browser Dino</span>
+        <div className="dino-modal-browser-tabs" aria-hidden="true">
+          <div className="dino-modal-tab dino-modal-tab--active">
+            <span className="dino-modal-tab-icon">◉</span>
+            <span className="dino-modal-tab-text">Dino Run</span>
+          </div>
+          <div className="dino-modal-tab">
+            <span className="dino-modal-tab-icon">◌</span>
+            <span className="dino-modal-tab-text">New Tab</span>
+          </div>
         </div>
         <button className="dino-modal-close" type="button" onClick={onClose} aria-label="Close Dino game">
           ✕
         </button>
       </div>
 
+      <div className="dino-modal-toolbar" aria-hidden="true">
+        <div className="dino-modal-nav-group">
+          <span className="dino-modal-nav-btn">←</span>
+          <span className="dino-modal-nav-btn">→</span>
+          <span className="dino-modal-nav-btn">↻</span>
+        </div>
+        <div className="dino-modal-address-bar">
+          chrome://dino
+        </div>
+        <div className="dino-modal-toolbar-chip">Offline game</div>
+      </div>
+
       <div className="dino-modal-hud">
         <span>Score {scoreLabel}</span>
         <span>Best {bestLabel}</span>
+        <span className="dino-modal-hint">Space/Up jump, Down duck, Esc close</span>
       </div>
 
-      <div className="dino-modal-canvas-wrapper">
+      <div className="dino-modal-canvas-shell">
+        <div className="dino-modal-canvas-wrapper">
         <canvas
           ref={canvasRef}
           width={WORLD_WIDTH}
@@ -306,10 +326,11 @@ export default function DinoGameModal({ onClose, onDragMouseDown }) {
             <div className="dino-modal-restart-hint">Press Space to Restart</div>
           </div>
         )}
+        </div>
       </div>
 
       <div className="dino-modal-footer">
-        <span className="dino-modal-help">Space/Up jump, Down duck, Esc close</span>
+        <span className="dino-modal-help">Classic browser runner in a desktop modal shell</span>
       </div>
     </div>
   );

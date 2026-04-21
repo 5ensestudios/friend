@@ -1,30 +1,15 @@
 .splash-screen {
   position: fixed;
   inset: 0;
-  background: #141414;
+  background: #000;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   z-index: 9999;
   cursor: pointer;
-  transition: opacity 0.7s ease;
 }
 
-
-.splash-in  { opacity: 0; animation: splashFadeIn 1.2s cubic-bezier(0.4,0,0.2,1) forwards; }
-.splash-hold { opacity: 1; }
-.splash-out { opacity: 1; animation: splashFadeOut 1.2s cubic-bezier(0.4,0,0.2,1) forwards; }
-
-@keyframes splashFadeIn {
-  from { opacity: 0; }
-  to   { opacity: 1; }
-}
-
-@keyframes splashFadeOut {
-  from { opacity: 1; }
-  to   { opacity: 0; }
-}
 
 /* Content wrapper */
 .splash-content {
@@ -33,6 +18,29 @@
   justify-content: center;
   flex: 1;
   width: 100%;
+  opacity: 0;
+}
+
+.splash-content-in {
+  animation: splashContentFadeIn 1.2s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+
+.splash-content-hold {
+  opacity: 1;
+}
+
+.splash-content-out {
+  animation: splashContentFadeOut 1.2s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+
+@keyframes splashContentFadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes splashContentFadeOut {
+  from { opacity: 1; }
+  to { opacity: 0; }
 }
 
 /* ───────── LOGO SLIDES ───────── */
