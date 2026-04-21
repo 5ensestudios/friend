@@ -8,7 +8,7 @@ function buildImageEntries() {
   return [
     {
       id: "trash_card_1",
-      name: "Game Design.png",
+      name: "Proxy Card.png",
       type: "image",
       icon: "/icons/Image.png",
       file_type: "PNG image",

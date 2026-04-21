@@ -4,7 +4,7 @@ import "../../styles/components/notepad.css";
 export default function Notepad({
   onClose,
   onDragMouseDown,
-  title = "Detective Notes - Notepad",
+  title = "Case Notes",
   iconSrc = "/icons/Notes.png",
   storageKey = "friEND_notes",
   initialText = "",

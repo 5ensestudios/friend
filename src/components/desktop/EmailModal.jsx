@@ -26,7 +26,7 @@ export default function EmailModal({ emails = [], activeMailId = null, onClose }
     null;
 
   const previewMetaLabel = selectedMail?.previewMeta?.label || "To";
-  const previewMetaValue = selectedMail?.previewMeta?.value || "pr0xy@unusual.net";
+  const previewMetaValue = selectedMail?.previewMeta?.value || "pr0xy@securemail.net";
 
   if (!selectedMail) return null;
 
@@ -35,7 +35,7 @@ export default function EmailModal({ emails = [], activeMailId = null, onClose }
       <div className="email-modal-header">
         <div className="email-modal-title-wrap">
           <img src="/icons/Mail.png" alt="" className="email-modal-title-icon" />
-          <span className="email-modal-title">CASE FILES</span>
+          <span className="email-modal-title">Mail Notification</span>
         </div>
         <button
           className="email-modal-close"
