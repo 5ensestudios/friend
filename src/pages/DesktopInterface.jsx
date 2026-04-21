@@ -764,7 +764,7 @@ export default function DesktopInterface({ playerData, onReturnToMenu, onAct3Sta
           <Notepad
             onClose={() => closeWindow("wishlist")}
             onDragMouseDown={notesDrag.onMouseDown}
-            title="Wishlist - Notepad"
+            title="Wishlist"
             iconSrc="/icons/Document.png"
             storageKey="friEND_wishlist"
             initialText={WISHLIST_DEFAULT_TEXT}
@@ -788,7 +788,7 @@ export default function DesktopInterface({ playerData, onReturnToMenu, onAct3Sta
           <Notepad
             onClose={() => closeWindow("redditDraft")}
             onDragMouseDown={redditDraftDrag.onMouseDown}
-            title="Reddit Draft - Notepad"
+            title="Reddit Draft"
             iconSrc="/icons/Notes.png"
             storageKey="friEND_reddit_draft"
             initialText={REDDIT_DRAFT_TEXT}

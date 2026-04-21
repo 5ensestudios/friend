@@ -157,7 +157,7 @@ export default function MusicPlayer({ onClose, masterVolume = 1, onDragMouseDown
 
       <div className="music-player-header" onMouseDown={onDragMouseDown}>
         <div className="music-player-title-wrap">
-          <span className="music-player-dot" aria-hidden="true" />
+          <img src="/icons/Music Player.png" alt="" className="music-player-icon" aria-hidden="true" />
           <span className="music-player-title">Music Player</span>
         </div>
         <button className="music-player-close" type="button" onClick={onClose} aria-label="Close music player">✕</button>

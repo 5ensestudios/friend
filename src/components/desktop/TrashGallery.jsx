@@ -8,11 +8,11 @@ function buildImageEntries() {
   return [
     {
       id: "trash_card_1",
-      name: "Proxy Card.png",
+      name: "proxy_card.png",
       type: "image",
       icon: "/icons/Image.png",
       file_type: "PNG image",
-      file_size: "2.4 MB",
+      file_size: "1.2 MB",
       created_date: "2016-03-25 16:52",
       description: "Game Design card",
       src: encodeURI("/Images/Game Design.png"),

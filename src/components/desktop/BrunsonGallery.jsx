@@ -20,11 +20,16 @@ function buildImageEntries() {
     type: "image",
     icon: "/icons/Image.png",
     file_type: "PNG image",
-    file_size: "2.4 MB",
+    file_size: generateFakeSize(),
     created_date: "2016-03-25 16:52",
     description: "Brunson photo",
     src: encodeURI(`/Brunson-pics/Brunson/${name}`),
   }));
+}
+
+function generateFakeSize() {
+  const mb = (Math.random() * 4 + 1).toFixed(2); // 1MB–5MB
+  return `${mb} MB`;
 }
 
 export default function BrunsonGallery({ onClose, onDragMouseDown }) {
@@ -43,7 +48,7 @@ export default function BrunsonGallery({ onClose, onDragMouseDown }) {
           <div className="window-title-bar" onMouseDown={onDragMouseDown} style={{ cursor: "grab" }}>
             <button className="window-nav-button" disabled title="Back">←</button>
             <button className="window-nav-button" disabled title="Forward">→</button>
-            <span className="window-title">Bruns</span>
+            <span className="window-title">Brunson</span>
           </div>
           <button className="window-close" onClick={onClose} title="Close">✕</button>
         </div>

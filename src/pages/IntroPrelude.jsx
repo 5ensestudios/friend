@@ -57,7 +57,9 @@ export default function IntroPrelude({ onDone }) {
     <div className={`case-intro case-intro--title ${fadeOut ? "case-intro--out" : ""}`}>
       <div className="case-intro-content">
         <h1 className="case-intro-title case-intro-title--brunson-intro">{slide.title}</h1>
-        <p className="case-intro-subtitle case-intro-subtitle--intro-label">{slide.subtitle}</p>
+        {slide.subtitle && (
+          <p className="case-intro-subtitle case-intro-subtitle--intro-label">{slide.subtitle}</p>
+        )}
       </div>
     </div>
   );

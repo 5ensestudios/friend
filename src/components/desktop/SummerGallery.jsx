@@ -22,11 +22,16 @@ function buildImageEntries() {
     type: "image",
     icon: "/icons/Image.png",
     file_type: "PNG image",
-    file_size: "2.4 MB",
+    file_size: generateFakeSize(),
     created_date: "2016-03-25 16:52",
     description: "Summer 2021 photo",
     src: encodeURI(`/Summer 2021/${name}`),
   }));
+}
+
+function generateFakeSize() {
+  const mb = (Math.random() * 4 + 1).toFixed(2); // 1MB–5MB
+  return `${mb} MB`;
 }
 
 export default function SummerGallery({ onClose, onDragMouseDown }) {
