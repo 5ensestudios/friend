@@ -85,11 +85,31 @@ const DESKTOP_MAILS = {
 
 const STATIC_INBOX_MAILS = [
   {
+    id: "static_detective_reply",
+    from: "Me",
+    subject: "Corrupted files",
+    attachment: "1 File",
+    previewMeta: { label: "To", value: "pr0xy@securemail.net" },
+    lines: [
+      "Hi,",
+      "",
+      "I found your contact info on a forum. I'm trying to look into an old case from March 2016 that the police closed as an accident.",
+      "",
+      "I managed to get some of the digital files from an investigation archive, but the folders seems to be corrupted. It keeps throwing errors every time I try to open it. These IT people I talked to told me ‘too bad’ and said they can't do anything about it, but I’m pretty sure the data is still there and just needs to be fixed.",
+      "",
+      "I’m not sure what’s inside but the folder is named ‘#2016-0307-CHRIS Footage’",
+      "",
+      "If I send you what I have, can you see if you can fix it and get the files to open? Just let me know what you'd charge for it.",
+      "",
+      "Thanks."
+    ],
+  },
+  {
     id: "static_proxy_reply",
     from: "Pr0xy",
-    subject: "Corrupted files",
+    subject: "Re: Corrupted files",
     attachment: "None",
-    previewMeta: { label: "To", value: "pr0xy@securemail.net" },
+    previewMeta: { label: "From", value: "pr0xy@securemail.net" },
     lines: [
       "I took a look at the data in the attachment you sent.",
       "",
@@ -103,33 +123,19 @@ const STATIC_INBOX_MAILS = [
     ],
   },
   {
-    id: "static_detective_reply",
+    id: "static_proxy_followup",
     from: "Me",
-    subject: "Corrupted files",
+    subject: "Re: Corrupted files",
     attachment: "None",
     previewMeta: { label: "To", value: "pr0xy@securemail.net" },
     lines: [
       "That’s fine, just let me know.",
       "",
-      "Honestly, I’ve been staring at that error message for weeks, so anything you can pull out of there is better than what I have now.",
+      "Honestly, I’ve been staring at that error message for weeks, so anything you can pull out of there is better than what I have now. ",
       "",
-      "Thank you so much for helping me with this, seriously. Just send over whatever you manage to recover.",
+      "Thank you so much for helping me with this, seriously. Just send over whatever you manage to recover. ",
       "",
       "I’ll be around.",
-    ],
-  },
-  {
-    id: "static_proxy_followup",
-    from: "Pr0xy",
-    subject: "Corrupted files",
-    attachment: "None",
-    previewMeta: { label: "To", value: "pr0xy@securemail.net" },
-    lines: [
-      "I recovered one more chunk from the archive.",
-      "",
-      "Same issue as before. Corruption spreads after repeated playback, so document everything before opening the next file.",
-      "",
-      "I’ll keep scraping what’s left.",
     ],
   },
 ];

@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import "../../styles/components/dinoGameModal.css";
-
+const DINO_IMAGE_SRC = "/icons/Dino.png";
 const WORLD_WIDTH = 760;
 const WORLD_HEIGHT = 250;
 const GROUND_Y = 206;
@@ -20,6 +20,7 @@ export default function DinoGameModal({ onClose, onDragMouseDown }) {
   const canvasRef = useRef(null);
   const frameRef = useRef(null);
   const gameRef = useRef(null);
+  const dinoImageRef = useRef(null);
 
   const [score, setScore] = useState(0);
   const [isOver, setIsOver] = useState(false);
@@ -68,11 +69,17 @@ export default function DinoGameModal({ onClose, onDragMouseDown }) {
     ctx.lineTo(WORLD_WIDTH, GROUND_Y + 0.5);
     ctx.stroke();
 
-    ctx.fillStyle = "#000000";
-    ctx.fillRect(DINO_X, game.dinoY, DINO_WIDTH, DINO_HEIGHT);
-
-    ctx.fillStyle = "#eaf4ef";
-    ctx.fillRect(DINO_X + DINO_WIDTH - 9, game.dinoY + 7, 4, 4);
+    const dinoImage = dinoImageRef.current;
+    if (dinoImage && dinoImage.complete) {
+      ctx.imageSmoothingEnabled = false;
+      ctx.drawImage(dinoImage, DINO_X, game.dinoY, DINO_WIDTH, DINO_HEIGHT);
+    } else {
+      // Fallback so gameplay still works while asset is loading.
+      ctx.fillStyle = "#000000";
+      ctx.fillRect(DINO_X, game.dinoY, DINO_WIDTH, DINO_HEIGHT);
+      ctx.fillStyle = "#eaf4ef";
+      ctx.fillRect(DINO_X + DINO_WIDTH - 9, game.dinoY + 7, 4, 4);
+    }
 
     game.obstacles.forEach((obstacle) => {
       ctx.fillStyle = "#000000";
@@ -164,6 +171,22 @@ export default function DinoGameModal({ onClose, onDragMouseDown }) {
     },
     [bestScore, drawFrame]
   );
+
+  useEffect(() => {
+    const dinoImage = new Image();
+    dinoImage.src = DINO_IMAGE_SRC;
+    dinoImage.onload = () => {
+      dinoImageRef.current = dinoImage;
+      drawFrame();
+    };
+    dinoImageRef.current = dinoImage;
+
+    return () => {
+      if (dinoImageRef.current === dinoImage) {
+        dinoImageRef.current = null;
+      }
+    };
+  }, [drawFrame]);
 
   useEffect(() => {
     resetGame();

@@ -2,7 +2,7 @@ import { useState, useEffect, useRef } from "react";
 import { useSound } from "../hooks/useSound";
 import "../styles/pages/mainMenu.css";
 
-export default function MainMenu({ onStartIntro, onContinue, onTutorial, currentUserEmail = "" }) {
+export default function MainMenu({ onStartIntro, onContinue, onTutorial, onCredits, currentUserEmail = "" }) {
   const [selectedOption, setSelectedOption] = useState(0);
   const [isStarting, setIsStarting] = useState(false);
   const [showNewGameModal, setShowNewGameModal] = useState(false);
@@ -30,6 +30,7 @@ export default function MainMenu({ onStartIntro, onContinue, onTutorial, current
     { label: "NEW GAME", action: "new_game", disabled: false },
     { label: "CONTINUE", action: "continue", disabled: false },
     { label: "HOW TO PLAY", action: "tutorial", disabled: false },
+    { label: "CREDITS", action: "credits", disabled: false },
     { label: "EXIT", action: "exit", disabled: false },
   ];
 
@@ -97,6 +98,11 @@ export default function MainMenu({ onStartIntro, onContinue, onTutorial, current
     if (action === "tutorial") {
       setIsStarting(true);
       setTimeout(() => onTutorial?.(), 500);
+    }
+
+    if (action === "credits") {
+      setIsStarting(true);
+      setTimeout(() => onCredits?.(), 500);
     }
 
     if (action === "exit") {

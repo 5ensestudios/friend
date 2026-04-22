@@ -8,7 +8,7 @@ export default function Notepad({
   iconSrc = "/icons/Notes.png",
   storageKey = "friEND_notes",
   initialText = "",
-  placeholder = "Write your investigation notes here...",
+  placeholder = "Write anything you might find useful here...",
 }) {
   const [text, setText] = useState("");
 

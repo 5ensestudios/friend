@@ -138,6 +138,20 @@
   color: rgba(255, 255, 255, 0.35);
 }
 
+/* Keep autofilled inputs visually consistent with the rest of the login fields */
+.login-input:-webkit-autofill,
+.login-input:-webkit-autofill:hover,
+.login-input:-webkit-autofill:focus,
+.login-input:-webkit-autofill:active {
+  -webkit-box-shadow: 0 0 0 1000px rgba(255, 255, 255, 0.08) inset;
+  box-shadow: 0 0 0 1000px rgba(255, 255, 255, 0.08) inset;
+  -webkit-text-fill-color: #fff;
+  caret-color: #fff;
+  font-size: 18px;
+  border: 0;
+  transition: background-color 9999s ease-out 0s;
+}
+
 /* Button */
 .login-signin-btn {
   width: 240px;

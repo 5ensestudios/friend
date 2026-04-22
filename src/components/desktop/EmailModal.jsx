@@ -1,8 +1,11 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import "../../styles/components/emailModal.css";
 
 export default function EmailModal({ emails = [], activeMailId = null, onClose }) {
-  const sortedEmails = Array.isArray(emails) ? emails : [];
+  const sortedEmails = useMemo(() => {
+    if (!Array.isArray(emails)) return [];
+    return [...emails].reverse();
+  }, [emails]);
 
   const [selectedMailId, setSelectedMailId] = useState(() => activeMailId ?? null);
 
@@ -17,15 +20,15 @@ export default function EmailModal({ emails = [], activeMailId = null, onClose }
       return;
     }
 
-    setSelectedMailId(sortedEmails[sortedEmails.length - 1].id);
+    setSelectedMailId(sortedEmails[0].id);
   }, [activeMailId, sortedEmails, selectedMailId]);
 
   const selectedMail =
     sortedEmails.find(mail => mail.id === selectedMailId) ||
-    sortedEmails[sortedEmails.length - 1] ||
+    sortedEmails[0] ||
     null;
 
-  const previewMetaLabel = selectedMail?.previewMeta?.label || "To";
+  const previewMetaLabel = selectedMail?.previewMeta?.label || "From";
   const previewMetaValue = selectedMail?.previewMeta?.value || "pr0xy@securemail.net";
 
   if (!selectedMail) return null;
@@ -35,7 +38,7 @@ export default function EmailModal({ emails = [], activeMailId = null, onClose }
       <div className="email-modal-header">
         <div className="email-modal-title-wrap">
           <img src="/icons/Mail.png" alt="" className="email-modal-title-icon" />
-          <span className="email-modal-title">Notification</span>
+          <span className="email-modal-title">Mail</span>
         </div>
         <button
           className="email-modal-close"
@@ -66,7 +69,6 @@ export default function EmailModal({ emails = [], activeMailId = null, onClose }
         <div className="email-modal-preview">
           <div className="email-modal-preview-header">Corrupted files</div>
           <div className="email-modal-preview-body">
-            <p><strong>{selectedMail.subject}</strong></p>
             <p><strong>{previewMetaLabel}:</strong> {previewMetaValue}</p>
 
             {selectedMail.lines.map((line, index) => (

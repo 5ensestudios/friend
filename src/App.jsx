@@ -10,6 +10,7 @@ import ShutdownScreen from "./pages/ShutdownScreen";
 import CinematicEnding from "./pages/CinematicEnding";
 import CreditsScene from "./pages/CreditsScene";
 import TutorialPage from "./pages/TutorialPage";
+import CreditsPage from "./pages/CreditsPage";
 import DesktopInterface from "./pages/DesktopInterface";
 import MobileWarning from "./pages/MobileWarning";
 import { useAssetPreloader } from "./hooks/useAssetPreloader";
@@ -18,7 +19,7 @@ import { deletePlayerDocument, loadProgress } from "./firebase/progress";
 
 export default function App() {
   const audioRef = useRef(null);
-  const [currentPage, setCurrentPage] = useState("preload"); // 'preload' | 'splash' | 'menu' | 'tutorial' | 'intro' | 'booting' | 'login' | 'game' | 'shutting-down' | 'ending' | 'credits'
+  const [currentPage, setCurrentPage] = useState("preload"); // 'preload' | 'splash' | 'menu' | 'tutorial' | 'credits-page' | 'intro' | 'booting' | 'login' | 'game' | 'shutting-down' | 'ending' | 'credits'
   const [playerData, setPlayerData] = useState(null);
   const [chosenSuspect, setChosenSuspect] = useState(null);
   const [loginMode, setLoginMode] = useState("login");
@@ -97,6 +98,10 @@ export default function App() {
 
   function handleOpenTutorial() {
     setCurrentPage("tutorial");
+  }
+
+  function handleOpenCredits() {
+    setCurrentPage("credits-page");
   }
 
   async function handleNewGame() {
@@ -190,11 +195,15 @@ export default function App() {
               onStartIntro={handleStartIntro}
               onContinue={handleContinueGame}
               onTutorial={handleOpenTutorial}
+              onCredits={handleOpenCredits}
               currentUserEmail={authUser?.email || ""}
             />
           )}
           {currentPage === "tutorial" && (
             <TutorialPage onBack={() => setCurrentPage("menu")} />
+          )}
+          {currentPage === "credits-page" && (
+            <CreditsPage onBack={() => setCurrentPage("menu")} />
           )}
           {currentPage === "intro" && (
             <CaseIntro onDone={handleNewGame} />

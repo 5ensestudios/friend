@@ -31,6 +31,7 @@ Six pills are a statement.`,
     typeSpeed: 40,
     holdAfter: 3000,
     transition: 1200,
+    siren: true,
   },
 
   {
@@ -47,6 +48,7 @@ Determine what really happened that night.`,
     typeSpeed: 32,
     holdAfter: 2800,
     transition: 1200,
+    siren: true,
   },
 
   {
@@ -57,13 +59,6 @@ Incident: Fatal Respiratory Failure / Acute Zolpidem Toxicity`,
     typewriter: false,
     holdAfter: 4000,
     transition: 1500,
-  },
-  {
-    type: "logo",
-    src: "/Images/The Friend Logo.png",
-    alt: "The Friend logo",
-    holdAfter: 5000,
-    transition: 1200,
   },
 ];
 
@@ -117,18 +112,19 @@ export default function CaseIntro({ onDone }) {
   const sirenPlayedRef = useRef(false);
 
   const current = SLIDES[slideIdx];
+  const isSirenSlide = Boolean(current?.siren);
 
-  /* Start delay and play radio siren */
+  /* Start delay and play radio siren on slides 2 and 3 (slideIdx 1 and 2) */
   useEffect(() => {
     const t = setTimeout(() => {
       setStarted(true);
-      if (!sirenPlayedRef.current) {
+      if (!sirenPlayedRef.current && isSirenSlide) {
         play("radioSiren", { volume: 0.8 });
         sirenPlayedRef.current = true;
       }
     }, 600);
     return () => clearTimeout(t);
-  }, [play]);
+  }, [isSirenSlide, play]);
 
   /* Slide transition controller */
   function goToNextSlide() {
@@ -173,7 +169,7 @@ export default function CaseIntro({ onDone }) {
     <div
       className={`case-intro ${
         slideIdx === 0 ? "case-intro--title" : "case-intro--dark"
-      } ${slideIdx > 0 ? "case-intro--siren" : ""} ${screenFade ? "case-intro--out" : ""}`}
+      } ${isSirenSlide ? "case-intro--siren" : ""} ${screenFade ? "case-intro--out" : ""}`}
     >
       <div className={`case-intro-content ${current.type === "logo" ? "case-intro-content--logo" : ""}`}>
 
