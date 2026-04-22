@@ -7,6 +7,7 @@ import CaseIntro from "./pages/CaseIntro";
 import BootScreen from "./pages/BootScreen";
 import LoginScreen from "./pages/LoginScreen";
 import ShutdownScreen from "./pages/ShutdownScreen";
+import FatalExceptionScreen from "./pages/FatalExceptionScreen";
 import CinematicEnding from "./pages/CinematicEnding";
 import CreditsScene from "./pages/CreditsScene";
 import TutorialPage from "./pages/TutorialPage";
@@ -19,12 +20,12 @@ import { deletePlayerDocument, loadProgress } from "./firebase/progress";
 
 export default function App() {
   const audioRef = useRef(null);
-  const [currentPage, setCurrentPage] = useState("preload"); // 'preload' | 'splash' | 'menu' | 'tutorial' | 'credits-page' | 'intro' | 'booting' | 'login' | 'game' | 'shutting-down' | 'ending' | 'credits'
+  const [currentPage, setCurrentPage] = useState("preload"); // 'preload' | 'splash' | 'menu' | 'tutorial' | 'credits-page' | 'intro' | 'booting' | 'login' | 'game' | 'fatal-exception' | 'shutting-down' | 'ending' | 'credits'
   const [playerData, setPlayerData] = useState(null);
   const [chosenSuspect, setChosenSuspect] = useState(null);
   const [loginMode, setLoginMode] = useState("login");
   const [authUser, setAuthUser] = useState(null);
-  const [shutdownTarget, setShutdownTarget] = useState("ending");
+  const [shutdownTarget, setShutdownTarget] = useState("ending"); // 'menu' | 'credits' | 'act3-ending' | 'ending'
   const [isMobile, setIsMobile] = useState(() => window.innerWidth < 1024);
   const wasMobileRef = useRef(isMobile);
   const { progress: preloadProgress, isDone: isPreloadDone } = useAssetPreloader({ enabled: !isMobile });
@@ -146,7 +147,12 @@ export default function App() {
 
   function handleAct3Start(suspectId) {
     setChosenSuspect(suspectId);
-    setCurrentPage("ending");
+    setShutdownTarget("act3-ending");
+    setCurrentPage("fatal-exception");
+  }
+
+  function handleFatalExceptionDone() {
+    setCurrentPage("shutting-down");
   }
 
   function handleDesktopShutdown() {
@@ -162,6 +168,10 @@ export default function App() {
     }
     if (shutdownTarget === "credits") {
       setCurrentPage("credits");
+      return;
+    }
+    if (shutdownTarget === "act3-ending") {
+      setCurrentPage("ending");
       return;
     }
     setCurrentPage("ending");
@@ -227,8 +237,14 @@ export default function App() {
               onShutdownToMenu={handleDesktopShutdown}
             />
           )}
+          {currentPage === "fatal-exception" && (
+            <FatalExceptionScreen onDone={handleFatalExceptionDone} />
+          )}
           {currentPage === "shutting-down" && (
-            <ShutdownScreen onDone={handleShutdownDone} />
+            <ShutdownScreen
+              onDone={handleShutdownDone}
+              variant={shutdownTarget === "act3-ending" ? "act3" : "default"}
+            />
           )}
           {currentPage === "ending" && (
             <CinematicEnding suspect={chosenSuspect} onDone={handleEndingDone} />

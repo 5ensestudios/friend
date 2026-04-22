@@ -914,6 +914,7 @@ export default function DesktopInterface({ playerData, onReturnToMenu, onAct3Sta
         <SuspectSelect
           onSelect={handleSuspectChosen}
           onCancel={() => setShowSuspectSelect(false)}
+          variant={currentAct === 3 ? "act3" : "default"}
         />
       )}
 
@@ -966,7 +967,7 @@ export default function DesktopInterface({ playerData, onReturnToMenu, onAct3Sta
               aria-label="Open start menu"
             >
               <img src="/icons/PC.png" alt="Start" className="start-icon-img" />
-              <span className="start-text">MENU</span>
+              <span className="start-text">Menu</span>
             </button>
           </div>
           <div className="taskbar-divider"></div>

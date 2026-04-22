@@ -25,13 +25,13 @@
 
 .case-doc-paper {
   position: relative;
-  width: 640px;
+  width: min(800px, 92vw);
   max-height: 85vh;
-  overflow-y: auto;
-  background: #f5f0e6;
-  color: #2a2522;
-  padding: 48px 56px;
-  box-shadow: 0 8px 40px rgba(0, 0, 0, 0.5);
+  overflow: auto;
+  color: transparent;
+  padding: none;
+  background: transparent;
+  box-shadow: 20px;
   font-family: var(--font-body);
   line-height: 1.7;
   animation: paperSlideUp 0.4s cubic-bezier(0.22, 1, 0.36, 1) forwards;
@@ -65,28 +65,69 @@
 }
 
 .case-doc-paper::-webkit-scrollbar {
-  width: 6px;
+  width: 10px;
+}
+
+.case-doc-paper::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.18);
+  border-radius: 999px;
 }
 
 .case-doc-paper::-webkit-scrollbar-thumb {
-  background: rgba(0, 0, 0, 0.2);
-  border-radius: 3px;
+  background: #999;
+  border-radius: 999px;
+  border: 2px solid rgba(255, 255, 255, 0.2);
+}
+
+.case-doc-paper::-webkit-scrollbar-thumb:hover {
+  background: #999;
+}
+
+.case-doc-paper {
+  scrollbar-width: thin;
+  scrollbar-color: #999 rgba(255, 255, 255, 0.18);
 }
 
 .case-doc-close {
   position: absolute;
-  top: 16px;
-  right: 16px;
-  background: none;
+  top: 20px;
+  right: 30px;
+  background: transparent;
   border: none;
-  color: #888;
-  font-size: 18px;
+  color: #292727;
+  font-size: 20px;
+  line-height: 1;
+  padding: 0;
   cursor: pointer;
-  transition: color 0.2s;
+  transition: color 0.2s ease;
+  z-index: 200;
 }
 
 .case-doc-close:hover {
-  color: #333;
+  color: #474444;
+}
+
+.case-doc-image-wrap {
+  position: relative;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
+
+.case-doc-image {
+  display: block;
+  width: 100%;
+  max-width: 1000px;
+  height: auto;
+  object-fit: contain;
+  z-index: 100;
+}
+
+.case-doc-image-fallback {
+  margin: 0;
+  padding: 28px 18px;
+  color: #f5f0e6;
+  font-family: var(--font-body);
 }
 
 /* Header */

@@ -1,10 +1,29 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useSound } from "../hooks/useSound";
 import "../styles/pages/shutdownScreen.css";
 
-export default function ShutdownScreen({ onDone }) {
+export default function ShutdownScreen({ onDone, variant = "default" }) {
   const [phase, setPhase] = useState("bright"); // 'bright' | 'collapse' | 'line' | 'done'
   const { play } = useSound();
+  const theme = useMemo(() => {
+    if (variant === "act3") {
+      return {
+        bg: "#662020",
+        exitBg: "#141414",
+        line: "#f5d8cf",
+        glow: "rgba(245, 216, 207, 0.5)",
+        shadow: "rgba(102, 32, 32, 0.65)",
+      };
+    }
+
+    return {
+      bg: "var(--color-accent-dark, #0d0d0d)",
+      exitBg: "var(--color-accent-dark, #0d0d0d)",
+      line: "var(--color-secondary, #3d655e)",
+      glow: "rgba(61, 101, 94, 0.6)",
+      shadow: "rgba(61, 101, 94, 0.3)",
+    };
+  }, [variant]);
 
   useEffect(() => {
     // Play boot screen OFF sound when shutdown starts
@@ -25,7 +44,16 @@ export default function ShutdownScreen({ onDone }) {
   }, [onDone, play]);
 
   return (
-    <div className={`shutdown-screen shutdown-${phase}`}>
+    <div
+      className={`shutdown-screen shutdown-${phase} shutdown-screen--${variant}`}
+      style={{
+        "--shutdown-bg": theme.bg,
+        "--shutdown-exit-bg": theme.exitBg,
+        "--shutdown-line": theme.line,
+        "--shutdown-glow": theme.glow,
+        "--shutdown-shadow": theme.shadow,
+      }}
+    >
       <div className="shutdown-scanlines" />
       <div className="shutdown-line" />
     </div>

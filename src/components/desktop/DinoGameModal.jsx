@@ -8,7 +8,7 @@ const DINO_X = 72;
 const DINO_WIDTH = 40;
 const DINO_HEIGHT = 44;
 const GRAVITY = 2250;
-const JUMP_VELOCITY = 840;
+const JUMP_VELOCITY = 700;
 const BASE_SPEED = 330;
 const MAX_SPEED = 830;
 

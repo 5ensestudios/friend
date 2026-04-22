@@ -1,13 +1,19 @@
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import { useSound } from "../../hooks/useSound";
 import "../../styles/components/emailNotificationPopup.css";
 
 export default function EmailNotificationPopup({ mail, onClose }) {
   const { play } = useSound();
+  const lastMailIdRef = useRef(null);
 
   useEffect(() => {
     if (!mail) return;
-    play("emailPopup");
+
+    // Only play sound if this is a new mail (mail ID changed)
+    if (lastMailIdRef.current !== mail.id) {
+      play("emailPopup");
+      lastMailIdRef.current = mail.id;
+    }
 
     const autoClose = setTimeout(() => {
       onClose?.();

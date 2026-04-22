@@ -104,14 +104,14 @@
   font-family: var(--font-heading);
   font-size: clamp(64px, 12vw, 140px);
   letter-spacing: 0.08em;
-  line-height: 1;
+  line-height: 0;
   color: #ffffff;
 }
 
 .case-intro-title--brunson-intro {
   font-family: "Brunson Rough", sans-serif;
   font-size: clamp(86px, 12vw, 190px);
-  line-height: 0.95;
+  line-height: 0.82;
   letter-spacing: 0.01em;
   text-transform: uppercase;
   margin-bottom: 18px;
@@ -152,7 +152,7 @@
 
 .case-intro-act-part {
   margin: 0 0 clamp(8px, 0.95vw, 16px);
-  font-family: var(--font-body);
+  font-family: "Brunson Rough", sans-serif;
   font-size: clamp(34px, 5vw, 96px);
   font-weight: 700;
   line-height: 1;

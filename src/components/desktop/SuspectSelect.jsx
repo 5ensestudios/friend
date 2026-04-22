@@ -9,7 +9,7 @@ const SUSPECTS = [
   { id: "richard", name: "Richard", role: "", img: "/Images/Richie Card.png" },
 ];
 
-export default function SuspectSelect({ onSelect }) {
+export default function SuspectSelect({ onSelect, variant = "default" }) {
   const [confirming, setConfirming] = useState(false);
   const { play } = useSound();
 
@@ -21,7 +21,7 @@ export default function SuspectSelect({ onSelect }) {
   }
 
   return (
-    <div className={`suspect-select-overlay${confirming ? " confirming" : ""}`} role="dialog" aria-label="Act 3 character selection">
+    <div className={`suspect-select-overlay${variant === "act3" ? " suspect-select-overlay--act3" : ""}${confirming ? " confirming" : ""}`} role="dialog" aria-label="Act 3 character selection">
       <div className="suspect-select-content">
         <div className="suspect-select-grid">
           {SUSPECTS.map(s => (

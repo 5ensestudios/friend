@@ -9,6 +9,12 @@
   align-items: center;
   justify-content: center;
   animation: suspectFadeIn 0.35s ease forwards;
+  --suspect-hover-border: var(--color-primary);
+  --suspect-hover-shadow: rgba(0, 0, 0, 0.6);
+}
+
+.suspect-select-overlay--act3 {
+  --suspect-hover-border: #662020;
 }
 
 .suspect-select-overlay.confirming {
@@ -82,8 +88,8 @@
 }
 
 .suspect-select-card:hover:not(:disabled) .suspect-card-img {
-  border: 5px solid var(--color-primary);
-  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.6);
+  border: 5px solid var(--suspect-hover-border);
+  box-shadow: 0 12px 40px var(--suspect-hover-shadow);
 }
 
 .suspect-card-info {

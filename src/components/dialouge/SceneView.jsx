@@ -69,6 +69,9 @@ const QUESTION_PROMPT_SCREENS = {
   ],
 };
 
+const QUESTION_PHASE_MS = 5000;
+const QUESTION_PHASE_FADE_OUT_MS = 900;
+
 /* ══════════════════════════════════════════════════════════
    ACT 0 — Intro (per-character full sequential interview)
    ══════════════════════════════════════════════════════════ */
@@ -304,12 +307,27 @@ function useVideoPreload(src) {
     el.preload = 'auto';
     el.muted = true;
     el.playsInline = true;
+    // Some CDN encodes never fire canplaythrough consistently; accept first playable signal.
     const onReady = () => setReady(true);
+    const onError = () => setReady(true);
+    el.addEventListener('loadeddata', onReady, { once: true });
+    el.addEventListener('canplay', onReady, { once: true });
     el.addEventListener('canplaythrough', onReady, { once: true });
+    el.addEventListener('error', onError, { once: true });
+
+    // Failsafe: never block "Proceed" forever if preload events are flaky.
+    const fallback = setTimeout(() => {
+      setReady(true);
+    }, 2500);
+
     el.load();
     videoRef.current = el;
     return () => {
+      clearTimeout(fallback);
+      el.removeEventListener('loadeddata', onReady);
+      el.removeEventListener('canplay', onReady);
       el.removeEventListener('canplaythrough', onReady);
+      el.removeEventListener('error', onError);
       el.src = '';
       videoRef.current = null;
     };
@@ -508,6 +526,7 @@ export default function SceneView({
   const [phase, setPhase] = useState(
     shouldShowQuestionTitle ? "question-intro-act" : (saved.phase ?? "selection")
   );
+  const [isQuestionPhaseFadingOut, setIsQuestionPhaseFadingOut] = useState(false);
   const [isTypingDone, setIsTypingDone] = useState(false);
   const [pendingLastClip, setPendingLastClip] = useState(null);
   const [tapFading, setTapFading] = useState(false);
@@ -535,6 +554,7 @@ export default function SceneView({
     setPickSubIdx(0);
     setPendingLastClip(null);
     setIsTypingDone(false);
+    setIsQuestionPhaseFadingOut(false);
     if ((actNumber === 1 || actNumber === 2) && isAlreadyCompleted) {
       setPhase("question-complete");
       return;
@@ -548,8 +568,20 @@ export default function SceneView({
       phase !== "question-intro-act" &&
       phase !== "question-intro-details" &&
       phase !== "question-slide"
-    ) return;
+    ) {
+      setIsQuestionPhaseFadingOut(false);
+      return;
+    }
+
+    setIsQuestionPhaseFadingOut(false);
+
+    const fadeTimer = setTimeout(() => {
+      setIsQuestionPhaseFadingOut(true);
+    }, Math.max(QUESTION_PHASE_MS - QUESTION_PHASE_FADE_OUT_MS, 0));
+
     const timer = setTimeout(() => {
+      setIsQuestionPhaseFadingOut(false);
+
       if (phase === "question-intro-act") {
         setPhase("question-intro-details");
         return;
@@ -564,8 +596,12 @@ export default function SceneView({
       } else if (phase === "question-slide") {
         setPhase("selection");
       }
-    }, 5000);
-    return () => clearTimeout(timer);
+    }, QUESTION_PHASE_MS);
+
+    return () => {
+      clearTimeout(fadeTimer);
+      clearTimeout(timer);
+    };
   }, [phase, isAct0, actNumber, qIdx]);
 
   /* Persist progress */
@@ -724,12 +760,12 @@ export default function SceneView({
     onQuestionComplete?.(actNumber, qIdx, updatedCompleted);
 
     if (qIdx + 1 >= ACTS[actNumber].questions.length) {
-      play("radioChirp");
+      play("");
       onActComplete?.(actNumber);
       return;
     }
 
-    play("radioChirp");
+    play("");
   }
 
   function handleTapToContinue() {
@@ -799,7 +835,10 @@ export default function SceneView({
   function renderQuestionIntroAct() {
     const info = getQuestionTitleScreenData(actNumber, qIdx);
     return (
-      <div className="scene-content scene-content--question-intro">
+      <div
+        key="question-intro-act"
+        className={`scene-content scene-content--question-intro scene-content--question-phase ${isQuestionPhaseFadingOut ? "scene-content--question-phase-out" : ""}`}
+      >
         <div className="question-intro-card question-intro-card--act">
           <h1 className="question-intro-title question-intro-title--act">{info.actLabel}</h1>
           <p className="question-intro-part">{info.partLabel}</p>
@@ -811,7 +850,10 @@ export default function SceneView({
   function renderQuestionIntroDetails() {
     const info = getQuestionTitleScreenData(actNumber, qIdx);
     return (
-      <div className="scene-content scene-content--question-intro">
+      <div
+        key="question-intro-details"
+        className={`scene-content scene-content--question-intro scene-content--question-phase ${isQuestionPhaseFadingOut ? "scene-content--question-phase-out" : ""}`}
+      >
         <div className="question-intro-card question-intro-card--details">
           <h1 className="question-intro-title question-intro-title--details">{info.detailTitle}</h1>
           {info.detailDescription && <p className="question-intro-desc">{info.detailDescription}</p>}
@@ -823,7 +865,10 @@ export default function SceneView({
   function renderQuestionPromptSlide() {
     const text = getQuestionPromptScreenText(actNumber, qIdx);
     return (
-      <div className="scene-content scene-content--question-slide">
+      <div
+        key="question-slide"
+        className={`scene-content scene-content--question-slide scene-content--question-phase ${isQuestionPhaseFadingOut ? "scene-content--question-phase-out" : ""}`}
+      >
         <p className="question-slide-text">{text}</p>
       </div>
     );
