@@ -205,6 +205,7 @@ export default function DesktopInterface({ playerData, onReturnToMenu, onAct3Sta
   const [evidenceVisible, setEvidenceVisible] = useState(
     playerData.progress.acts_completed.includes(2)
   );
+  const [caseDocumentKey, setCaseDocumentKey] = useState(0);
 
   const filesDrag = useDraggable({ x: 60, y: 40 });
   const notesDrag = useDraggable({ x: 120, y: 80 });
@@ -413,6 +414,10 @@ export default function DesktopInterface({ playerData, onReturnToMenu, onAct3Sta
   }
 
   function openWindow(windowId) {
+    if (windowId === "casedoc") {
+      setCaseDocumentKey(prev => prev + 1);
+    }
+
     if (!openWindows.includes(windowId)) {
       setOpenWindows(prev => [...prev, windowId]);
     }
@@ -793,7 +798,7 @@ export default function DesktopInterface({ playerData, onReturnToMenu, onAct3Sta
       )}
 
       {openWindows.includes("casedoc") && (
-        <CaseDocument onClose={() => closeWindow("casedoc")} />
+        <CaseDocument key={caseDocumentKey} onClose={() => closeWindow("casedoc")} />
       )}
 
       {openWindows.includes("evidence") && (
@@ -980,17 +985,17 @@ export default function DesktopInterface({ playerData, onReturnToMenu, onAct3Sta
               {w === "files" ? (
                 <>
                   <img src="/icons/Folder.png" alt="" className="taskbar-window-icon" />
-                  <span>Case Files</span>
+                  <span>#2016-0307-CHRIS Footage</span>
                 </>
               ) : w === "notes" ? (
                 <>
                   <img src="/icons/Notes.png" alt="" className="taskbar-window-icon" />
-                  <span>Notes</span>
+                  <span>Case Notes.txt</span>
                 </>
               ) : w === "wishlist" ? (
                 <>
                   <img src="/icons/Document.png" alt="" className="taskbar-window-icon" />
-                  <span>Wishlist</span>
+                  <span>Wishlist.txt</span>
                 </>
               ) : w === "evidence" ? (
                 <>
@@ -1015,7 +1020,7 @@ export default function DesktopInterface({ playerData, onReturnToMenu, onAct3Sta
               ) : w === "redditDraft" ? (
                 <>
                   <img src="/icons/Notes.png" alt="" className="taskbar-window-icon" />
-                  <span>Reddit Draft</span>
+                  <span>Reddit Draft.txt</span>
                 </>
               ) : w === "music" ? (
                 <>
@@ -1025,17 +1030,17 @@ export default function DesktopInterface({ playerData, onReturnToMenu, onAct3Sta
               ) : w === "mail" ? (
                 <>
                   <img src="/icons/Mail.png" alt="" className="taskbar-window-icon" />
-                  <span>Inbox</span>
+                  <span>Mail</span>
                 </>
               ) : w === "dino" ? (
                 <>
                   <img src="/icons/Image.png" alt="" className="taskbar-window-icon" />
-                  <span>Browser Game</span>
+                  <span>SurfNet</span>
                 </>
               ) : (
                 <>
                   <img src="/icons/Document.png" alt="" className="taskbar-window-icon" />
-                  <span>Case Brief</span>
+                  <span>#2016-0307-CHRIS Case File.pdf</span>
                 </>
               )}
             </button>

@@ -2,7 +2,7 @@
   position: fixed;
   inset: 0;
   background: rgba(0, 0, 0, 0.7);
-  z-index: 300;
+  z-index: 10020;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -25,17 +25,20 @@
 
 .case-doc-paper {
   position: relative;
-  width: min(800px, 92vw);
+  width: min(92vw, 800px);
   max-height: 85vh;
   overflow: auto;
-  color: transparent;
-  padding: none;
   background: transparent;
-  box-shadow: 20px;
+  color: transparent;
+  padding: 0;
+  box-shadow: none;
   font-family: var(--font-body);
   line-height: 1.7;
   animation: paperSlideUp 0.4s cubic-bezier(0.22, 1, 0.36, 1) forwards;
   transform-origin: bottom center;
+  display: flex;
+  justify-content: center;
+  z-index: 10021;
 }
 
 .case-doc-paper.closing {
@@ -80,7 +83,7 @@
 }
 
 .case-doc-paper::-webkit-scrollbar-thumb:hover {
-  background: #999;
+  background: #a8a8a8;
 }
 
 .case-doc-paper {
@@ -90,37 +93,60 @@
 
 .case-doc-close {
   position: absolute;
-  top: 20px;
-  right: 30px;
-  background: transparent;
-  border: none;
-  color: #292727;
-  font-size: 20px;
+  top: 12px;
+  right: 12px;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: rgba(20, 20, 20, 0.72);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: #f5f0e6;
+  font-size: 14px;
   line-height: 1;
-  padding: 0;
   cursor: pointer;
-  transition: color 0.2s ease;
+  transition: background 0.2s ease, color 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   z-index: 200;
 }
 
 .case-doc-close:hover {
-  color: #474444;
+  color: #ffffff;
+  background: rgba(44, 44, 44, 0.9);
 }
 
 .case-doc-image-wrap {
   position: relative;
   width: 100%;
-  display: flex;
-  justify-content: center;
+  max-width: 1000px;
+  display: block;
 }
 
 .case-doc-image {
   display: block;
   width: 100%;
-  max-width: 1000px;
+  max-width: 100%;
   height: auto;
   object-fit: contain;
   z-index: 100;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.case-doc-image.loaded {
+  opacity: 1;
+}
+
+.case-doc-loading {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  color: #ccc;
+  font-size: 14px;
+  z-index: 99;
+  pointer-events: none;
 }
 
 .case-doc-image-fallback {
@@ -221,4 +247,3 @@
   border-top: 1px solid #ccc;
   margin-bottom: 12px;
 }
-

@@ -383,7 +383,8 @@
 }
 
 .taskbar-volume-slider {
-  -webkit-appearance: slider-vertical;
+  writing-mode: vertical-lr;
+  direction: rtl;
   width: 20px;
   height: 112px;
   accent-color: #b33838;

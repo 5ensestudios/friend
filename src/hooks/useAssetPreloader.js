@@ -14,6 +14,7 @@ const STARTUP_ASSETS = [
   "/Images/May Card.png",
   "/Images/Johnny Card.png",
   "/Images/Richie Card.png",
+  "/Images/Case%20File.png",
   "/icons/Battery.png",
   "/icons/Bin.png",
   "/icons/Document.png",
