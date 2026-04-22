@@ -118,6 +118,20 @@
   gap: 16px;
 }
 
+.question-intro-card--act {
+  max-width: min(1200px, 95vw);
+  min-height: 0;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  align-items: flex-end;
+  justify-content: center;
+  gap: 60px;
+}
+
+.question-intro-card--details {
+  max-width: min(1200px, 95vw);
+}
+
 .question-intro-title {
   margin: 0;
   font-family: var(--font-heading);
@@ -126,6 +140,36 @@
   letter-spacing: 0.06em;
   color: #ffffff !important;
   opacity: 1;
+}
+
+.question-intro-title--act {
+  font-family: var(--font-heading);
+  font-size: 300px;
+  letter-spacing: 0.015em;
+  line-height: 0.9;
+}
+
+.question-intro-title--details {
+  font-family: var(--font-heading);
+  font-size: clamp(88px, 13vw, 230px);
+  letter-spacing: 0.015em;
+  line-height: 0.9;
+}
+
+.question-intro-part {
+  margin: 0;
+  align-self: flex-end;
+  display: block;
+  position: relative;
+  top: 0;
+  color: #ffffff;
+  font-family: var(--font-body);
+  font-size: clamp(34px, 5vw, 94px);
+  line-height: 0.9;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  opacity: 0.95;
 }
 
 .question-intro-subtitle {
@@ -145,6 +189,14 @@
   font-size: clamp(18px, 1.9vw, 30px);
   line-height: 1.35;
   opacity: 0.92;
+}
+
+.question-intro-card--details .question-intro-desc {
+  margin-top: 2px;
+  max-width: none;
+  white-space: nowrap;
+  font-size: clamp(19px, 2vw, 42px);
+  line-height: 1.25;
 }
 
 .question-slide-text {
@@ -220,6 +272,19 @@
   text-align: center;
 }
 
+.scene-content--question-intro .question-intro-card--act {
+  align-items: flex-end;
+}
+
+.scene-content--question-intro p.question-intro-part {
+  margin: 0;
+  margin-bottom: 0;
+  font-family: var(--font-body);
+  font-weight: 700;
+  line-height: 0.88;
+  align-self: flex-end;
+}
+
 .scene-content--complete .act-complete-copy {
   color: #ffffff;
 }
@@ -228,6 +293,25 @@
   color: #ffffff;
   margin-bottom: 0;
   font-weight: 400;
+}
+
+@media (max-width: 760px) {
+  .question-intro-card--act {
+    flex-direction: row;
+    flex-wrap: nowrap;
+    align-items: flex-end;
+    gap: 10px;
+  }
+
+  .scene-content--question-intro p.question-intro-part {
+    margin-bottom: 0;
+    font-size: clamp(24px, 6vw, 48px);
+  }
+
+  .question-intro-card--details .question-intro-desc {
+    font-size: clamp(16px, 3.8vw, 24px);
+    max-width: 90vw;
+  }
 }
 
 .suspect-grid {

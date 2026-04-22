@@ -13,7 +13,7 @@ function buildImageEntries() {
       icon: "/icons/Image.png",
       file_type: "PNG image",
       file_size: "1.2 MB",
-      created_date: "2016-03-25 16:52",
+      created_date: "01-12-2026 8:50",
       description: "Game Design card",
       src: encodeURI("/Images/Game Design.png"),
     },

@@ -6,7 +6,7 @@ const SLIDES = [
   {
     id: "act3",
     type: "title",
-    text: "ACT 3",
+    text: "ACT III",
     holdMs: 1700,
   },
   {

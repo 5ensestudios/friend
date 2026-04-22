@@ -1,4 +1,4 @@
-import { doc, getDoc, setDoc, serverTimestamp } from "firebase/firestore";
+import { deleteDoc, doc, getDoc, setDoc, serverTimestamp } from "firebase/firestore";
 import { db } from "./config";
 
 const PLAYERS_COLLECTION = "players";
@@ -58,4 +58,9 @@ export async function loadProgress(userId) {
 
   const data = snapshot.data();
   return data.gameState || null;
+}
+
+export async function deletePlayerDocument(userId) {
+  if (!userId) return;
+  await deleteDoc(doc(db, PLAYERS_COLLECTION, userId));
 }

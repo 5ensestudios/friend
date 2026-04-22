@@ -8,15 +8,17 @@ import BootScreen from "./pages/BootScreen";
 import LoginScreen from "./pages/LoginScreen";
 import ShutdownScreen from "./pages/ShutdownScreen";
 import CinematicEnding from "./pages/CinematicEnding";
+import CreditsScene from "./pages/CreditsScene";
+import TutorialPage from "./pages/TutorialPage";
 import DesktopInterface from "./pages/DesktopInterface";
 import MobileWarning from "./pages/MobileWarning";
 import { useAssetPreloader } from "./hooks/useAssetPreloader";
-import { subscribeToAuth, logoutUser } from "./firebase/auth";
-import { loadProgress } from "./firebase/progress";
+import { deleteUserAccount, subscribeToAuth, logoutUser } from "./firebase/auth";
+import { deletePlayerDocument, loadProgress } from "./firebase/progress";
 
 export default function App() {
   const audioRef = useRef(null);
-  const [currentPage, setCurrentPage] = useState("preload"); // 'preload' | 'splash' | 'menu' | 'intro' | 'booting' | 'login' | 'game' | 'shutting-down' | 'ending'
+  const [currentPage, setCurrentPage] = useState("preload"); // 'preload' | 'splash' | 'menu' | 'tutorial' | 'intro' | 'booting' | 'login' | 'game' | 'shutting-down' | 'ending' | 'credits'
   const [playerData, setPlayerData] = useState(null);
   const [chosenSuspect, setChosenSuspect] = useState(null);
   const [loginMode, setLoginMode] = useState("login");
@@ -93,9 +95,25 @@ export default function App() {
     setCurrentPage("intro");
   }
 
+  function handleOpenTutorial() {
+    setCurrentPage("tutorial");
+  }
+
   async function handleNewGame() {
-    if (authUser) {
-      await logoutUser();
+    if (authUser?.uid) {
+      const activeUser = authUser;
+      try {
+        await deletePlayerDocument(activeUser.uid);
+      } catch {
+        // Keep flow going even if old save cleanup fails.
+      }
+
+      try {
+        await deleteUserAccount(activeUser);
+      } catch {
+        // Fallback to signing out if account deletion is blocked by provider rules.
+        await logoutUser();
+      }
     }
 
     setLoginMode("register");
@@ -137,12 +155,21 @@ export default function App() {
       setCurrentPage("menu");
       return;
     }
+    if (shutdownTarget === "credits") {
+      setCurrentPage("credits");
+      return;
+    }
     setCurrentPage("ending");
   }
 
   function handleEndingDone() {
-    setShutdownTarget("menu");
+    setShutdownTarget("credits");
     setCurrentPage("shutting-down");
+  }
+
+  function handleCreditsDone() {
+    setShutdownTarget("menu");
+    setCurrentPage("menu");
   }
 
   return (
@@ -162,7 +189,12 @@ export default function App() {
             <MainMenu
               onStartIntro={handleStartIntro}
               onContinue={handleContinueGame}
+              onTutorial={handleOpenTutorial}
+              currentUserEmail={authUser?.email || ""}
             />
+          )}
+          {currentPage === "tutorial" && (
+            <TutorialPage onBack={() => setCurrentPage("menu")} />
           )}
           {currentPage === "intro" && (
             <CaseIntro onDone={handleNewGame} />
@@ -191,6 +223,9 @@ export default function App() {
           )}
           {currentPage === "ending" && (
             <CinematicEnding suspect={chosenSuspect} onDone={handleEndingDone} />
+          )}
+          {currentPage === "credits" && (
+            <CreditsScene onDone={handleCreditsDone} />
           )}
         </>
       )}

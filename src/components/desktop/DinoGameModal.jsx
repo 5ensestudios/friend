@@ -7,7 +7,6 @@ const GROUND_Y = 206;
 const DINO_X = 72;
 const DINO_WIDTH = 40;
 const DINO_HEIGHT = 44;
-const DINO_DUCK_HEIGHT = 28;
 const GRAVITY = 2250;
 const JUMP_VELOCITY = 840;
 const BASE_SPEED = 330;
@@ -34,14 +33,14 @@ export default function DinoGameModal({ onClose, onDragMouseDown }) {
       dinoY: GROUND_Y - DINO_HEIGHT,
       dinoVelocityY: 0,
       isJumping: false,
-      isDucking: false,
       speed: BASE_SPEED,
       score: 0,
       spawnTimer: randomRange(0.8, 1.4),
       obstacles: [],
       lastTime: performance.now(),
       ticks: 0,
-      running: true,
+      running: false,
+      started: false,
     };
 
     setScore(0);
@@ -59,53 +58,25 @@ export default function DinoGameModal({ onClose, onDragMouseDown }) {
 
     ctx.clearRect(0, 0, WORLD_WIDTH, WORLD_HEIGHT);
 
-    const sky = ctx.createLinearGradient(0, 0, 0, WORLD_HEIGHT);
-    sky.addColorStop(0, "#f4f8f1");
-    sky.addColorStop(0.64, "#d3e6d8");
-    sky.addColorStop(1, "#b5d0c2");
-    ctx.fillStyle = sky;
+    ctx.fillStyle = "#ffffff";
     ctx.fillRect(0, 0, WORLD_WIDTH, WORLD_HEIGHT);
 
-    ctx.strokeStyle = "rgba(24, 43, 48, 0.36)";
+    ctx.strokeStyle = "#000000";
     ctx.lineWidth = 2;
     ctx.beginPath();
     ctx.moveTo(0, GROUND_Y + 0.5);
     ctx.lineTo(WORLD_WIDTH, GROUND_Y + 0.5);
     ctx.stroke();
 
-    ctx.fillStyle = "rgba(19, 44, 50, 0.2)";
-    const offset = (game.ticks * game.speed * 0.12) % 28;
-    for (let x = -offset; x < WORLD_WIDTH; x += 28) {
-      ctx.fillRect(x, GROUND_Y + 8, 14, 2);
-    }
-
-    const dinoHeight = game.isDucking && !game.isJumping ? DINO_DUCK_HEIGHT : DINO_HEIGHT;
-    const dinoY = game.dinoY + (DINO_HEIGHT - dinoHeight);
-
-    ctx.fillStyle = "#183d44";
-    ctx.fillRect(DINO_X, dinoY, DINO_WIDTH, dinoHeight);
+    ctx.fillStyle = "#000000";
+    ctx.fillRect(DINO_X, game.dinoY, DINO_WIDTH, DINO_HEIGHT);
 
     ctx.fillStyle = "#eaf4ef";
-    ctx.fillRect(DINO_X + DINO_WIDTH - 9, dinoY + 7, 4, 4);
+    ctx.fillRect(DINO_X + DINO_WIDTH - 9, game.dinoY + 7, 4, 4);
 
     game.obstacles.forEach((obstacle) => {
-      ctx.fillStyle = obstacle.type === "bird" ? "#1f5550" : "#245049";
-
-      if (obstacle.type === "bird") {
-        ctx.beginPath();
-        ctx.ellipse(
-          obstacle.x + obstacle.width / 2,
-          obstacle.y + obstacle.height / 2,
-          obstacle.width / 2,
-          obstacle.height / 2,
-          0,
-          0,
-          Math.PI * 2
-        );
-        ctx.fill();
-      } else {
-        ctx.fillRect(obstacle.x, obstacle.y, obstacle.width, obstacle.height);
-      }
+      ctx.fillStyle = "#000000";
+      ctx.fillRect(obstacle.x, obstacle.y, obstacle.width, obstacle.height);
     });
   }, []);
 
@@ -133,24 +104,14 @@ export default function DinoGameModal({ onClose, onDragMouseDown }) {
 
       game.spawnTimer -= delta;
       if (game.spawnTimer <= 0) {
-        if (Math.random() > 0.72) {
-          game.obstacles.push({
-            type: "bird",
-            x: WORLD_WIDTH + randomRange(24, 90),
-            y: GROUND_Y - randomRange(68, 124),
-            width: 42,
-            height: 24,
-          });
-        } else {
-          const height = randomRange(34, 62);
-          game.obstacles.push({
-            type: "cactus",
-            x: WORLD_WIDTH + randomRange(24, 90),
-            y: GROUND_Y - height,
-            width: randomRange(20, 32),
-            height,
-          });
-        }
+        const height = randomRange(34, 62);
+        game.obstacles.push({
+          type: "block",
+          x: WORLD_WIDTH + randomRange(24, 90),
+          y: GROUND_Y - height,
+          width: randomRange(20, 32),
+          height,
+        });
 
         const pace = (game.speed - BASE_SPEED) / (MAX_SPEED - BASE_SPEED);
         game.spawnTimer = randomRange(0.72, 1.35) - pace * 0.24;
@@ -161,12 +122,11 @@ export default function DinoGameModal({ onClose, onDragMouseDown }) {
       });
       game.obstacles = game.obstacles.filter((obstacle) => obstacle.x + obstacle.width > -36);
 
-      const dinoHeight = game.isDucking && !game.isJumping ? DINO_DUCK_HEIGHT : DINO_HEIGHT;
       const dinoRect = {
         x: DINO_X + 6,
-        y: game.dinoY + (DINO_HEIGHT - dinoHeight) + 2,
+        y: game.dinoY + 2,
         width: DINO_WIDTH - 10,
-        height: dinoHeight - 5,
+        height: DINO_HEIGHT - 5,
       };
 
       const hit = game.obstacles.some((obstacle) => {
@@ -214,15 +174,13 @@ export default function DinoGameModal({ onClose, onDragMouseDown }) {
     if (!game) return;
 
     drawFrame();
-    game.lastTime = performance.now();
-    frameRef.current = requestAnimationFrame(gameLoop);
 
     return () => {
       if (frameRef.current) {
         cancelAnimationFrame(frameRef.current);
       }
     };
-  }, [drawFrame, gameLoop, isOver]);
+  }, [drawFrame, gameLoop]);
 
   useEffect(() => {
     const onKeyDown = (event) => {
@@ -242,35 +200,26 @@ export default function DinoGameModal({ onClose, onDragMouseDown }) {
           return;
         }
 
+        if (!game.started) {
+          game.started = true;
+          game.running = true;
+          game.lastTime = performance.now();
+          frameRef.current = requestAnimationFrame(gameLoop);
+        }
+
         if (!game.isJumping) {
           game.isJumping = true;
-          game.isDucking = false;
           game.dinoVelocityY = -JUMP_VELOCITY;
         }
-      }
-
-      if (event.key === "ArrowDown") {
-        game.isDucking = true;
-      }
-    };
-
-    const onKeyUp = (event) => {
-      const game = gameRef.current;
-      if (!game) return;
-
-      if (event.key === "ArrowDown") {
-        game.isDucking = false;
       }
     };
 
     window.addEventListener("keydown", onKeyDown);
-    window.addEventListener("keyup", onKeyUp);
 
     return () => {
       window.removeEventListener("keydown", onKeyDown);
-      window.removeEventListener("keyup", onKeyUp);
     };
-  }, [isOver, onClose, resetGame]);
+  }, [gameLoop, isOver, onClose, resetGame]);
 
   const scoreLabel = useMemo(() => String(score).padStart(5, "0"), [score]);
   const bestLabel = useMemo(() => String(bestScore).padStart(5, "0"), [bestScore]);
@@ -280,12 +229,8 @@ export default function DinoGameModal({ onClose, onDragMouseDown }) {
       <div className="dino-modal-header" onMouseDown={onDragMouseDown}>
         <div className="dino-modal-browser-tabs" aria-hidden="true">
           <div className="dino-modal-tab dino-modal-tab--active">
-            <span className="dino-modal-tab-icon">◉</span>
-            <span className="dino-modal-tab-text">Dino Run</span>
-          </div>
-          <div className="dino-modal-tab">
-            <span className="dino-modal-tab-icon">◌</span>
-            <span className="dino-modal-tab-text">New Tab</span>
+            <img src="/icons/Browser.png" alt="" className="dino-modal-tab-icon" />
+            <span className="dino-modal-tab-text">SurfNet</span>
           </div>
         </div>
         <button className="dino-modal-close" type="button" onClick={onClose} aria-label="Close Dino game">
@@ -297,18 +242,10 @@ export default function DinoGameModal({ onClose, onDragMouseDown }) {
         <div className="dino-modal-nav-group">
           <span className="dino-modal-nav-btn">←</span>
           <span className="dino-modal-nav-btn">→</span>
-          <span className="dino-modal-nav-btn">↻</span>
         </div>
         <div className="dino-modal-address-bar">
-          chrome://dino
+          surfnet://network-error/106
         </div>
-        <div className="dino-modal-toolbar-chip">Offline game</div>
-      </div>
-
-      <div className="dino-modal-hud">
-        <span>Score {scoreLabel}</span>
-        <span>Best {bestLabel}</span>
-        <span className="dino-modal-hint">Space/Up jump, Down duck, Esc close</span>
       </div>
 
       <div className="dino-modal-canvas-shell">
@@ -330,7 +267,12 @@ export default function DinoGameModal({ onClose, onDragMouseDown }) {
       </div>
 
       <div className="dino-modal-footer">
-        <span className="dino-modal-help">Classic browser runner in a desktop modal shell</span>
+        <div className="dino-modal-footer-row">
+          <span className="dino-modal-help">Press space to play</span>
+          <span className="dino-modal-scoreline">Score {scoreLabel} High Score {bestLabel}</span>
+        </div>
+        <h3 className="dino-modal-error-title">Network Error</h3>
+        <p className="dino-modal-error-text">Please check your network connection, or try connecting to the wi-fi.</p>
       </div>
     </div>
   );

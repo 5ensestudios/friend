@@ -32,7 +32,7 @@
 .act3-prelude-title {
   margin: 0;
   font-family: var(--font-heading);
-  font-size: clamp(4rem, 11vw, 10rem);
+  font-size: 211px;
   letter-spacing: 0.1em;
   text-transform: uppercase;
   text-shadow: 0 8px 30px rgba(0, 0, 0, 0.45);

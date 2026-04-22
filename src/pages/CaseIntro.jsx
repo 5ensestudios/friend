@@ -58,6 +58,13 @@ Incident: Fatal Respiratory Failure / Acute Zolpidem Toxicity`,
     holdAfter: 4000,
     transition: 1500,
   },
+  {
+    type: "logo",
+    src: "/Images/The Friend Logo.png",
+    alt: "The Friend logo",
+    holdAfter: 5000,
+    transition: 1200,
+  },
 ];
 
 /* ═══════════════════════════════════════════
@@ -168,28 +175,33 @@ export default function CaseIntro({ onDone }) {
         slideIdx === 0 ? "case-intro--title" : "case-intro--dark"
       } ${slideIdx > 0 ? "case-intro--siren" : ""} ${screenFade ? "case-intro--out" : ""}`}
     >
-      <div className="case-intro-content">
+      <div className={`case-intro-content ${current.type === "logo" ? "case-intro-content--logo" : ""}`}>
 
         {started && (
           <div className={`case-intro-slide ${fade ? "fade-out" : "fade-in"}`}>
+            {current.type === "logo" ? (
+              <div className="case-intro-logo-wrap">
+                <img className="case-intro-logo" src={current.src} alt={current.alt} />
+              </div>
+            ) : (
+              <p
+                className={`case-intro-line ${current.isTitle ? "title" : ""}`}
+                style={{ whiteSpace: "pre-line" }}
+              >
 
-            <p
-              className={`case-intro-line ${current.isTitle ? "title" : ""}`}
-              style={{ whiteSpace: "pre-line" }}
-            >
+                {current.typewriter ? (
+                  <TypeLine
+                    key={slideIdx}
+                    text={current.text}
+                    speed={current.typeSpeed || 40}
+                    onDone={handleSlideDone}
+                  />
+                ) : (
+                  current.text
+                )}
 
-              {current.typewriter ? (
-                <TypeLine
-                  key={slideIdx}
-                  text={current.text}
-                  speed={current.typeSpeed || 40}
-                  onDone={handleSlideDone}
-                />
-              ) : (
-                current.text
-              )}
-
-            </p>
+              </p>
+            )}
           </div>
           
         )}

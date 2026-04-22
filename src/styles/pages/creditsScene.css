@@ -1,0 +1,154 @@
+.credits-scene {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #141414;
+  color: #ffffff;
+  z-index: 1600;
+  overflow: hidden;
+  padding: 4vh 3vw;
+}
+
+.credits-content {
+  width: min(1280px, 96vw);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transform: scale(0.992);
+  transition: opacity 700ms ease, transform 700ms ease;
+}
+
+.credits-content--in {
+  opacity: 1;
+  transform: scale(1);
+}
+
+.credits-content--out {
+  opacity: 0;
+  transform: scale(1.006);
+}
+
+.credits-logo-wrap {
+  width: min(1100px, 92vw);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.credits-logo {
+  width: 100%;
+  max-width: 980px;
+  max-height: 64vh;
+  object-fit: contain;
+  display: block;
+}
+
+.credits-logo--studio {
+  max-width: 1260px;
+  max-height: 125vh;
+}
+
+.credits-team {
+  width: min(1180px, 94vw);
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin: 0 auto;
+  padding-left: 120px;
+}
+
+.credits-team-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1.15fr) minmax(0, 0.85fr);
+  align-items: baseline;
+  column-gap: 300px;
+  width: min(100%, 980px);
+  margin: 0 auto;
+  justify-items: start;
+  text-align: left;
+}
+
+.credits-team-row p {
+  margin: 0;
+  line-height: 1;
+  white-space: nowrap;
+}
+
+.credits-team-name {
+  font-family: var(--font-heading);
+  font-size: clamp(36px, 6vw, 70px);
+  letter-spacing: 0.01em;
+  text-transform: uppercase;
+}
+
+.credits-team-role {
+  font-family: var(--font-body);
+  font-size: clamp(26px, 3.1vw, 56px);
+  line-height: 1.05;
+  text-align: left;
+}
+
+.credits-person {
+  width: min(1160px, 94vw);
+  text-align: center;
+}
+
+.credits-person-name {
+  margin: 0;
+  font-family: var(--font-heading);
+  font-size: 120px;
+  max-width: none;
+  line-height: 0.95;
+  letter-spacing: 0.012em;
+  text-transform: uppercase;
+}
+
+.credits-person-role {
+  margin: clamp(10px, 1.7vh, 20px) 0 0;
+  font-family: var(--font-body);
+  font-size: 35px;
+  line-height: 1.18;
+  letter-spacing: 0em;
+}
+
+.credits-preview-hud {
+  position: fixed;
+  right: 16px;
+  bottom: 16px;
+  display: inline-flex;
+  gap: 10px;
+  align-items: center;
+  padding: 8px 12px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  background: rgba(0, 0, 0, 0.45);
+  color: #f1f1f1;
+  font-family: var(--font-body);
+  font-size: 13px;
+  line-height: 1;
+  letter-spacing: 0.02em;
+}
+
+@media (max-width: 900px) {
+  .credits-team {
+    gap: 18px;
+  }
+
+  .credits-team-row {
+    grid-template-columns: 1fr;
+    row-gap: 6px;
+    justify-items: center;
+    text-align: center;
+  }
+
+  .credits-team-name {
+    font-size: clamp(28px, 8.2vw, 62px);
+  }
+
+  .credits-team-role {
+    font-size: clamp(20px, 6vw, 34px);
+    text-align: center;
+  }
+}

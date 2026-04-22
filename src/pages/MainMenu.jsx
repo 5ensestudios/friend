@@ -2,9 +2,10 @@ import { useState, useEffect, useRef } from "react";
 import { useSound } from "../hooks/useSound";
 import "../styles/pages/mainMenu.css";
 
-export default function MainMenu({ onStartIntro, onContinue }) {
+export default function MainMenu({ onStartIntro, onContinue, onTutorial, currentUserEmail = "" }) {
   const [selectedOption, setSelectedOption] = useState(0);
   const [isStarting, setIsStarting] = useState(false);
+  const [showNewGameModal, setShowNewGameModal] = useState(false);
   const audioRef = useRef(null);
   const { play } = useSound();
 
@@ -28,13 +29,26 @@ export default function MainMenu({ onStartIntro, onContinue }) {
   const options = [
     { label: "NEW GAME", action: "new_game", disabled: false },
     { label: "CONTINUE", action: "continue", disabled: false },
-    { label: "TUTORIAL", action: "tutorial", disabled: false },
+    { label: "HOW TO PLAY", action: "tutorial", disabled: false },
     { label: "EXIT", action: "exit", disabled: false },
   ];
 
   useEffect(() => {
     const handleKeyDown = (e) => {
       if (isStarting) return;
+
+      if (showNewGameModal) {
+        if (e.key === "Escape") {
+          play("click");
+          setShowNewGameModal(false);
+        }
+
+        if (e.key === "Enter") {
+          handleConfirmNewGame();
+        }
+
+        return;
+      }
 
       if (e.key === "ArrowUp") {
         play("hover");
@@ -58,20 +72,31 @@ export default function MainMenu({ onStartIntro, onContinue }) {
 
     window.addEventListener("keydown", handleKeyDown);
     return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [selectedOption, isStarting, play]);
+  }, [selectedOption, isStarting, play, showNewGameModal]);
+
+  function handleConfirmNewGame() {
+    play("click");
+    play("radioSiren", { volume: 0.8 });
+    setShowNewGameModal(false);
+    setIsStarting(true);
+    setTimeout(() => onStartIntro(), 500);
+  }
 
   function handleSelectOption(action) {
     play("click");
 
     if (action === "new_game") {
-      play("radioSiren", { volume: 0.8 });
-      setIsStarting(true);
-      setTimeout(() => onStartIntro(), 500);
+      setShowNewGameModal(true);
     }
 
     if (action === "continue") {
       setIsStarting(true);
       setTimeout(() => onContinue(), 500);
+    }
+
+    if (action === "tutorial") {
+      setIsStarting(true);
+      setTimeout(() => onTutorial?.(), 500);
     }
 
     if (action === "exit") {
@@ -117,6 +142,27 @@ export default function MainMenu({ onStartIntro, onContinue }) {
           <p>© 2026 5ENSE STUDIOS. All rights reserved.</p>
         </div>
       </div>
+
+      {showNewGameModal && (
+        <div className="menu-modal-overlay" onClick={() => setShowNewGameModal(false)}>
+          <div className="menu-modal" onClick={(event) => event.stopPropagation()} role="dialog" aria-modal="true">
+            <h2 className="menu-modal-title">Start new game?</h2>
+            <p className="menu-modal-copy">
+              The current account linked and its progress will be deleted.
+            </p>
+            {currentUserEmail && <p className="menu-modal-user">{currentUserEmail}</p>}
+
+            <div className="menu-modal-actions">
+              <button type="button" className="menu-modal-btn" onClick={() => setShowNewGameModal(false)}>
+                CANCEL
+              </button>
+              <button type="button" className="menu-modal-btn menu-modal-btn--danger" onClick={handleConfirmNewGame}>
+                DELETE & CONTINUE
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

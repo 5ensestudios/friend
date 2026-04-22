@@ -35,7 +35,7 @@ export default function EmailModal({ emails = [], activeMailId = null, onClose }
       <div className="email-modal-header">
         <div className="email-modal-title-wrap">
           <img src="/icons/Mail.png" alt="" className="email-modal-title-icon" />
-          <span className="email-modal-title">Mail Notification</span>
+          <span className="email-modal-title">Notification</span>
         </div>
         <button
           className="email-modal-close"
@@ -66,8 +66,8 @@ export default function EmailModal({ emails = [], activeMailId = null, onClose }
         <div className="email-modal-preview">
           <div className="email-modal-preview-header">Corrupted files</div>
           <div className="email-modal-preview-body">
-            <p><strong>{previewMetaLabel}:</strong> {previewMetaValue}</p>
             <p><strong>{selectedMail.subject}</strong></p>
+            <p><strong>{previewMetaLabel}:</strong> {previewMetaValue}</p>
 
             {selectedMail.lines.map((line, index) => (
               line ? (
@@ -77,7 +77,9 @@ export default function EmailModal({ emails = [], activeMailId = null, onClose }
               )
             ))}
 
-            <p><strong>Attachment:</strong> {selectedMail.attachment}</p>
+            {selectedMail.attachment && selectedMail.attachment.toLowerCase() !== "none" && (
+              <p><strong>Attachment:</strong> {selectedMail.attachment}</p>
+            )}
           </div>
         </div>
       </div>

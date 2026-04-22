@@ -23,9 +23,26 @@ const QUESTION_FILE_SIZES = {
   2: ["150 MB", "210 MB", "240 MB"],
 };
 
+function pad2(value) {
+  return String(value).padStart(2, "0");
+}
+
+function formatDateTime(date) {
+  return `${pad2(date.getMonth() + 1)}-${pad2(date.getDate())}-${date.getFullYear()} ${pad2(date.getHours())}:${pad2(date.getMinutes())}`;
+}
+
+function randomDateInRange(start, end) {
+  const startMs = start.getTime();
+  const endMs = end.getTime();
+  const randomMs = Math.floor(Math.random() * (endMs - startMs + 1)) + startMs;
+  return formatDateTime(new Date(randomMs));
+}
+
 function buildQuestionFolders(actNumber) {
   const questions = ACT_QUESTIONS[actNumber] || [];
   const sizes = QUESTION_FILE_SIZES[actNumber] || [];
+  const dateStart = new Date("2016-03-07T00:00:00");
+  const dateEnd = new Date("2016-03-07T23:59:00");
   return questions.map((label, index) => ({
     id: `act${actNumber}_q${index + 1}`,
     name: `${label}`,
@@ -39,7 +56,7 @@ function buildQuestionFolders(actNumber) {
     unlocks_after_question: index > 0 ? index - 1 : undefined,
     file_type: FILE_TYPE_LABEL,
     file_size: sizes[index] || "128 MB",
-    created_date: "2016-03-07",
+    created_date: randomDateInRange(dateStart, dateEnd),
     description: label,
   }));
 }
@@ -73,6 +90,8 @@ export default function FileExplorer({
   }, [currentFolder, fileStructure, selectedFile]);
 
   async function loadFileSystem() {
+    const rootDateStart = new Date("2016-03-07T00:00:00");
+    const rootDateEnd = new Date("2016-03-07T23:59:00");
     // Hardcoded file structure for now
     const structure = {
       rootFolders: [
@@ -86,7 +105,7 @@ export default function FileExplorer({
           file_type: FILE_TYPE_LABEL,
           property_name: "4:00:37 AM",
           file_size: "400 MB",
-          created_date: "2016-03-07",
+          created_date: randomDateInRange(rootDateStart, rootDateEnd),
           description: "Initial interview statements from all suspects",
         },
         {
@@ -100,7 +119,7 @@ export default function FileExplorer({
           file_type: FILE_TYPE_LABEL,
           property_name: "4:12:10 AM",
           file_size: "1 GB",
-          created_date: "2016-03-07",
+          created_date: randomDateInRange(rootDateStart, rootDateEnd),
           description: "Detailed recounts of what happened last night",
           children: buildQuestionFolders(1),
         },
@@ -115,7 +134,7 @@ export default function FileExplorer({
           file_type: FILE_TYPE_LABEL,
           property_name: "5:08:07 AM",
           file_size: "600 MB",
-          created_date: "2016-03-07",
+          created_date: randomDateInRange(rootDateStart, rootDateEnd),
           description: "Background and motivations of each suspect",
           children: buildQuestionFolders(2),
         },
@@ -123,14 +142,14 @@ export default function FileExplorer({
           id: "act3_file",
           name: "???",
           type: "file",
-          icon: "/icons/Document.png",
+          icon: "/icons/Folder.png",
           required_act: 3,
           unlocks_after_act: 2,
           act_number: 3,
           file_type: FILE_TYPE_LABEL,
           property_name: "????",
           file_size: "300 MB",
-          created_date: "2016-03-07",
+          created_date: randomDateInRange(rootDateStart, rootDateEnd),
           description: "Confrontation and truth revelation",
         },
       ],

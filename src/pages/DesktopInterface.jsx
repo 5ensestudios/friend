@@ -86,10 +86,10 @@ const DESKTOP_MAILS = {
 const STATIC_INBOX_MAILS = [
   {
     id: "static_proxy_reply",
-    from: "Me",
-    subject: "Re: Corrupted files",
+    from: "Pr0xy",
+    subject: "Corrupted files",
     attachment: "None",
-    previewMeta: { label: "From", value: "pr0xy@securemail.net" },
+    previewMeta: { label: "To", value: "pr0xy@securemail.net" },
     lines: [
       "I took a look at the data in the attachment you sent.",
       "",
@@ -105,7 +105,7 @@ const STATIC_INBOX_MAILS = [
   {
     id: "static_detective_reply",
     from: "Me",
-    subject: "Re: Corrupted files",
+    subject: "Corrupted files",
     attachment: "None",
     previewMeta: { label: "To", value: "pr0xy@securemail.net" },
     lines: [
@@ -116,6 +116,20 @@ const STATIC_INBOX_MAILS = [
       "Thank you so much for helping me with this, seriously. Just send over whatever you manage to recover.",
       "",
       "I’ll be around.",
+    ],
+  },
+  {
+    id: "static_proxy_followup",
+    from: "Pr0xy",
+    subject: "Corrupted files",
+    attachment: "None",
+    previewMeta: { label: "To", value: "pr0xy@securemail.net" },
+    lines: [
+      "I recovered one more chunk from the archive.",
+      "",
+      "Same issue as before. Corruption spreads after repeated playback, so document everything before opening the next file.",
+      "",
+      "I’ll keep scraping what’s left.",
     ],
   },
 ];
@@ -148,9 +162,15 @@ function getNextDesktopMail(progress) {
 }
 
 function getSeenDesktopMails(progress) {
-  const seen = progress?.desktop_mail_seen || {};
+  const actsCompleted = progress?.acts_completed || [];
+  const unlockedIds = ["firstDesktop"];
+
+  if (actsCompleted.includes(0)) unlockedIds.push("afterIntro");
+  if (actsCompleted.includes(1)) unlockedIds.push("afterAct1");
+  if (actsCompleted.includes(2)) unlockedIds.push("afterAct2");
+
   const unlockedProgressMails = DESKTOP_MAIL_ORDER
-    .filter(mailId => seen[mailId] && DESKTOP_MAILS[mailId])
+    .filter(mailId => unlockedIds.includes(mailId) && DESKTOP_MAILS[mailId])
     .map(mailId => DESKTOP_MAILS[mailId]);
 
   return [...STATIC_INBOX_MAILS, ...unlockedProgressMails];
@@ -414,38 +434,7 @@ export default function DesktopInterface({ playerData, onReturnToMenu, onAct3Sta
       return <Act3Prelude onDone={handleActIntroDone} />;
     }
 
-    // You can customize lines per act here
-    const actLines = [
-      [
-        { text: "INTRODUCTION", delay: 0 },
-        { text: "", delay: 900 },
-        { text: "Interview each suspect to establish the facts.", delay: 1400 },
-        { text: "", delay: 200 },
-        { text: "Pay attention to their first impressions.", delay: 200 },
-      ],
-      [
-        { text: "ACT I — The Incident", delay: 0 },
-        { text: "", delay: 900 },
-        { text: "The night took a turn no one expected. Each suspect holds a piece of the truth.", delay: 1400 },
-        { text: "", delay: 200 },
-        { text: "Listen carefully. Motive hides in the details.", delay: 200 },
-      ],
-      [
-        { text: "ACT II — The Motives", delay: 0 },
-        { text: "", delay: 900 },
-        { text: "Motives begin to surface. The truth is layered beneath their words.", delay: 1400 },
-        { text: "", delay: 200 },
-        { text: "Who had reason to want Chris gone?", delay: 200 },
-      ],
-      [
-        { text: "ACT III — The Truth", delay: 0 },
-        { text: "", delay: 900 },
-        { text: "This is the final confrontation. The truth will be revealed.", delay: 1400 },
-        { text: "", delay: 200 },
-        { text: "Choose wisely.", delay: 200 },
-      ],
-    ];
-    return <ActIntro lines={actLines[currentAct] || actLines[0]} onDone={handleActIntroDone} />;
+    return <ActIntro actNumber={currentAct} onDone={handleActIntroDone} />;
   }
 
   if (view === "scene") {
@@ -704,9 +693,9 @@ export default function DesktopInterface({ playerData, onReturnToMenu, onAct3Sta
           type="button"
         >
           <div className="desktop-icon-img">
-            <img src="/icons/Image.png" alt="Browser" />
+            <img src="/icons/Browser.png" alt="Browser" />
           </div>
-          <span className="desktop-icon-label">Browser?.exe</span>
+          <span className="desktop-icon-label">SurfNet</span>
         </button>
       </div>
 
@@ -765,7 +754,7 @@ export default function DesktopInterface({ playerData, onReturnToMenu, onAct3Sta
             onClose={() => closeWindow("wishlist")}
             onDragMouseDown={notesDrag.onMouseDown}
             title="Wishlist"
-            iconSrc="/icons/Document.png"
+            iconSrc="/icons/Notes.png"
             storageKey="friEND_wishlist"
             initialText={WISHLIST_DEFAULT_TEXT}
             placeholder=""

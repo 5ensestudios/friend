@@ -1,0 +1,92 @@
+.tutorial-page {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: #141414;
+  color: #f1f1f1;
+  padding: clamp(24px, 4vh, 56px) clamp(20px, 3vw, 40px);
+  z-index: 1400;
+  overflow: hidden;
+}
+
+.tutorial-content {
+  width: min(980px, 60vw);
+  display: flex;
+  flex-direction: column;
+  max-height: calc(100dvh - clamp(48px, 8vh, 112px));
+  justify-content: center;
+  box-sizing: border-box;
+}
+
+.tutorial-title {
+  margin: 0 0 clamp(20px, 3vh, 36px);
+  font-family: var(--font-body);
+  font-size: clamp(28px, 4vh, 35px);
+  line-height: 1.1;
+  font-weight: 400;
+  letter-spacing: 0;
+  text-align: center;
+}
+
+.tutorial-section + .tutorial-section {
+  margin-top: clamp(14px, 2.2vh, 24px);
+}
+
+.tutorial-heading {
+  margin: 0;
+  font-family: var(--font-body);
+  font-size: clamp(18px, 1.5vw, 21px);
+  line-height: 0.40;
+  font-weight: 700;
+  letter-spacing: 0;
+  margin-top: 25px;
+}
+
+.tutorial-copy {
+  margin: 10px 0 0;
+  font-family: var(--font-body);
+  font-size: clamp(18px, 1.5vw, 21px);
+  line-height: 1.35;
+  font-weight: 400;
+  letter-spacing: 0;
+}
+
+.tutorial-back {
+  margin: clamp(24px, 4vh, 44px) auto 0;
+  min-width: 220px;
+  padding: 12px 28px;
+  border: none;
+  background: rgba(217, 217, 217, 0.05);
+  color: #f1f1f1;
+  font-family: var(--font-body);
+  font-size: 20px;
+  line-height: 1.25;
+  font-weight: 400;
+  letter-spacing: 0;
+  cursor: pointer;
+}
+
+.tutorial-back:hover {
+  background: rgba(217, 217, 217, 0.1);
+}
+
+@media (max-width: 900px) {
+  .tutorial-page {
+    padding: clamp(20px, 3.5vh, 40px) 20px;
+  }
+
+  .tutorial-content {
+    width: min(960px, 60vw);
+    max-height: calc(100dvh - 80px);
+  }
+
+  .tutorial-title {
+    margin-bottom: clamp(16px, 2.4vh, 28px);
+  }
+
+  .tutorial-section + .tutorial-section {
+    margin-top: clamp(10px, 1.8vh, 18px);
+  }
+}

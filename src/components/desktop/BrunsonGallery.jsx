@@ -13,7 +13,24 @@ const BRUNSON_IMAGE_NAMES = [
   "surpriseeee.png",
 ];
 
+function pad2(value) {
+  return String(value).padStart(2, "0");
+}
+
+function formatDateTime(date) {
+  return `${pad2(date.getMonth() + 1)}-${pad2(date.getDate())}-${date.getFullYear()} ${pad2(date.getHours())}:${pad2(date.getMinutes())}`;
+}
+
+function randomDateInRange(start, end) {
+  const startMs = start.getTime();
+  const endMs = end.getTime();
+  const randomMs = Math.floor(Math.random() * (endMs - startMs + 1)) + startMs;
+  return formatDateTime(new Date(randomMs));
+}
+
 function buildImageEntries() {
+  const dateStart = new Date("2025-03-20T08:00:00");
+  const dateEnd = new Date("2025-04-15T21:45:00");
   return BRUNSON_IMAGE_NAMES.map((name, index) => ({
     id: `brunson_${index + 1}`,
     name,
@@ -21,7 +38,7 @@ function buildImageEntries() {
     icon: "/icons/Image.png",
     file_type: "PNG image",
     file_size: generateFakeSize(),
-    created_date: "2016-03-25 16:52",
+    created_date: randomDateInRange(dateStart, dateEnd),
     description: "Brunson photo",
     src: encodeURI(`/Brunson-pics/Brunson/${name}`),
   }));

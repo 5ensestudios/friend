@@ -23,21 +23,34 @@ const ACT_TITLES = {
 const QUESTION_TITLE_SCREENS = {
   1: [
     {
-      title: "ACT 1",
-      subtitle: "The Incident - Part 1",
+      title: "THE INCIDENT",
       description: "Reconstruct the night, find out where each one of them was.",
     },
     {
-      title: "ACT 1",
-      subtitle: "The Incident - Part 2",
+      title: "THE INCIDENT",
+      description: "Reconstruct the night, find out where each one of them was.",
     },
     {
-      title: "ACT 1",
-      subtitle: "The Incident - Part 3",
+      title: "THE INCIDENT",
+      description: "Reconstruct the night, find out where each one of them was.",
     },
     {
-      title: "ACT 1",
-      subtitle: "The Incident - Part 4",
+      title: "THE INCIDENT",
+      description: "Reconstruct the night, find out where each one of them was.",
+    },
+  ],
+  2: [
+    {
+      title: "THE MOTIVES",
+      description: "Look beyond what they are showing on the surface, what hidden truths do they hide?",
+    },
+    {
+      title: "THE MOTIVES",
+      description: "Look beyond what they are showing on the surface, what hidden truths do they hide?",
+    },
+    {
+      title: "THE MOTIVES",
+      description: "Look beyond what they are showing on the surface, what hidden truths do they hide?",
     },
   ],
 };
@@ -452,19 +465,14 @@ export default function SceneView({
 }) {
   function getQuestionTitleScreenData(targetAct, targetQIdx) {
     const custom = QUESTION_TITLE_SCREENS[targetAct]?.[targetQIdx];
-    if (custom) return custom;
-
-    if (targetAct === 2) {
-      return {
-        title: "ACT 2",
-        subtitle: `The Motives - Part ${targetQIdx + 1}`,
-        description: "Look beyond what they are showing on the surface, what hidden truths do they hide?",
-      };
-    }
+    const detailTitle = custom?.title || `ACT ${targetAct}`;
+    const detailDescription = custom?.description;
 
     return {
-      title: `ACT ${targetAct}`,
-      subtitle: `Part ${targetQIdx + 1}`,
+      actLabel: `ACT ${targetAct}`,
+      partLabel: `PART ${targetQIdx + 1}`,
+      detailTitle,
+      detailDescription,
     };
   }
 
@@ -498,7 +506,7 @@ export default function SceneView({
     typeof questionIndex === "number" &&
     typeof qIdx === "number";
   const [phase, setPhase] = useState(
-    shouldShowQuestionTitle ? "question-intro" : (saved.phase ?? "selection")
+    shouldShowQuestionTitle ? "question-intro-act" : (saved.phase ?? "selection")
   );
   const [isTypingDone, setIsTypingDone] = useState(false);
   const [pendingLastClip, setPendingLastClip] = useState(null);
@@ -531,20 +539,29 @@ export default function SceneView({
       setPhase("question-complete");
       return;
     }
-    setPhase("question-intro");
+    setPhase("question-intro-act");
   }, [questionIndex, actNumber, saved.completedQuestions]);
 
   useEffect(() => {
     if (isAct0) return;
-    if (phase !== "question-intro" && phase !== "question-slide") return;
+    if (
+      phase !== "question-intro-act" &&
+      phase !== "question-intro-details" &&
+      phase !== "question-slide"
+    ) return;
     const timer = setTimeout(() => {
-      if (phase === "question-intro") {
+      if (phase === "question-intro-act") {
+        setPhase("question-intro-details");
+        return;
+      }
+
+      if (phase === "question-intro-details") {
         if (actNumber === 1 && qIdx === 1) {
           setPhase("question-warning");
           return;
         }
         setPhase("question-slide");
-      } else {
+      } else if (phase === "question-slide") {
         setPhase("selection");
       }
     }, 5000);
@@ -553,7 +570,12 @@ export default function SceneView({
 
   /* Persist progress */
   useEffect(() => {
-    const persistedPhase = phase === "question-intro" || phase === "question-slide" || phase === "question-complete" || phase === "question-warning"
+    const persistedPhase =
+      phase === "question-intro-act" ||
+      phase === "question-intro-details" ||
+      phase === "question-slide" ||
+      phase === "question-complete" ||
+      phase === "question-warning"
       ? "selection"
       : (phase === "answer" || phase === "pending"
         ? "question"
@@ -774,14 +796,25 @@ export default function SceneView({
     );
   }
 
-  function renderQuestionIntro() {
+  function renderQuestionIntroAct() {
     const info = getQuestionTitleScreenData(actNumber, qIdx);
     return (
       <div className="scene-content scene-content--question-intro">
-        <div className="question-intro-card">
-          <h1 className="question-intro-title">{info.title}</h1>
-          <p className="question-intro-subtitle">{info.subtitle}</p>
-          {info.description && <p className="question-intro-desc">{info.description}</p>}
+        <div className="question-intro-card question-intro-card--act">
+          <h1 className="question-intro-title question-intro-title--act">{info.actLabel}</h1>
+          <p className="question-intro-part">{info.partLabel}</p>
+        </div>
+      </div>
+    );
+  }
+
+  function renderQuestionIntroDetails() {
+    const info = getQuestionTitleScreenData(actNumber, qIdx);
+    return (
+      <div className="scene-content scene-content--question-intro">
+        <div className="question-intro-card question-intro-card--details">
+          <h1 className="question-intro-title question-intro-title--details">{info.detailTitle}</h1>
+          {info.detailDescription && <p className="question-intro-desc">{info.detailDescription}</p>}
         </div>
       </div>
     );
@@ -870,8 +903,10 @@ export default function SceneView({
 
       {/* ════ ACTS 1 & 2 ════ */}
       {!isAct0 && hasActData && (
-        phase === "question-intro" ? (
-          renderQuestionIntro()
+        phase === "question-intro-act" ? (
+          renderQuestionIntroAct()
+        ) : phase === "question-intro-details" ? (
+          renderQuestionIntroDetails()
         ) : phase === "question-warning" ? (
           renderQuestionWarning()
         ) : phase === "question-slide" ? (

@@ -3,8 +3,8 @@
   height: 500px;
   display: flex;
   flex-direction: column;
-  background: linear-gradient(180deg, #262728 0%, #1a1b1c 100%);
-  border: 1px solid rgba(255, 255, 255, 0.12);
+  background: #121417;
+  border: 1px solid rgba(255, 255, 255, 0.08);
   border-radius: 10px;
   overflow: hidden;
   color: #eef1ec;
@@ -12,18 +12,16 @@
 
 .dino-modal-header {
   display: flex;
-  gap: 10px;
   align-items: center;
   justify-content: space-between;
-  padding: 8px 10px 7px;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-  background: linear-gradient(180deg, #343536 0%, #2a2b2c 100%);
+  padding: 6px 10px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  background: linear-gradient(180deg, #1f2124 0%, #191b1e 100%);
 }
 
 .dino-modal-browser-tabs {
   display: inline-flex;
   align-items: center;
-  gap: 6px;
   min-width: 0;
   flex: 1;
 }
@@ -31,26 +29,25 @@
 .dino-modal-tab {
   display: inline-flex;
   align-items: center;
-  gap: 8px;
+  gap: 7px;
   min-width: 120px;
-  max-width: 170px;
-  height: 26px;
-  padding: 0 12px;
+  height: 24px;
+  padding: 0 10px;
   border-radius: 8px 8px 0 0;
-  background: rgba(255, 255, 255, 0.07);
-  color: #b9c3bf;
+  background: rgba(255, 255, 255, 0.05);
+  color: #cfd5d3;
   font-size: 11px;
-  letter-spacing: 0.04em;
 }
 
 .dino-modal-tab--active {
-  background: linear-gradient(180deg, #404243 0%, #313233 100%);
-  color: #f2f5f0;
+  background: linear-gradient(180deg, #2b2f34 0%, #22262b 100%);
+  color: #f0f2f2;
 }
 
 .dino-modal-tab-icon {
-  font-size: 10px;
-  opacity: 0.9;
+  width: 12px;
+  height: 12px;
+  object-fit: contain;
 }
 
 .dino-modal-tab-text {
@@ -80,10 +77,10 @@
 
 .dino-modal-close {
   width: 30px;
-  height: 24px;
+  height: 22px;
   border: 0;
   background: transparent;
-  color: #8f8f8f;
+  color: #9ea3a8;
   border-radius: 4px;
   cursor: pointer;
 }
@@ -96,100 +93,65 @@
 .dino-modal-toolbar {
   display: flex;
   align-items: center;
-  gap: 10px;
-  padding: 8px 12px;
-  background: linear-gradient(180deg, #222324 0%, #1c1d1e 100%);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  gap: 8px;
+  padding: 6px 10px;
+  background: #17191c;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
 }
 
 .dino-modal-nav-group {
   display: inline-flex;
-  gap: 6px;
+  gap: 4px;
 }
 
 .dino-modal-nav-btn {
-  width: 26px;
-  height: 26px;
+  width: 22px;
+  height: 22px;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  border-radius: 6px;
-  background: rgba(255, 255, 255, 0.06);
-  color: #c7cfca;
-  font-size: 12px;
+  border-radius: 4px;
+  background: transparent;
+  color: #9ea3a8;
+  font-size: 14px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
 }
 
 .dino-modal-address-bar {
   flex: 1;
   min-width: 0;
-  height: 28px;
+  height: 26px;
   display: flex;
   align-items: center;
   padding: 0 12px;
   border-radius: 999px;
-  background: rgba(10, 10, 10, 0.6);
+  background: #0d0f11;
   border: 1px solid rgba(255, 255, 255, 0.08);
-  color: #d6dfd7;
+  color: #e2e6e4;
   font-size: 11px;
   letter-spacing: 0.02em;
 }
 
-.dino-modal-toolbar-chip {
-  flex: 0 0 auto;
-  height: 26px;
-  display: inline-flex;
-  align-items: center;
-  padding: 0 10px;
-  border-radius: 999px;
-  background: rgba(61, 101, 94, 0.18);
-  border: 1px solid rgba(61, 101, 94, 0.35);
-  color: #dcebe4;
-  font-size: 10px;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-}
-
-.dino-modal-hud {
-  display: grid;
-  grid-template-columns: 1fr auto auto;
-  align-items: center;
-  gap: 10px;
-  padding: 8px 12px;
-  font-size: 11px;
-  color: #d6dfd7;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-  background: #202224;
-}
-
-.dino-modal-hint {
-  color: #aeb8b1;
-  text-align: right;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
 .dino-modal-canvas-shell {
   flex: 1;
-  padding: 12px;
-  background: radial-gradient(circle at 50% 0%, rgba(255,255,255,0.04), transparent 60%), #161718;
+  padding: 14px 16px 10px;
+  background: #14171a;
 }
 
 .dino-modal-canvas-wrapper {
   position: relative;
   width: 100%;
   height: 100%;
-  border-radius: 10px;
+  border-radius: 12px;
   overflow: hidden;
   border: 1px solid rgba(255, 255, 255, 0.08);
-  box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.35);
 }
 
 .dino-modal-canvas {
   width: 100%;
   height: 100%;
   display: block;
-  background: #ddece1;
+  background: #e8e8e8;
   object-fit: cover;
   image-rendering: pixelated;
 }
@@ -220,16 +182,47 @@
 
 .dino-modal-footer {
   display: flex;
-  justify-content: flex-start;
-  align-items: center;
-  gap: 10px;
-  padding: 8px 12px;
+  flex-direction: column;
+  gap: 0;
+  padding: 4px 16px 14px;
   font-size: 10px;
-  color: #bec9c0;
-  border-top: 1px solid rgba(255, 255, 255, 0.08);
-  background: #202224;
+  color: #d2d8d4;
+  background: #14171a;
+}
+
+.dino-modal-footer-row {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 11px;
+  color: #e6ece8;
+  margin-bottom: 8px;
 }
 
 .dino-modal-help {
-  letter-spacing: 0.03em;
+  font-size: 11px;
+  color: #f1f5f2;
+}
+
+.dino-modal-scoreline {
+  font-size: 11px;
+  color: #f1f5f2;
+}
+
+.dino-modal-error-title {
+  width: 100%;
+  margin: 0;
+  font-size: 18px;
+  line-height: 1;
+  color: #f4f7f5;
+  letter-spacing: -0.01em;
+}
+
+.dino-modal-error-text {
+  width: 100%;
+  margin: 2px 0 0;
+  font-size: 15px;
+  line-height: 1.15;
+  color: #e8ede9;
 }

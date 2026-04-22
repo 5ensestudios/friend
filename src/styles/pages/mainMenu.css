@@ -140,3 +140,77 @@
   font-size: 10px;
   color: #403f38;
 }
+
+.menu-modal-overlay {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(10, 10, 10, 0.72);
+  z-index: 5;
+}
+
+.menu-modal {
+  width: min(420px, 84vw);
+  background: rgba(20, 20, 20, 0.96);
+  padding: 14px 12px 11px;
+
+}
+
+.menu-modal-title {
+  margin: 0;
+  color: #e8dcc8;
+  font-family: var(--font-body);
+  font-size: 18px;
+  line-height: 1.2;
+  font-weight: 600;
+}
+
+.menu-modal-copy {
+  margin: 6px 0 0;
+  color: #e8dcc8;
+  font-family: var(--font-body);
+  font-size: 13px;
+  line-height: 1.3;
+}
+
+.menu-modal-user {
+  margin: 4px 0 0;
+  color: #7a7a70;
+  font-family: var(--font-body);
+  font-size: 11px;
+  line-height: 1.3;
+}
+
+.menu-modal-actions {
+  margin-top: 10px;
+  display: flex;
+  justify-content: flex-end;
+  gap: 6px;
+}
+
+.menu-modal-btn {
+  border: none;
+  padding: 6px 10px;
+  background: rgba(217, 217, 217, 0.08);
+  color: #e8dcc8;
+  font-family: var(--font-body);
+  font-size: 11px;
+  line-height: 1.2;
+  text-transform: uppercase;
+  cursor: pointer;
+}
+
+.menu-modal-btn:hover {
+  background: rgba(217, 217, 217, 0.16);
+}
+
+.menu-modal-btn--danger {
+  background: rgba(169, 58, 53, 0.7);
+  color: #ffffff;
+}
+
+.menu-modal-btn--danger:hover {
+  background: rgba(191, 74, 68, 0.85);
+}

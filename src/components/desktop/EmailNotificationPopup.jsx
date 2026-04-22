@@ -24,7 +24,7 @@ export default function EmailNotificationPopup({ mail, onClose }) {
         <div className="email-notification-top">
           <div className="email-notification-title-wrap">
             <img src="/icons/Mail.png" alt="" className="email-notification-icon" />
-            <span className="email-notification-title">Mail Notification</span>
+            <span className="email-notification-title">Notification</span>
           </div>
           <button
             type="button"
@@ -37,8 +37,8 @@ export default function EmailNotificationPopup({ mail, onClose }) {
         </div>
 
         <div className="email-notification-body">
-          <p className="email-notification-from"><strong>From:</strong> {mail.from}</p>
           <p className="email-notification-subject"><strong>Subject:</strong> {mail.subject}</p>
+          <p className="email-notification-from"><strong>From:</strong> {mail.from}</p>
 
           {Array.isArray(mail.lines) && mail.lines.map((line, index) => (
             line ? (
@@ -48,7 +48,9 @@ export default function EmailNotificationPopup({ mail, onClose }) {
             )
           ))}
 
-          <p className="email-notification-attachment"><strong>Attachment:</strong> {mail.attachment}</p>
+          {mail.attachment && mail.attachment.toLowerCase() !== "none" && (
+            <p className="email-notification-attachment"><strong>Attachment:</strong> {mail.attachment}</p>
+          )}
         </div>
       </div>
     </div>

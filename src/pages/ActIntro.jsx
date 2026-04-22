@@ -2,31 +2,42 @@ import { useState, useEffect, useRef } from "react";
 import { useSound } from "../hooks/useSound";
 import "../styles/pages/caseIntro.css";
 
-function normalizeIntroContent(lines) {
-  const textLines = (lines || [])
-    .map(line => (typeof line?.text === "string" ? line.text.trim() : ""))
-    .filter(Boolean);
+const ACT_SLIDES = {
+  1: [
+    {
+      type: "part",
+      title: "ACT I",
+      part: "PART 1",
+    },
+    {
+      type: "title",
+      title: "THE INCIDENT",
+      subtitle: "Reconstruct the night, find out where each one of them was.",
+    },
+  ],
+  2: [
+    {
+      type: "part",
+      title: "ACT II",
+      part: "PART 2",
+    },
+    {
+      type: "title",
+      title: "THE MOTIVES",
+      subtitle: "Motives begin to surface. Who had reason to want Chris gone?",
+    },
+  ],
+};
 
-  if (!textLines.length) {
-    return {
-      title: "INTRODUCTION",
-      subtitle: "The First Interviews",
-      description: "Meet the victim's friends, establish who they are.",
-    };
-  }
+const HOLD_MS = 3200;
+const FADE_MS = 700;
 
-  return {
-    title: textLines[0] || "INTRODUCTION",
-    subtitle: textLines[1] || "",
-    description: textLines[2] || "",
-  };
-}
-
-export default function ActIntro({ onDone, lines = [] }) {
+export default function ActIntro({ onDone, actNumber = 1 }) {
+  const [slideIdx, setSlideIdx] = useState(0);
   const [fadeOut, setFadeOut] = useState(false);
   const onDoneRef = useRef(onDone);
   const { play } = useSound();
-  const { title, subtitle, description } = normalizeIntroContent(lines);
+  const slides = ACT_SLIDES[actNumber] || ACT_SLIDES[1];
 
   useEffect(() => {
     onDoneRef.current = onDone;
@@ -34,20 +45,52 @@ export default function ActIntro({ onDone, lines = [] }) {
 
   useEffect(() => {
     play("radioChirp");
-    const fadeTimer = setTimeout(() => setFadeOut(true), 5000);
-    const doneTimer = setTimeout(() => onDoneRef.current?.(), 5700);
+  }, [play]);
+
+  useEffect(() => {
+    setFadeOut(false);
+
+    const fadeTimer = setTimeout(() => {
+      setFadeOut(true);
+    }, HOLD_MS);
+
+    const nextTimer = setTimeout(() => {
+      const next = slideIdx + 1;
+      if (next >= slides.length) {
+        onDoneRef.current?.();
+        return;
+      }
+      setSlideIdx(next);
+    }, HOLD_MS + FADE_MS);
+
     return () => {
       clearTimeout(fadeTimer);
-      clearTimeout(doneTimer);
+      clearTimeout(nextTimer);
     };
-  }, [play]);
+  }, [slideIdx, slides.length]);
+
+  const slide = slides[slideIdx];
 
   return (
     <div className={`case-intro case-intro--title ${fadeOut ? "case-intro--out" : ""}`}>
-      <div className="case-intro-content">
-        <h1 className="case-intro-title">{title}</h1>
-        {subtitle && <p className="case-intro-subtitle">{subtitle}</p>}
-        {description && <p className="case-intro-desc">{description}</p>}
+      <div className="case-intro-content case-intro-content--act">
+        {slide.type === "part" ? (
+          <div className="case-intro-act-header">
+            <h1 className="case-intro-title case-intro-title--brunson-intro case-intro-title--act">
+              {slide.title}
+            </h1>
+            <p className="case-intro-act-part">{slide.part}</p>
+          </div>
+        ) : (
+          <>
+            <h1 className="case-intro-title case-intro-title--brunson-intro case-intro-title--act">
+              {slide.title}
+            </h1>
+            <p className="case-intro-subtitle case-intro-subtitle--intro-label case-intro-subtitle--act">
+              {slide.subtitle}
+            </p>
+          </>
+        )}
       </div>
     </div>
   );

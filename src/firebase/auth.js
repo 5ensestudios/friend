@@ -1,5 +1,6 @@
 import {
   createUserWithEmailAndPassword,
+  deleteUser,
   signInWithEmailAndPassword,
   signOut,
   onAuthStateChanged,
@@ -26,6 +27,11 @@ export async function loginUser(email, password) {
 
 export async function logoutUser() {
   await signOut(auth);
+}
+
+export async function deleteUserAccount(user) {
+  if (!user) return;
+  await deleteUser(user);
 }
 
 export function subscribeToAuth(callback) {

@@ -15,7 +15,24 @@ const SUMMER_IMAGE_NAMES = [
   "img_8874.png",
 ];
 
+function pad2(value) {
+  return String(value).padStart(2, "0");
+}
+
+function formatDateTime(date) {
+  return `${pad2(date.getMonth() + 1)}-${pad2(date.getDate())}-${date.getFullYear()} ${pad2(date.getHours())}:${pad2(date.getMinutes())}`;
+}
+
+function randomDateInRange(start, end) {
+  const startMs = start.getTime();
+  const endMs = end.getTime();
+  const randomMs = Math.floor(Math.random() * (endMs - startMs + 1)) + startMs;
+  return formatDateTime(new Date(randomMs));
+}
+
 function buildImageEntries() {
+  const dateStart = new Date("2021-06-01T07:30:00");
+  const dateEnd = new Date("2021-08-31T23:15:00");
   return SUMMER_IMAGE_NAMES.map((name, index) => ({
     id: `summer_${index + 1}`,
     name,
@@ -23,7 +40,7 @@ function buildImageEntries() {
     icon: "/icons/Image.png",
     file_type: "PNG image",
     file_size: generateFakeSize(),
-    created_date: "2016-03-25 16:52",
+    created_date: randomDateInRange(dateStart, dateEnd),
     description: "Summer 2021 photo",
     src: encodeURI(`/Summer 2021/${name}`),
   }));
