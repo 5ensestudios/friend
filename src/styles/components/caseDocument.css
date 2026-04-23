@@ -26,8 +26,8 @@
 .case-doc-paper {
   position: relative;
   width: min(92vw, 800px);
-  max-height: 85vh;
-  overflow: auto;
+  max-height: calc(100vh - 32px);
+  overflow: hidden;
   background: transparent;
   color: transparent;
   padding: 0;
@@ -38,6 +38,7 @@
   transform-origin: bottom center;
   display: flex;
   justify-content: center;
+  align-items: center;
   z-index: 10021;
 }
 
@@ -67,40 +68,20 @@
   }
 }
 
-.case-doc-paper::-webkit-scrollbar {
-  width: 10px;
-}
-
-.case-doc-paper::-webkit-scrollbar-track {
-  background: rgba(255, 255, 255, 0.18);
-  border-radius: 999px;
-}
-
-.case-doc-paper::-webkit-scrollbar-thumb {
-  background: #999;
-  border-radius: 999px;
-  border: 2px solid rgba(255, 255, 255, 0.2);
-}
-
-.case-doc-paper::-webkit-scrollbar-thumb:hover {
-  background: #a8a8a8;
-}
-
 .case-doc-paper {
-  scrollbar-width: thin;
-  scrollbar-color: #999 rgba(255, 255, 255, 0.18);
+  scrollbar-width: none;
 }
 
 .case-doc-close {
   position: absolute;
-  top: 12px;
-  right: 12px;
+  top: 5px;
+  right: clamp(2px, -10vw, -200px);
   width: 28px;
   height: 28px;
   border-radius: 50%;
-  background: rgba(20, 20, 20, 0.72);
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  color: #f5f0e6;
+  background: transparent;
+  border: 0px solid rgba(255, 255, 255, 0.2);
+  color: #333;
   font-size: 14px;
   line-height: 1;
   cursor: pointer;
@@ -112,21 +93,24 @@
 }
 
 .case-doc-close:hover {
-  color: #ffffff;
-  background: rgba(44, 44, 44, 0.9);
+  color: #3f3d3d;
 }
 
 .case-doc-image-wrap {
   position: relative;
-  width: 100%;
-  max-width: 1000px;
-  display: block;
+  width: fit-content;
+  max-width: 100%;
+  max-height: calc(100vh - 32px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .case-doc-image {
   display: block;
-  width: 100%;
+  width: auto;
   max-width: 100%;
+  max-height: calc(100vh - 32px);
   height: auto;
   object-fit: contain;
   z-index: 100;
@@ -141,7 +125,8 @@
 .case-doc-loading {
   position: absolute;
   top: 50%;
-  left: 50%;
+  left: calc(100% + 10px);
+  right: auto;
   transform: translate(-50%, -50%);
   color: #ccc;
   font-size: 14px;

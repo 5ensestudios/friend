@@ -1000,7 +1000,7 @@ export default function DesktopInterface({ playerData, onReturnToMenu, onAct3Sta
               ) : w === "evidence" ? (
                 <>
                   <img src="/icons/Lock.png" alt="" className="taskbar-window-icon" />
-                  <span>Evidence</span>
+                  <span>#2016-0307-CHRIS Evidence</span>
                 </>
               ) : w === "brunson" ? (
                 <>
