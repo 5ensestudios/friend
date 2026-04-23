@@ -1,6 +1,7 @@
 import { createPortal } from "react-dom";
 import { useMemo, useState } from "react";
 import FileItem from "./FileItem";
+import { useSound } from "../../hooks/useSound";
 import "../../styles/components/fileExplorer.css";
 import "../../styles/components/brunsonGallery.css";
 
@@ -55,8 +56,10 @@ export default function SummerGallery({ onClose, onDragMouseDown }) {
   const images = useMemo(() => buildImageEntries(), []);
   const [selectedFile, setSelectedFile] = useState(images[0] || null);
   const [openedImage, setOpenedImage] = useState(null);
+  const { play } = useSound();
 
   function handleOpenImage(file) {
+    play("click_desktop");
     setOpenedImage(file);
   }
 
@@ -69,7 +72,10 @@ export default function SummerGallery({ onClose, onDragMouseDown }) {
             <button className="window-nav-button" disabled title="Forward">→</button>
             <span className="window-title">Summer 2021</span>
           </div>
-          <button className="window-close" onClick={onClose} title="Close">✕</button>
+          <button className="window-close" onClick={() => {
+            play("click_desktop");
+            onClose();
+          }} title="Close">✕</button>
         </div>
 
         <div className="window-content">

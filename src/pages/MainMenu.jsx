@@ -40,7 +40,7 @@ export default function MainMenu({ onStartIntro, onContinue, onTutorial, onCredi
 
       if (showNewGameModal) {
         if (e.key === "Escape") {
-          play("click");
+          play("click_game");
           setShowNewGameModal(false);
         }
 
@@ -52,14 +52,14 @@ export default function MainMenu({ onStartIntro, onContinue, onTutorial, onCredi
       }
 
       if (e.key === "ArrowUp") {
-        play("hover");
+        play("scene_hover");
         setSelectedOption((prev) =>
           prev === 0 ? options.length - 1 : prev - 1
         );
       }
 
       if (e.key === "ArrowDown") {
-        play("hover");
+        play("scene_hover");
         setSelectedOption((prev) =>
           prev === options.length - 1 ? 0 : prev + 1
         );
@@ -76,7 +76,7 @@ export default function MainMenu({ onStartIntro, onContinue, onTutorial, onCredi
   }, [selectedOption, isStarting, play, showNewGameModal]);
 
   function handleConfirmNewGame() {
-    play("click");
+    play("click_game");
     play("radioSiren", { volume: 0.8 });
     setShowNewGameModal(false);
     setIsStarting(true);
@@ -84,7 +84,7 @@ export default function MainMenu({ onStartIntro, onContinue, onTutorial, onCredi
   }
 
   function handleSelectOption(action) {
-    play("click");
+    play("click_game");
 
     if (action === "new_game") {
       setShowNewGameModal(true);
@@ -134,7 +134,7 @@ export default function MainMenu({ onStartIntro, onContinue, onTutorial, onCredi
               } ${option.disabled ? "disabled" : ""}`}
               onClick={() => handleSelectOption(option.action)}
               onMouseEnter={() => {
-                play("hover");
+                play("scene_hover");
                 setSelectedOption(idx);
               }}
               disabled={option.disabled}

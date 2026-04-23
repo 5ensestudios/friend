@@ -1,3 +1,4 @@
+import { createPortal } from "react-dom";
 import { useState } from "react";
 import FileItem from "./FileItem";
 import "../../styles/components/fileExplorer.css";
@@ -9,20 +10,22 @@ const EVIDENCE_FILES = [
     name: "chat_extraction_01.png",
     type: "file",
     icon: "/icons/Image.png",
+    asset_path: "/evidence/chat_extraction_01.png",
     file_type: "PNG Image",
     file_size: "1.4 MB",
     created_date: "03-07-2016 00:12",
-    description: "Exported chat extraction image 01.",
+    description: "Exported chat extraction image 01 (asset linked).",
   },
   {
     id: "evidence_02",
     name: "chat_extraction_02.png",
     type: "file",
     icon: "/icons/Image.png",
+    asset_path: "/evidence/chat_extraction_02.png",
     file_type: "PNG Image",
     file_size: "1.8 MB",
     created_date: "03-07-2016 00:48",
-    description: "Exported chat extraction image 02.",
+    description: "Exported chat extraction image 02 (asset linked).",
   },
   {
     id: "evidence_03",
@@ -32,17 +35,18 @@ const EVIDENCE_FILES = [
     file_type: "MP3 Audio",
     file_size: "3.2 MB",
     created_date: "03-07-2016 01:12",
-    description: "Recorded dispatch call audio.",
+    description: "Recorded dispatch call audio (placeholder, asset pending).",
   },
   {
     id: "evidence_04",
-    name: "medical_examiner_report.pdf",
+    name: "medical_examiner_report-1.png",
     type: "file",
-    icon: "/icons/Document.png",
-    file_type: "PDF Document",
+    icon: "/icons/Image.png",
+    asset_path: "/evidence/medical_examiner_report-1.png",
+    file_type: "PNG Image",
     file_size: "2.4 MB",
     created_date: "03-07-2016 01:48",
-    description: "Medical examiner report PDF.",
+    description: "Medical examiner report image (asset linked).",
   },
   {
     id: "evidence_05",
@@ -52,7 +56,7 @@ const EVIDENCE_FILES = [
     file_type: "PNG Image",
     file_size: "1.1 MB",
     created_date: "03-07-2016 02:12",
-    description: "Scene item photo containing zolpidem evidence.",
+    description: "Scene item photo containing zolpidem evidence (placeholder, asset pending).",
   },
   {
     id: "evidence_06",
@@ -62,7 +66,7 @@ const EVIDENCE_FILES = [
     file_type: "PNG Image",
     file_size: "2.0 MB",
     created_date: "03-07-2016 02:48",
-    description: "Victim evidence photo.",
+    description: "Victim evidence photo (placeholder, asset pending).",
   },
   {
     id: "evidence_07",
@@ -72,7 +76,7 @@ const EVIDENCE_FILES = [
     file_type: "CSV File",
     file_size: "0.6 MB",
     created_date: "03-07-2016 03:12",
-    description: "Search history export log.",
+    description: "Search history export log (placeholder, asset pending).",
   },
   {
     id: "evidence_08",
@@ -82,15 +86,34 @@ const EVIDENCE_FILES = [
     file_type: "PDF Document",
     file_size: "1.7 MB",
     created_date: "03-07-2016 03:48",
-    description: "Pharmacy prescription record.",
+    description: "Pharmacy prescription record (placeholder, asset pending).",
   },
 ];
 
 export default function EvidenceFolder({ onClose, onDragMouseDown }) {
   const [selectedFile, setSelectedFile] = useState(EVIDENCE_FILES[0]);
+  const [openedFile, setOpenedFile] = useState(null);
+
+  function isImageFile(file) {
+    return /\.(png|jpe?g|gif|webp)$/i.test(file.name);
+  }
+
+  function handleOpenFile(file) {
+    if (!file.asset_path) {
+      return;
+    }
+
+    if (isImageFile(file)) {
+      setOpenedFile(file);
+      return;
+    }
+
+    window.open(file.asset_path, "_blank", "noopener,noreferrer");
+  }
 
   return (
-    <div className="evidence-folder file-explorer-window">
+    <>
+      <div className="evidence-folder file-explorer-window">
       <div className="window-header">
         <div className="window-title-bar" onMouseDown={onDragMouseDown} style={{ cursor: "grab" }}>
           <button
@@ -124,7 +147,7 @@ export default function EvidenceFolder({ onClose, onDragMouseDown }) {
             <FileItem
               key={file.id}
               file={file}
-              onDoubleClick={() => {}}
+              onDoubleClick={() => handleOpenFile(file)}
               onSelect={() => setSelectedFile(file)}
               isSelected={selectedFile?.id === file.id}
               isLocked={false}
@@ -154,6 +177,33 @@ export default function EvidenceFolder({ onClose, onDragMouseDown }) {
           </div>
         </div>
       </div>
-    </div>
+      </div>
+
+      {openedFile && typeof document !== "undefined" && createPortal(
+        <div
+          className="evidence-image-popup-backdrop"
+          onClick={() => setOpenedFile(null)}
+          role="dialog"
+          aria-label="Evidence image preview"
+        >
+          <div className="evidence-image-popup-frame" onClick={event => event.stopPropagation()}>
+            <button
+              className="evidence-image-popup-close"
+              type="button"
+              aria-label="Close image preview"
+              onClick={() => setOpenedFile(null)}
+            >
+              ✕
+            </button>
+            <img
+              src={openedFile.asset_path}
+              alt={openedFile.name}
+              className="evidence-image-popup-photo"
+            />
+          </div>
+        </div>,
+        document.body
+      )}
+    </>
   );
 }

@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import FileItem from "./FileItem";
+import { useSound } from "../../hooks/useSound";
 import "../../styles/components/fileExplorer.css";
 
 const FILE_TYPE_LABEL = "File folder";
@@ -71,6 +72,7 @@ export default function FileExplorer({
   const [currentFolder, setCurrentFolder] = useState(null);
   const [selectedFile, setSelectedFile] = useState(null);
   const [fileStructure, setFileStructure] = useState(null);
+  const { play } = useSound();
 
   useEffect(() => {
     loadFileSystem();
@@ -222,7 +224,10 @@ export default function FileExplorer({
         <div className="window-title-bar" onMouseDown={onDragMouseDown} style={{ cursor: "grab" }}>
           <button
             className="window-nav-button"
-            onClick={handleBack}
+            onClick={() => {
+              play("click_desktop");
+              handleBack();
+            }}
             disabled={!currentFolder}
             title="Back"
           >
@@ -241,7 +246,10 @@ export default function FileExplorer({
         </div>
         <button
           className="window-close"
-          onClick={onClose}
+          onClick={() => {
+            play("click_desktop");
+            onClose();
+          }}
           title="Close"
         >
           ✕

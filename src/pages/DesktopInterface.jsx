@@ -202,6 +202,7 @@ export default function DesktopInterface({ playerData, onReturnToMenu, onAct3Sta
   const [showStartMenu, setShowStartMenu] = useState(false);
   const [showVolumePopup, setShowVolumePopup] = useState(false);
   const [desktopVolume, setDesktopVolume] = useState(74);
+  const [bgmVolume] = useState(0.2);
   const [evidenceVisible, setEvidenceVisible] = useState(
     playerData.progress.acts_completed.includes(2)
   );
@@ -216,6 +217,7 @@ export default function DesktopInterface({ playerData, onReturnToMenu, onAct3Sta
   const redditDraftDrag = useDraggable({ x: 138, y: 150 });
   const musicDrag = useDraggable({ x: 230, y: 120 });
   const dinoDrag = useDraggable({ x: 190, y: 90 });
+  const bgMusicRef = useRef(null);
   const volumePopupRef = useRef(null);
 
   useEffect(() => {
@@ -223,6 +225,27 @@ export default function DesktopInterface({ playerData, onReturnToMenu, onAct3Sta
     return () => clearInterval(interval);
   }, []);
 
+  useEffect(() => {
+    const audio = bgMusicRef.current || new Audio("/Friend SFX/Friend SFX - ambient desktop.wav");
+    audio.loop = true;
+    audio.volume = bgmVolume;
+
+    bgMusicRef.current = audio;
+
+    audio.play().catch(() => {
+      const resume = () => {
+        audio.play();
+        window.removeEventListener("click", resume);
+      };
+
+      window.addEventListener("click", resume);
+    });
+
+    return () => {
+      audio.pause();
+      audio.currentTime = 0;
+    };
+  }, [bgmVolume]);
   useEffect(() => {
     function handleOutsideClick(event) {
       if (!showVolumePopup) return;
@@ -238,6 +261,7 @@ export default function DesktopInterface({ playerData, onReturnToMenu, onAct3Sta
   useEffect(() => {
     function handleKeyDown(event) {
       if (event.key === "Escape") {
+        play("click_game");
         setShowStartMenu(prev => !prev);
       }
     }
@@ -475,14 +499,13 @@ export default function DesktopInterface({ playerData, onReturnToMenu, onAct3Sta
           className="desktop-icon"
           style={{ left: "clamp(64px, 5vw, 96px)", top: "clamp(36px, 7vh, 64px)" }}
           onDoubleClick={() => {
-            play("click");
+            play("click_desktop");
             openWindow("files");
           }}
           onClick={() => {
-            play("click");
+            play("click_desktop");
             openWindow("files");
           }}
-          onMouseEnter={() => play("hover")}
         >
           <div className="desktop-icon-img">
             <img src="/icons/Folder.png" alt="Case Files" />
@@ -494,14 +517,13 @@ export default function DesktopInterface({ playerData, onReturnToMenu, onAct3Sta
           className="desktop-icon"
           style={{ left: "clamp(224px, 16vw, 320px)", top: "clamp(36px, 7vh, 64px)" }}
           onDoubleClick={() => {
-            play("click");
+            play("click_desktop");
             openWindow("casedoc");
           }}
           onClick={() => {
-            play("click");
+            play("click_desktop");
             openWindow("casedoc");
           }}
-          onMouseEnter={() => play("hover")}
         >
           <div className="desktop-icon-img">
             <img src="/icons/Document.png" alt="Case File" />
@@ -513,14 +535,13 @@ export default function DesktopInterface({ playerData, onReturnToMenu, onAct3Sta
           className="desktop-icon"
           style={{ left: "clamp(64px, 5vw, 96px)", top: "clamp(184px, 29vh, 300px)" }}
           onDoubleClick={() => {
-            play("click");
+            play("click_desktop");
             openWindow("notes");
           }}
           onClick={() => {
-            play("click");
+            play("click_desktop");
             openWindow("notes");
           }}
-          onMouseEnter={() => play("hover")}
         >
           <div className="desktop-icon-img">
             <img src="/icons/Notes.png" alt="Case Notes" />
@@ -533,14 +554,13 @@ export default function DesktopInterface({ playerData, onReturnToMenu, onAct3Sta
             className="desktop-icon"
             style={{ left: "clamp(64px, 5vw, 96px)", top: "clamp(320px, 47vh, 468px)" }}
             onDoubleClick={() => {
-              play("click");
+              play("click_desktop");
               openWindow("evidence");
             }}
             onClick={() => {
-              play("click");
+              play("click_desktop");
               openWindow("evidence");
             }}
-            onMouseEnter={() => play("hover")}
           >
             <div className="desktop-icon-img">
               <img src="/icons/Lock.png" alt="Evidence" />
@@ -553,14 +573,13 @@ export default function DesktopInterface({ playerData, onReturnToMenu, onAct3Sta
           className="desktop-icon"
           style={{ left: "clamp(64px, 5vw, 96px)", top: "clamp(440px, 63vh, 640px)" }}
           onDoubleClick={() => {
-            play("click");
+            play("click_desktop");
             openWindow("trash");
           }}
           onClick={() => {
-            play("click");
+            play("click_desktop");
             openWindow("trash");
           }}
-          onMouseEnter={() => play("hover")}
           type="button"
         >
           <div className="desktop-icon-img">
@@ -573,14 +592,13 @@ export default function DesktopInterface({ playerData, onReturnToMenu, onAct3Sta
           className="desktop-icon"
           style={{ right: "clamp(360px, 28vw, 452px)", top: "clamp(36px, 7vh, 64px)" }}
           onDoubleClick={() => {
-            play("click");
+            play("click_desktop");
             openWindow("wishlist");
           }}
           onClick={() => {
-            play("click");
+            play("click_desktop");
             openWindow("wishlist");
           }}
-          onMouseEnter={() => play("hover")}
           type="button"
         >
           <div className="desktop-icon-img">
@@ -593,14 +611,13 @@ export default function DesktopInterface({ playerData, onReturnToMenu, onAct3Sta
           className="desktop-icon"
           style={{ right: "clamp(212px, 16vw, 304px)", top: "clamp(36px, 7vh, 64px)" }}
           onDoubleClick={() => {
-            play("click");
+            play("click_desktop");
             openWindow("brunson");
           }}
           onClick={() => {
-            play("click");
+            play("click_desktop");
             openWindow("brunson");
           }}
-          onMouseEnter={() => play("hover")}
           type="button"
         >
           <div className="desktop-icon-img">
@@ -613,14 +630,13 @@ export default function DesktopInterface({ playerData, onReturnToMenu, onAct3Sta
           className="desktop-icon"
           style={{ right: "clamp(64px, 5vw, 156px)", top: "clamp(36px, 7vh, 64px)" }}
           onDoubleClick={() => {
-            play("click");
+            play("click_desktop");
             openWindow("summer");
           }}
           onClick={() => {
-            play("click");
+            play("click_desktop");
             openWindow("summer");
           }}
-          onMouseEnter={() => play("hover")}
           type="button"
         >
           <div className="desktop-icon-img">
@@ -633,14 +649,13 @@ export default function DesktopInterface({ playerData, onReturnToMenu, onAct3Sta
           className="desktop-icon desktop-icon--round"
           style={{ right: "clamp(212px, 16vw, 304px)", top: "clamp(184px, 29vh, 300px)" }}
           onDoubleClick={() => {
-            play("click");
+            play("click_desktop");
             handleOpenMail();
           }}
           onClick={() => {
-            play("click");
+            play("click_desktop");
             handleOpenMail();
-          }}
-          onMouseEnter={() => play("hover")}
+          }}    
           type="button"
         >
           <div className="desktop-icon-img">
@@ -653,14 +668,13 @@ export default function DesktopInterface({ playerData, onReturnToMenu, onAct3Sta
           className="desktop-icon desktop-icon--round"
           style={{ right: "clamp(64px, 5vw, 156px)", top: "clamp(184px, 29vh, 300px)" }}
           onDoubleClick={() => {
-            play("click");
+            play("click_desktop");
             openWindow("music");
           }}
           onClick={() => {
-            play("click");
+            play("click_desktop");
             openWindow("music");
           }}
-          onMouseEnter={() => play("hover")}
           type="button"
         >
           <div className="desktop-icon-img">
@@ -673,14 +687,13 @@ export default function DesktopInterface({ playerData, onReturnToMenu, onAct3Sta
           className="desktop-icon"
           style={{ right: "clamp(64px, 5vw, 156px)", top: "clamp(320px, 47vh, 468px)" }}
           onDoubleClick={() => {
-            play("click");
+            play("click_desktop");
             openWindow("redditDraft");
           }}
           onClick={() => {
-            play("click");
+            play("click_desktop");
             openWindow("redditDraft");
           }}
-          onMouseEnter={() => play("hover")}
           type="button"
         >
           <div className="desktop-icon-img">
@@ -693,14 +706,13 @@ export default function DesktopInterface({ playerData, onReturnToMenu, onAct3Sta
           className="desktop-icon"
           style={{ right: "clamp(212px, 16vw, 304px)", top: "clamp(320px, 47vh, 468px)" }}
           onDoubleClick={() => {
-            play("click");
+            play("click_desktop");
             openWindow("dino");
           }}
           onClick={() => {
-            play("click");
+            play("click_desktop");
             openWindow("dino");
           }}
-          onMouseEnter={() => play("hover")}
           type="button"
         >
           <div className="desktop-icon-img">

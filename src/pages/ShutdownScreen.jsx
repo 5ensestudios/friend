@@ -27,7 +27,7 @@ export default function ShutdownScreen({ onDone, variant = "default" }) {
 
   useEffect(() => {
     // Play boot screen OFF sound when shutdown starts
-    play("bootScreenOff");
+    play("bootScreenOff", { volume: 0.1 });
 
     // Phase 1: bright hold with scanlines (0.4s)
     const t1 = setTimeout(() => setPhase("collapse"), 400);

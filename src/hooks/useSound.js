@@ -1,13 +1,16 @@
 import { useCallback } from "react";
 
 const SOUND_PATHS = {
-  hover: "/Friend SFX/Friend SFX - hover.wav",
-  click: "/Friend SFX/Friend SFX - click .wav",
+  scene_hover: "/Friend SFX/Friend SFX - hover game .wav",
+  click_desktop: "/Friend SFX/Friend SFX - click desktop .wav",
+  click_game: "/Friend SFX/Friend SFX - click game.wav",
   emailPopup: "/Friend SFX/Friend SFX - email popup.wav",
-  radioChirp: "/Friend SFX/Friend SFX - radio chirp.wav",
-  bootScreenOn: "/Friend SFX/Friend SFX - boot screen on.wav",
-  bootScreenOff: "/Friend SFX/Friend SFX - boot screen off.wav",
+  bootScreenOn: "/Friend SFX/Friend SFX - boot screenon_off.wav",
+  bootScreenOff: "/Friend SFX/Friend SFX - boot screenon_off.wav",
+  glitch: "/Friend SFX/Friend SFX - glitch effect.wav",
+  dino: "/Friend SFX/Friend SFX - dino jump.wav",
   radioSiren: "/Friend SFX/Friend SFX - radio siren.wav",
+
 };
 
 export function useSound() {
