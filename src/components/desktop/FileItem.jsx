@@ -33,6 +33,7 @@ export default function FileItem({
       className={`file-list-item ${isSelected ? "selected" : ""} ${
         isLocked ? "locked" : ""
       }`}
+      onMouseEnter={() => play("scene_hover")}
       onClick={handleClick}
       onDoubleClick={handleDoubleClick}
       title={file.description || file.name}

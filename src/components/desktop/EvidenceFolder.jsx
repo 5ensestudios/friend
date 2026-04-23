@@ -43,7 +43,7 @@ const EVIDENCE_FILES = [
     name: "medical_examiner_report-1.png",
     type: "file",
     icon: "/icons/Document.png",
-    asset_path: "/evidence/medical_examiner_report-1.png",
+    asset_path: "/evidence/medical_examiner_report.png",
     file_type: "PNG Image",
     file_size: "2.4 MB",
     created_date: "03-07-2016 01:48",
@@ -54,6 +54,7 @@ const EVIDENCE_FILES = [
     name: "scene_item_zolpidem.png",
     type: "file",
     icon: "/icons/Image.png",
+    asset_path: "/evidence/scene_item _zolpidem.png",
     file_type: "PNG Image",
     file_size: "1.1 MB",
     created_date: "03-07-2016 02:12",
@@ -64,6 +65,7 @@ const EVIDENCE_FILES = [
     name: "victim.png",
     type: "file",
     icon: "/icons/Image.png",
+    asset_path: "/evidence/scene_victim_chris.png",
     file_type: "PNG Image",
     file_size: "2.0 MB",
     created_date: "03-07-2016 02:48",
@@ -73,7 +75,8 @@ const EVIDENCE_FILES = [
     id: "evidence_07",
     name: "search_history_log.csv",
     type: "file",
-    icon: "/icons/Image.png",
+    icon: "/icons/Document.png",
+    asset_path: "/evidence/search_history_log.png",
     file_type: "CSV File",
     file_size: "0.6 MB",
     created_date: "03-07-2016 03:12",
@@ -84,6 +87,7 @@ const EVIDENCE_FILES = [
     name: "pharmacy_prescription.pdf",
     type: "file",
     icon: "/icons/Document.png",
+    asset_path: "/evidence/pharmacy_prescription.png",
     file_type: "PDF Document",
     file_size: "1.7 MB",
     created_date: "03-07-2016 03:48",
@@ -97,7 +101,7 @@ export default function EvidenceFolder({ onClose, onDragMouseDown }) {
   const { play } = useSound();
 
   function isImageFile(file) {
-    return /\.(png|jpe?g|gif|webp)$/i.test(file.name);
+    return /\.(png|jpe?g|gif|webp)$/i.test(file.asset_path || "");
   }
 
   function handleOpenFile(file) {

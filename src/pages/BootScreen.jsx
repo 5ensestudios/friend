@@ -8,7 +8,9 @@ export default function BootScreen({ onDone }) {
 
   useEffect(() => {
     // Boot screen ON sound when animation starts
+    const timer = setTimeout(() => {
     play("bootScreenOn", { volume: 0.1 });
+  }, 500);
 
     // Phase 1: horizontal line appears (0.5s)
     const t1 = setTimeout(() => setPhase("expand"), 500);

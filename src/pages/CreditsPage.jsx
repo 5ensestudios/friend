@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import "../styles/pages/creditsPage.css";
+import { useSound } from "../hooks/useSound";
 
 const CREDITS = [
   ["Eana Mae Tagana", "Game Director, Visual Designer, & Writer"],
@@ -10,6 +11,8 @@ const CREDITS = [
 ];
 
 export default function CreditsPage({ onBack }) {
+  const { play } = useSound(); 
+
   const [isLeaving, setIsLeaving] = useState(false);
   const [isVisible, setIsVisible] = useState(false);
 
@@ -19,9 +22,7 @@ export default function CreditsPage({ onBack }) {
   }, []);
 
   function handleBack() {
-    if (isLeaving) {
-      return;
-    }
+    if (isLeaving) return;
 
     setIsLeaving(true);
     setTimeout(() => onBack?.(), 500);
@@ -29,7 +30,9 @@ export default function CreditsPage({ onBack }) {
 
   return (
     <div
-      className={`credits-page ${isVisible ? "credits-page--visible" : ""} ${isLeaving ? "credits-page--leaving" : ""}`}
+      className={`credits-page ${
+        isVisible ? "credits-page--visible" : ""
+      } ${isLeaving ? "credits-page--leaving" : ""}`}
       role="dialog"
       aria-label="Credits"
     >
@@ -46,11 +49,16 @@ export default function CreditsPage({ onBack }) {
         ))}
       </div>
 
-      <div className="credits-page-footer">
-        <button className="credits-page-back tutorial-back" type="button" onClick={handleBack}>
-          BACK
-        </button>
-      </div>
+      <button
+        className="credits-page-back tutorial-back"
+        type="button"
+        onClick={() => {
+          play("click_desktop"); // ✅ SFX
+          handleBack();
+        }}
+      >
+        BACK
+      </button>
     </div>
   );
 }

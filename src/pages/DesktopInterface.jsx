@@ -225,6 +225,15 @@ export default function DesktopInterface({ playerData, onReturnToMenu, onAct3Sta
   const act3MusicRef = useRef(null);
   const act3ResumeHandlerRef = useRef(null);
   const volumePopupRef = useRef(null);
+  const lastDesktopHoverRef = useRef(0);
+
+  const desktopHover = () => {
+    const now = Date.now();
+    if (now - lastDesktopHoverRef.current < 150) return;
+    lastDesktopHoverRef.current = now;
+    play("scene_hover");
+  };
+  
 
   function clearResumeHandler() {
     if (bgResumeHandlerRef.current) {
@@ -602,6 +611,7 @@ export default function DesktopInterface({ playerData, onReturnToMenu, onAct3Sta
         <button
           className="desktop-icon"
           style={{ left: "clamp(64px, 5vw, 96px)", top: "clamp(36px, 7vh, 64px)" }}
+          onMouseEnter={desktopHover}
           onDoubleClick={() => {
             play("click_desktop");
             openWindow("files");
@@ -620,6 +630,7 @@ export default function DesktopInterface({ playerData, onReturnToMenu, onAct3Sta
         <button
           className="desktop-icon"
           style={{ left: "clamp(224px, 16vw, 320px)", top: "clamp(36px, 7vh, 64px)" }}
+          onMouseEnter={desktopHover}
           onDoubleClick={() => {
             play("click_desktop");
             openWindow("casedoc");
@@ -638,6 +649,7 @@ export default function DesktopInterface({ playerData, onReturnToMenu, onAct3Sta
         <button
           className="desktop-icon"
           style={{ left: "clamp(64px, 5vw, 96px)", top: "clamp(184px, 29vh, 300px)" }}
+          onMouseEnter={desktopHover}
           onDoubleClick={() => {
             play("click_desktop");
             openWindow("notes");
@@ -657,6 +669,7 @@ export default function DesktopInterface({ playerData, onReturnToMenu, onAct3Sta
           <button
             className="desktop-icon"
             style={{ left: "clamp(64px, 5vw, 96px)", top: "clamp(320px, 47vh, 468px)" }}
+            onMouseEnter={desktopHover}
             onDoubleClick={() => {
               play("click_desktop");
               openWindow("evidence");
@@ -676,6 +689,7 @@ export default function DesktopInterface({ playerData, onReturnToMenu, onAct3Sta
         <button
           className="desktop-icon"
           style={{ left: "clamp(64px, 5vw, 96px)", top: "clamp(440px, 63vh, 640px)" }}
+          onMouseEnter={desktopHover}
           onDoubleClick={() => {
             play("click_desktop");
             openWindow("trash");
@@ -695,6 +709,7 @@ export default function DesktopInterface({ playerData, onReturnToMenu, onAct3Sta
         <button
           className="desktop-icon"
           style={{ right: "clamp(360px, 28vw, 452px)", top: "clamp(36px, 7vh, 64px)" }}
+          onMouseEnter={desktopHover}
           onDoubleClick={() => {
             play("click_desktop");
             openWindow("wishlist");
@@ -714,6 +729,7 @@ export default function DesktopInterface({ playerData, onReturnToMenu, onAct3Sta
         <button
           className="desktop-icon"
           style={{ right: "clamp(212px, 16vw, 304px)", top: "clamp(36px, 7vh, 64px)" }}
+          onMouseEnter={desktopHover}
           onDoubleClick={() => {
             play("click_desktop");
             openWindow("brunson");
@@ -733,6 +749,7 @@ export default function DesktopInterface({ playerData, onReturnToMenu, onAct3Sta
         <button
           className="desktop-icon"
           style={{ right: "clamp(64px, 5vw, 156px)", top: "clamp(36px, 7vh, 64px)" }}
+          onMouseEnter={desktopHover}
           onDoubleClick={() => {
             play("click_desktop");
             openWindow("summer");
@@ -752,6 +769,7 @@ export default function DesktopInterface({ playerData, onReturnToMenu, onAct3Sta
         <button
           className="desktop-icon desktop-icon--round"
           style={{ right: "clamp(212px, 16vw, 304px)", top: "clamp(184px, 29vh, 300px)" }}
+          onMouseEnter={desktopHover}
           onDoubleClick={() => {
             play("click_desktop");
             handleOpenMail();
@@ -771,6 +789,7 @@ export default function DesktopInterface({ playerData, onReturnToMenu, onAct3Sta
         <button
           className="desktop-icon desktop-icon--round"
           style={{ right: "clamp(64px, 5vw, 156px)", top: "clamp(184px, 29vh, 300px)" }}
+          onMouseEnter={desktopHover}
           onDoubleClick={() => {
             play("click_desktop");
             openWindow("music");
@@ -790,6 +809,7 @@ export default function DesktopInterface({ playerData, onReturnToMenu, onAct3Sta
         <button
           className="desktop-icon"
           style={{ right: "clamp(64px, 5vw, 156px)", top: "clamp(320px, 47vh, 468px)" }}
+          onMouseEnter={desktopHover}
           onDoubleClick={() => {
             play("click_desktop");
             openWindow("redditDraft");
@@ -809,6 +829,7 @@ export default function DesktopInterface({ playerData, onReturnToMenu, onAct3Sta
         <button
           className="desktop-icon"
           style={{ right: "clamp(212px, 16vw, 304px)", top: "clamp(320px, 47vh, 468px)" }}
+          onMouseEnter={desktopHover}
           onDoubleClick={() => {
             play("click_desktop");
             openWindow("dino");
@@ -1103,6 +1124,7 @@ export default function DesktopInterface({ playerData, onReturnToMenu, onAct3Sta
             <button
               key={w}
               className={`taskbar-window-btn ${activeWindow === w ? "active" : ""}`}
+              onMouseOver={desktopHover}
               onClick={() => focusWindow(w)}
             >
               {w === "files" ? (

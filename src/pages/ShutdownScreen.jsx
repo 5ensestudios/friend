@@ -5,6 +5,7 @@ import "../styles/pages/shutdownScreen.css";
 export default function ShutdownScreen({ onDone, variant = "default" }) {
   const [phase, setPhase] = useState("bright"); // 'bright' | 'collapse' | 'line' | 'done'
   const { play } = useSound();
+
   const theme = useMemo(() => {
     if (variant === "act3") {
       return {
@@ -26,22 +27,35 @@ export default function ShutdownScreen({ onDone, variant = "default" }) {
   }, [variant]);
 
   useEffect(() => {
-    // Play boot screen OFF sound when shutdown starts
-    play("bootScreenOff", { volume: 0.1 });
+    const soundToPlay =
+      variant === "act3" ? "bootScreenOff_act3" : "bootScreenOff";
 
-    // Phase 1: bright hold with scanlines (0.4s)
+    // =========================
+    // SOUND TIMING
+    // =========================
+    const soundTimer =
+      variant === "act3"
+        ? requestAnimationFrame(() => {
+            play(soundToPlay, { volume: 0.1 });
+          })
+        : setTimeout(() => {
+            play(soundToPlay, { volume: 0.1 });
+          }, 500);
+
+    // =========================
+    // ANIMATION FLOW
+    // =========================
     const t1 = setTimeout(() => setPhase("collapse"), 400);
-    // Phase 2: collapse to horizontal line (0.8s)
     const t2 = setTimeout(() => setPhase("line"), 1200);
-    // Phase 3: line shrinks and fades (0.6s)
     const t3 = setTimeout(() => onDone(), 2200);
 
     return () => {
+      clearTimeout(soundTimer);
       clearTimeout(t1);
       clearTimeout(t2);
       clearTimeout(t3);
     };
-  }, [onDone, play]);
+  }, [onDone, play, variant]);
 
   return (
     <div
