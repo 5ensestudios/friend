@@ -41,7 +41,7 @@ const EVIDENCE_FILES = [
     id: "evidence_04",
     name: "medical_examiner_report-1.png",
     type: "file",
-    icon: "/icons/Image.png",
+    icon: "/icons/Document.png",
     asset_path: "/evidence/medical_examiner_report-1.png",
     file_type: "PNG Image",
     file_size: "2.4 MB",
