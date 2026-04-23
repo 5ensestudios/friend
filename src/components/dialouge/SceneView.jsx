@@ -71,6 +71,8 @@ const QUESTION_PROMPT_SCREENS = {
 
 const QUESTION_PHASE_MS = 5000;
 const QUESTION_PHASE_FADE_OUT_MS = 900;
+const SCENE_BGM_SRC = "/Friend SFX/Friend SFX - ambient scenes act.wav";
+const SCENE_BGM_VOLUME = 0.2;
 
 /* ══════════════════════════════════════════════════════════
    ACT 0 — Intro (per-character full sequential interview)
@@ -504,6 +506,52 @@ export default function SceneView({
   const saved = playerProgress?.scenes_visited?.[actKey] || {};
   const isAct0 = actNumber === 0;
   const { play } = useSound();
+  const sceneBgmRef = useRef(null);
+  const sceneResumeHandlerRef = useRef(null);
+
+  useEffect(() => {
+    const ambient = window.__friendDesktopAmbient;
+    if (!ambient) return;
+
+    ambient.pause();
+    ambient.currentTime = 0;
+    ambient.loop = false;
+    ambient.src = "";
+    ambient.load();
+    window.__friendDesktopAmbient = null;
+  }, []);
+
+  useEffect(() => {
+    const audio = new Audio(SCENE_BGM_SRC);
+    audio.loop = true;
+    audio.volume = SCENE_BGM_VOLUME;
+    sceneBgmRef.current = audio;
+
+    audio.play().catch(() => {
+      const resume = () => {
+        audio.play().catch(() => {});
+        window.removeEventListener("click", resume);
+        sceneResumeHandlerRef.current = null;
+      };
+
+      sceneResumeHandlerRef.current = resume;
+      window.addEventListener("click", resume, { once: true });
+    });
+
+    return () => {
+      if (sceneResumeHandlerRef.current) {
+        window.removeEventListener("click", sceneResumeHandlerRef.current);
+        sceneResumeHandlerRef.current = null;
+      }
+
+      audio.pause();
+      audio.currentTime = 0;
+      audio.loop = false;
+      audio.src = "";
+      audio.load();
+      sceneBgmRef.current = null;
+    };
+  }, []);
 
   /* ── ACT 0 state ── */
   const [introChar, setIntroChar] = useState(saved.introChar ?? null);
@@ -932,7 +980,12 @@ export default function SceneView({
               {CHARACTERS.map(c => {
                 const done = introCompleted.includes(c.id);
                 return (
-                  <button key={c.id} disabled={done} onClick={() => handleIntroPickChar(c.id)}>
+                  <button
+                    key={c.id}
+                    disabled={done}
+                    onClick={() => handleIntroPickChar(c.id)}
+                    onMouseEnter={() => play("scene_hover")}
+                  >
                     <img src={c.image} alt={c.name} className="suspect-card-img" />
                     <div className="suspect-card-info">
                       <strong>{c.name}</strong>
@@ -983,7 +1036,12 @@ export default function SceneView({
               {CHARACTERS.map(c => {
                 const picked = picksThisQ.includes(c.id);
                 return (
-                  <button key={c.id} disabled={picked} onClick={() => handlePickChar(c.id)}>
+                  <button
+                    key={c.id}
+                    disabled={picked}
+                    onClick={() => handlePickChar(c.id)}
+                    onMouseEnter={() => play("scene_hover")}
+                  >
                     <img src={c.image} alt={c.name} className="suspect-card-img" />
                     <div className="suspect-card-info">
                       <strong>{c.name}</strong>

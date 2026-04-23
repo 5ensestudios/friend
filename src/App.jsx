@@ -20,6 +20,7 @@ import { deletePlayerDocument, loadProgress } from "./firebase/progress";
 
 export default function App() {
   const audioRef = useRef(null);
+  const menuMusicRef = useRef(null);
   const [currentPage, setCurrentPage] = useState("preload"); // 'preload' | 'splash' | 'menu' | 'tutorial' | 'credits-page' | 'intro' | 'booting' | 'login' | 'game' | 'fatal-exception' | 'shutting-down' | 'ending' | 'credits'
   const [playerData, setPlayerData] = useState(null);
   const [chosenSuspect, setChosenSuspect] = useState(null);
@@ -74,7 +75,9 @@ export default function App() {
       return;
     }
 
-    if (isMobile) {
+    const shouldPlayGlobalBgm = !isMobile && ["splash", "menu", "tutorial", "credits-page"].includes(currentPage);
+
+    if (!shouldPlayGlobalBgm) {
       audioEl.pause();
       audioEl.currentTime = 0;
     } else {
@@ -83,7 +86,7 @@ export default function App() {
         // Silently fail if audio blocked
       });
     }
-  }, [isMobile]);
+  }, [isMobile, currentPage]);
 
   useEffect(() => {
     if (!isMobile && wasMobileRef.current) {
@@ -92,6 +95,54 @@ export default function App() {
 
     wasMobileRef.current = isMobile;
   }, [isMobile, isPreloadDone]);
+
+  useEffect(() => {
+    const audio = new Audio("/sound/Friend%20Soundtrack.mp3");
+    audio.loop = true;
+    audio.volume = 0.05;
+    menuMusicRef.current = audio;
+
+    return () => {
+      audio.pause();
+      audio.currentTime = 0;
+    };
+  }, []);
+
+  useEffect(() => {
+    const audio = menuMusicRef.current;
+    if (!audio) {
+      return;
+    }
+
+    const shouldPlayMenuMusic = !isMobile && ["menu", "tutorial", "credits-page"].includes(currentPage);
+
+    if (shouldPlayMenuMusic) {
+      audio.play().catch(() => {
+        // Silently fail if autoplay is blocked.
+      });
+      return;
+    }
+
+    audio.pause();
+  }, [currentPage, isMobile]);
+
+  useEffect(() => {
+    if (currentPage === "game") {
+      return;
+    }
+
+    const ambient = window.__friendDesktopAmbient;
+    if (!ambient) {
+      return;
+    }
+
+    ambient.pause();
+    ambient.currentTime = 0;
+    ambient.loop = false;
+    ambient.src = "";
+    ambient.load();
+    window.__friendDesktopAmbient = null;
+  }, [currentPage]);
 
   function handleStartIntro() {
     setCurrentPage("intro");
@@ -178,8 +229,8 @@ export default function App() {
   }
 
   function handleEndingDone() {
-    setShutdownTarget("credits");
-    setCurrentPage("shutting-down");
+    setShutdownTarget("menu");
+    setCurrentPage("credits");
   }
 
   function handleCreditsDone() {
@@ -224,6 +275,7 @@ export default function App() {
           {currentPage === "login" && (
             <LoginScreen
               onAuthSuccess={handleAuthSuccess}
+              onReturnToMenu={handleReturnToMenu}
               mode={loginMode}
               currentUserEmail={authUser?.email || ""}
               currentUsername={playerData?.username || authUser?.displayName || "Detective"}

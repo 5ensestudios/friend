@@ -1,7 +1,9 @@
 import { useEffect, useMemo, useState } from "react";
+import { useSound } from "../../hooks/useSound";
 import "../../styles/components/emailModal.css";
 
 export default function EmailModal({ emails = [], activeMailId = null, onClose }) {
+  const { play } = useSound();
   const sortedEmails = useMemo(() => {
     if (!Array.isArray(emails)) return [];
     return [...emails].reverse();
@@ -44,7 +46,10 @@ export default function EmailModal({ emails = [], activeMailId = null, onClose }
           className="email-modal-close"
           type="button"
           aria-label="Close mail"
-          onClick={onClose}
+          onClick={() => {
+            play("click_desktop");
+            onClose();
+          }}
         >
           ✕
         </button>

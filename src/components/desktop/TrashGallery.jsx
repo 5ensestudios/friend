@@ -90,7 +90,10 @@ export default function TrashGallery({ onClose, onDragMouseDown }) {
       {openedImage && typeof document !== "undefined" && createPortal(
         <div
           className="brunson-image-popup-backdrop"
-          onClick={() => setOpenedImage(null)}
+          onClick={() => {
+            play("click_desktop");
+            setOpenedImage(null);
+          }}
           role="dialog"
           aria-label="Trash image preview"
         >
@@ -99,7 +102,10 @@ export default function TrashGallery({ onClose, onDragMouseDown }) {
               className="brunson-image-popup-close trash-image-popup-close"
               type="button"
               aria-label="Close image preview"
-              onClick={() => setOpenedImage(null)}
+              onClick={() => {
+                play("click_desktop");
+                setOpenedImage(null);
+              }}
             >
               ✕
             </button>

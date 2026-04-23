@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useSound } from "../../hooks/useSound";
 import "../../styles/components/dinoGameModal.css";
 const DINO_IMAGE_SRC = "/icons/Dino.png";
 const WORLD_WIDTH = 760;
@@ -17,6 +18,7 @@ function randomRange(min, max) {
 }
 
 export default function DinoGameModal({ onClose, onDragMouseDown }) {
+  const { play } = useSound();
   const canvasRef = useRef(null);
   const frameRef = useRef(null);
   const gameRef = useRef(null);
@@ -231,6 +233,8 @@ export default function DinoGameModal({ onClose, onDragMouseDown }) {
         }
 
         if (!game.isJumping) {
+          play("dino");
+
           game.isJumping = true;
           game.dinoVelocityY = -JUMP_VELOCITY;
         }
@@ -256,7 +260,15 @@ export default function DinoGameModal({ onClose, onDragMouseDown }) {
             <span className="dino-modal-tab-text">SurfNet</span>
           </div>
         </div>
-        <button className="dino-modal-close" type="button" onClick={onClose} aria-label="Close Dino game">
+        <button
+          className="dino-modal-close"
+          type="button"
+          onClick={() => {
+            play("click_desktop");
+            onClose();
+          }}
+          aria-label="Close Dino game"
+        >
           ✕
         </button>
       </div>

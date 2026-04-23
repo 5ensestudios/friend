@@ -1,14 +1,17 @@
 import { useState, useEffect } from "react";
+import { useSound } from "../../hooks/useSound";
 import "../../styles/components/caseDocument.css";
 
 export default function CaseDocument({ onClose }) {
   const [closing, setClosing] = useState(false);
   const [imageLoaded, setImageLoaded] = useState(false);
+  const { play } = useSound();
 
   // Add cache-bust query parameter to force fresh load every time
   const CASE_FILE_SRC = `/Images/Case File.png?v=${Date.now()}`;
 
   function handleClose() {
+    play("click_desktop");
     setClosing(true);
     setTimeout(() => onClose(), 350);
   }

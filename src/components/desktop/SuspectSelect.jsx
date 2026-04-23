@@ -29,7 +29,7 @@ export default function SuspectSelect({ onSelect, variant = "default" }) {
               key={s.id}
               className="suspect-select-card"
               onClick={() => handleSelect(s.id)}
-              onMouseEnter={() => play("hover")}
+              onMouseEnter={() => play("scene_hover")}
               disabled={confirming}
             >
               <img src={s.img} alt={s.name} className="suspect-card-img" />

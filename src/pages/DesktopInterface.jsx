@@ -20,6 +20,9 @@ import { useSound } from "../hooks/useSound";
 import { saveProgress } from "../firebase/progress";
 import "../styles/pages/desktop.css";
 
+const ACT3_AMBIENT_SRC = "/Friend SFX/Friend SFX - ambient scenes act.wav";
+const ACT3_AMBIENT_VOLUME = 0.2;
+
 const WISHLIST_DEFAULT_TEXT = `1.Ergonomic lumbar support pillow (current chair is killing my back)
 2. Nespresso pods (Bulk, Dark Roast)
 3. Noise-canceling headphones 
@@ -218,7 +221,53 @@ export default function DesktopInterface({ playerData, onReturnToMenu, onAct3Sta
   const musicDrag = useDraggable({ x: 230, y: 120 });
   const dinoDrag = useDraggable({ x: 190, y: 90 });
   const bgMusicRef = useRef(null);
+  const bgResumeHandlerRef = useRef(null);
+  const act3MusicRef = useRef(null);
+  const act3ResumeHandlerRef = useRef(null);
   const volumePopupRef = useRef(null);
+
+  function clearResumeHandler() {
+    if (bgResumeHandlerRef.current) {
+      window.removeEventListener("click", bgResumeHandlerRef.current);
+      bgResumeHandlerRef.current = null;
+    }
+  }
+
+  function destroyDesktopAmbient() {
+    const audio = bgMusicRef.current;
+    if (!audio) return;
+
+    audio.pause();
+    audio.currentTime = 0;
+    audio.loop = false;
+    audio.src = "";
+    audio.load();
+
+    if (window.__friendDesktopAmbient === audio) {
+      window.__friendDesktopAmbient = null;
+    }
+
+    bgMusicRef.current = null;
+  }
+
+  function clearAct3ResumeHandler() {
+    if (act3ResumeHandlerRef.current) {
+      window.removeEventListener("click", act3ResumeHandlerRef.current);
+      act3ResumeHandlerRef.current = null;
+    }
+  }
+
+  function destroyAct3Ambient() {
+    const audio = act3MusicRef.current;
+    if (!audio) return;
+
+    audio.pause();
+    audio.currentTime = 0;
+    audio.loop = false;
+    audio.src = "";
+    audio.load();
+    act3MusicRef.current = null;
+  }
 
   useEffect(() => {
     const interval = setInterval(() => setClock(new Date()), 1000);
@@ -226,26 +275,81 @@ export default function DesktopInterface({ playerData, onReturnToMenu, onAct3Sta
   }, []);
 
   useEffect(() => {
-    const audio = bgMusicRef.current || new Audio("/Friend SFX/Friend SFX - ambient desktop.wav");
-    audio.loop = true;
+    if (view !== "desktop" || showSuspectSelect) {
+      clearResumeHandler();
+      destroyDesktopAmbient();
+      return;
+    }
+
+    let audio = bgMusicRef.current;
+    if (!audio) {
+      audio = new Audio("/Friend SFX/Friend SFX - ambient desktop.wav");
+      audio.loop = true;
+      bgMusicRef.current = audio;
+      window.__friendDesktopAmbient = audio;
+    }
+
     audio.volume = bgmVolume;
-
-    bgMusicRef.current = audio;
-
     audio.play().catch(() => {
+      clearResumeHandler();
       const resume = () => {
+        if (bgMusicRef.current !== audio) return;
         audio.play();
         window.removeEventListener("click", resume);
+        bgResumeHandlerRef.current = null;
       };
-
+      bgResumeHandlerRef.current = resume;
       window.addEventListener("click", resume);
     });
 
     return () => {
-      audio.pause();
-      audio.currentTime = 0;
+      clearResumeHandler();
     };
-  }, [bgmVolume]);
+  }, [view, showSuspectSelect, bgmVolume]);
+
+  useEffect(() => {
+    const shouldPlayAct3Ambient =
+      currentAct === 3 && (view === "act-intro" || showSuspectSelect);
+
+    if (!shouldPlayAct3Ambient) {
+      clearAct3ResumeHandler();
+      destroyAct3Ambient();
+      return;
+    }
+
+    let audio = act3MusicRef.current;
+    if (!audio) {
+      audio = new Audio(ACT3_AMBIENT_SRC);
+      audio.loop = true;
+      act3MusicRef.current = audio;
+    }
+
+    audio.volume = ACT3_AMBIENT_VOLUME;
+    audio.play().catch(() => {
+      clearAct3ResumeHandler();
+      const resume = () => {
+        if (act3MusicRef.current !== audio) return;
+        audio.play().catch(() => {});
+        window.removeEventListener("click", resume);
+        act3ResumeHandlerRef.current = null;
+      };
+      act3ResumeHandlerRef.current = resume;
+      window.addEventListener("click", resume);
+    });
+
+    return () => {
+      clearAct3ResumeHandler();
+    };
+  }, [currentAct, view, showSuspectSelect]);
+
+  useEffect(() => {
+    return () => {
+      clearResumeHandler();
+      destroyDesktopAmbient();
+      clearAct3ResumeHandler();
+      destroyAct3Ambient();
+    };
+  }, []);
   useEffect(() => {
     function handleOutsideClick(event) {
       if (!showVolumePopup) return;
@@ -261,7 +365,7 @@ export default function DesktopInterface({ playerData, onReturnToMenu, onAct3Sta
   useEffect(() => {
     function handleKeyDown(event) {
       if (event.key === "Escape") {
-        play("click_game");
+        play("click_desktop");
         setShowStartMenu(prev => !prev);
       }
     }
@@ -959,7 +1063,10 @@ export default function DesktopInterface({ playerData, onReturnToMenu, onAct3Sta
                 <button
                   className="taskbar-start-menu-item"
                   type="button"
-                  onClick={() => setShowStartMenu(false)}
+                  onClick={() => {
+                    play("click_desktop");
+                    setShowStartMenu(false);
+                  }}
                 >
                   Back
                 </button>
@@ -967,6 +1074,7 @@ export default function DesktopInterface({ playerData, onReturnToMenu, onAct3Sta
                   className="taskbar-start-menu-item"
                   type="button"
                   onClick={() => {
+                    play("click_desktop");
                     setShowStartMenu(false);
                     onShutdownToMenu?.();
                   }}
@@ -979,7 +1087,10 @@ export default function DesktopInterface({ playerData, onReturnToMenu, onAct3Sta
             <button
               className="taskbar-start"
               type="button"
-              onClick={() => setShowStartMenu(prev => !prev)}
+              onClick={() => {
+                play("click_desktop");
+                setShowStartMenu(prev => !prev);
+              }}
               aria-expanded={showStartMenu}
               aria-label="Open start menu"
             >

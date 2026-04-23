@@ -9,6 +9,19 @@
   padding: clamp(24px, 4vh, 56px) clamp(20px, 3vw, 40px);
   z-index: 1400;
   overflow: hidden;
+  opacity: 0;
+  transform: scale(0.995);
+  transition: opacity 520ms ease, transform 520ms ease;
+}
+
+.tutorial-page--visible {
+  opacity: 1;
+  transform: scale(1);
+}
+
+.tutorial-page--leaving {
+  opacity: 0;
+  transform: scale(1.004);
 }
 
 .tutorial-content {

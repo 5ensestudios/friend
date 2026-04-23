@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from "react";
+import { useSound } from "../../hooks/useSound";
 import "../../styles/components/musicPlayer.css";
 
 const MUSIC_TRACKS = [
@@ -31,6 +32,7 @@ function formatDuration(totalSeconds) {
 }
 
 export default function MusicPlayer({ onClose, masterVolume = 1, onDragMouseDown }) {
+  const { play } = useSound();
   const tracks = useMemo(() => MUSIC_TRACKS, []);
   const [activeTrackIndex, setActiveTrackIndex] = useState(0);
   const [isPlaying, setIsPlaying] = useState(false);
@@ -160,7 +162,17 @@ export default function MusicPlayer({ onClose, masterVolume = 1, onDragMouseDown
           <img src="/icons/Music Player.png" alt="" className="music-player-icon" aria-hidden="true" />
           <span className="music-player-title">Music Player</span>
         </div>
-        <button className="music-player-close" type="button" onClick={onClose} aria-label="Close music player">✕</button>
+        <button
+          className="music-player-close"
+          type="button"
+          onClick={() => {
+            play("click_desktop");
+            onClose();
+          }}
+          aria-label="Close music player"
+        >
+          ✕
+        </button>
       </div>
 
       <div className="music-player-list-head">

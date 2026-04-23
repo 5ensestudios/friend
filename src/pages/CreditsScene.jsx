@@ -2,6 +2,9 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import "../styles/pages/creditsScene.css";
 
 const CONTENT_FADE_MS = 700;
+const CREDITS_BGM_SRC = "/Friend SFX/Black Static Halo.mp3";
+const CREDITS_BGM_DELAY_MS = 5000;
+const CREDITS_BGM_VOLUME = 0.8;
 
 const SLIDES = [
   {
@@ -14,54 +17,54 @@ const SLIDES = [
     type: "logo",
     src: "/Images/The Friend Logo.png",
     alt: "The Friend logo",
-    holdMs: 5000,
+    holdMs: 10000,
   },
   {
     id: "team",
     type: "team",
-    holdMs: 6500,
+    holdMs: 12000,
   },
   {
     id: "eana",
     type: "person",
     name: "EANA MAE TAGANA",
     role: "Game Director, Visual Designer, & Writer",
-    holdMs: 5000,
+    holdMs: 8000,
   },
   {
     id: "frederick",
     type: "person",
     name: "FREDERICK ARAGO",
     role: "Media Producer & Post-Production Lead",
-    holdMs: 5000,
+    holdMs: 8000,
   },
   {
     id: "nathan",
     type: "person",
     name: "NATHAN BARTOLO",
     role: "Lead Developer & Sound Designer",
-    holdMs: 5000,
+    holdMs: 8000,
   },
   {
     id: "john",
     type: "person",
     name: "JOHN RICHARD ROBLE",
     role: "Production Assistance & Audio Support",
-    holdMs: 5000,
+    holdMs: 8000,
   },
   {
     id: "christian",
     type: "person",
     name: "CHRISTIAN DARREL TAN",
     role: "Production Assistance & Development Support",
-    holdMs: 5000,
+    holdMs: 8000,
   },
   {
     id: "studio-logo",
     type: "logo",
     src: "/Images/5ENSE Logo.png",
     alt: "5ENSE Studios logo",
-    holdMs: 10000,
+    holdMs: 30000,
   },
 ];
 
@@ -126,6 +129,8 @@ export default function CreditsScene({ onDone }) {
   const [slideIndex, setSlideIndex] = useState(0);
   const [phase, setPhase] = useState("in");
   const onDoneRef = useRef(onDone);
+  const creditsBgmRef = useRef(null);
+  const creditsBgmResumeRef = useRef(null);
   const slide = useMemo(() => SLIDES[slideIndex], [slideIndex]);
 
   useEffect(() => {
@@ -136,6 +141,42 @@ export default function CreditsScene({ onDone }) {
   useEffect(() => {
     onDoneRef.current = onDone;
   }, [onDone]);
+
+  useEffect(() => {
+    const audio = new Audio(CREDITS_BGM_SRC);
+    audio.loop = true;
+    audio.volume = CREDITS_BGM_VOLUME;
+    creditsBgmRef.current = audio;
+
+    const startTimer = setTimeout(() => {
+      audio.play().catch(() => {
+        const resume = () => {
+          audio.play().catch(() => {});
+          window.removeEventListener("click", resume);
+          creditsBgmResumeRef.current = null;
+        };
+
+        creditsBgmResumeRef.current = resume;
+        window.addEventListener("click", resume, { once: true });
+      });
+    }, CREDITS_BGM_DELAY_MS);
+
+    return () => {
+      clearTimeout(startTimer);
+
+      if (creditsBgmResumeRef.current) {
+        window.removeEventListener("click", creditsBgmResumeRef.current);
+        creditsBgmResumeRef.current = null;
+      }
+
+      audio.pause();
+      audio.currentTime = 0;
+      audio.loop = false;
+      audio.src = "";
+      audio.load();
+      creditsBgmRef.current = null;
+    };
+  }, []);
 
   useEffect(() => {
     if (isPreviewMode) {

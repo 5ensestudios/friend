@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
+import { useSound } from "../hooks/useSound";
 import "../styles/pages/fatalExceptionScreen.css";
 
 const COUNTDOWN_START = 3;
@@ -6,10 +7,13 @@ const COUNTDOWN_START = 3;
 export default function FatalExceptionScreen({ onDone }) {
   const [countdown, setCountdown] = useState(COUNTDOWN_START);
   const [phase, setPhase] = useState("enter"); // 'enter' | 'countdown' | 'exit'
+  const { play } = useSound();
 
   const countdownLabel = useMemo(() => `${countdown}...`, [countdown]);
 
   useEffect(() => {
+    play("glitch", { volume: 0.2 });
+
     const enterTimer = setTimeout(() => setPhase("countdown"), 700);
     const interval = setInterval(() => {
       setCountdown(prev => {

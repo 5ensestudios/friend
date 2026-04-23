@@ -5,7 +5,7 @@
 .cinematic-ending {
   position: fixed;
   inset: 0;
-  background: #000;
+  background: #141414;
   z-index: 9999;
   display: flex;
   align-items: center;
@@ -22,7 +22,7 @@
 .cinematic-black-hold {
   position: absolute;
   inset: 0;
-  background: #000;
+  background: #141414;
   z-index: 10;
 }
 

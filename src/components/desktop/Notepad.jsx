@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { useSound } from "../../hooks/useSound";
 import "../../styles/components/notepad.css";
 
 export default function Notepad({
@@ -11,6 +12,7 @@ export default function Notepad({
   placeholder = "Write anything you might find useful here...",
 }) {
   const [text, setText] = useState("");
+  const { play } = useSound();
 
   useEffect(() => {
     const saved = localStorage.getItem(storageKey);
@@ -38,7 +40,15 @@ export default function Notepad({
         <div className="notepad-controls">
           <button className="notepad-btn notepad-minimize">─</button>
           <button className="notepad-btn notepad-maximize">□</button>
-          <button className="notepad-btn notepad-close" onClick={onClose}>✕</button>
+          <button
+            className="notepad-btn notepad-close"
+            onClick={() => {
+              play("click_desktop");
+              onClose();
+            }}
+          >
+            ✕
+          </button>
         </div>
       </div>
       <div className="notepad-menubar">

@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { useSound } from "../hooks/useSound";
 import "../styles/pages/loginScreen.css";
 import { loginUser, signUpUser } from "../firebase/auth";
 import {
@@ -25,6 +26,7 @@ function getAuthErrorMessage(code) {
 
 export default function LoginScreen({
   onAuthSuccess,
+  onReturnToMenu,
   mode = "login",
   currentUserEmail = "",
   currentUsername = "Detective",
@@ -34,6 +36,7 @@ export default function LoginScreen({
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const { play } = useSound();
 
   const isPasswordOnlyLogin = mode === "login" && Boolean(currentUserEmail);
 
@@ -150,7 +153,10 @@ export default function LoginScreen({
               />
             </div>
             {error && <p className="login-error">{error}</p>}
-            <button className="login-signin-btn" onClick={handleSubmit} disabled={isLoading}>
+            <button className="login-signin-btn" onClick={() => {
+              play("click_game");
+              handleSubmit();
+            }} disabled={isLoading}>
               {isLoading ? "Creating..." : "Continue"}
             </button>
           </>
@@ -179,7 +185,10 @@ export default function LoginScreen({
               />
             </div>
             {error && <p className="login-error">{error}</p>}
-            <button className="login-signin-btn" onClick={handleSubmit} disabled={isLoading}>
+            <button className="login-signin-btn" onClick={() => {
+              play("click_game");
+              handleSubmit();
+            }} disabled={isLoading}>
               {isLoading ? "Signing In..." : "Continue"}
             </button>
           </>
@@ -188,7 +197,15 @@ export default function LoginScreen({
 
       <div className="login-bottom-bar">
         <div className="login-bottom-icons">
-          <button className="login-bottom-icon" title="Power">
+          <button
+            className="login-bottom-icon"
+            title="Power"
+            type="button"
+            onClick={() => {
+              play("click_game");
+              onReturnToMenu?.();
+            }}
+          >
             <svg viewBox="0 0 24 24" fill="currentColor" width="20" height="20">
               <path d="M13 3h-2v10h2V3zm4.83 2.17l-1.42 1.42A6.92 6.92 0 0119 12c0 3.87-3.13 7-7 7s-7-3.13-7-7c0-2.05.88-3.89 2.29-5.17L5.88 5.46A8.93 8.93 0 003 12c0 4.97 4.03 9 9 9s9-4.03 9-9a8.93 8.93 0 00-3.17-6.83z"/>
             </svg>

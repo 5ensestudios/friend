@@ -267,6 +267,7 @@ export default function FileExplorer({
                 onDoubleClick={() => handleFileClick(item)}
                 onSelect={() => setSelectedFile(item)}
                 isSelected={selectedFile?.id === item.id}
+                playClickSound
               />
             )
           )}

@@ -35,7 +35,10 @@ export default function EmailNotificationPopup({ mail, onClose }) {
           <button
             type="button"
             className="email-notification-close"
-            onClick={onClose}
+            onClick={() => {
+              play("click_desktop");
+              onClose?.();
+            }}
             aria-label="Dismiss mail notification"
           >
             ✕

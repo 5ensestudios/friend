@@ -1,6 +1,7 @@
 import { createPortal } from "react-dom";
 import { useState } from "react";
 import FileItem from "./FileItem";
+import { useSound } from "../../hooks/useSound";
 import "../../styles/components/fileExplorer.css";
 import "../../styles/components/evidenceFolder.css";
 
@@ -93,6 +94,7 @@ const EVIDENCE_FILES = [
 export default function EvidenceFolder({ onClose, onDragMouseDown }) {
   const [selectedFile, setSelectedFile] = useState(EVIDENCE_FILES[0]);
   const [openedFile, setOpenedFile] = useState(null);
+  const { play } = useSound();
 
   function isImageFile(file) {
     return /\.(png|jpe?g|gif|webp)$/i.test(file.name);
@@ -134,7 +136,10 @@ export default function EvidenceFolder({ onClose, onDragMouseDown }) {
         </div>
         <button
           className="window-close"
-          onClick={onClose}
+          onClick={() => {
+            play("click_desktop");
+            onClose();
+          }}
           title="Close"
         >
           ✕
@@ -151,6 +156,7 @@ export default function EvidenceFolder({ onClose, onDragMouseDown }) {
               onSelect={() => setSelectedFile(file)}
               isSelected={selectedFile?.id === file.id}
               isLocked={false}
+              playClickSound
             />
           ))}
         </div>
@@ -182,7 +188,10 @@ export default function EvidenceFolder({ onClose, onDragMouseDown }) {
       {openedFile && typeof document !== "undefined" && createPortal(
         <div
           className="evidence-image-popup-backdrop"
-          onClick={() => setOpenedFile(null)}
+          onClick={() => {
+            play("click_desktop");
+            setOpenedFile(null);
+          }}
           role="dialog"
           aria-label="Evidence image preview"
         >
@@ -191,7 +200,10 @@ export default function EvidenceFolder({ onClose, onDragMouseDown }) {
               className="evidence-image-popup-close"
               type="button"
               aria-label="Close image preview"
-              onClick={() => setOpenedFile(null)}
+              onClick={() => {
+                play("click_desktop");
+                setOpenedFile(null);
+              }}
             >
               ✕
             </button>

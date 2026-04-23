@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect } from "react";
 import { useSound } from "../hooks/useSound";
 import "../styles/pages/mainMenu.css";
 
@@ -6,25 +6,7 @@ export default function MainMenu({ onStartIntro, onContinue, onTutorial, onCredi
   const [selectedOption, setSelectedOption] = useState(0);
   const [isStarting, setIsStarting] = useState(false);
   const [showNewGameModal, setShowNewGameModal] = useState(false);
-  const audioRef = useRef(null);
   const { play } = useSound();
-
-  useEffect(() => {
-    const audio = new Audio("/sound/Friend%20Soundtrack.mp3");
-    audio.loop = true;
-    audio.volume = 0.05;
-    audioRef.current = audio;
-
-    const timer = setTimeout(() => {
-      audio.play().catch(() => {});
-    }, 2000);
-
-    return () => {
-      clearTimeout(timer);
-      audio.pause();
-      audio.currentTime = 0;
-    };
-  }, []);
 
   const options = [
     { label: "NEW GAME", action: "new_game", disabled: false },

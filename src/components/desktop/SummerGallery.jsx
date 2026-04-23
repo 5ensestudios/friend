@@ -121,7 +121,10 @@ export default function SummerGallery({ onClose, onDragMouseDown }) {
       {openedImage && typeof document !== "undefined" && createPortal(
         <div
           className="brunson-image-popup-backdrop"
-          onClick={() => setOpenedImage(null)}
+          onClick={() => {
+            play("click_desktop");
+            setOpenedImage(null);
+          }}
           role="dialog"
           aria-label="Summer 2021 image preview"
         >
@@ -130,7 +133,10 @@ export default function SummerGallery({ onClose, onDragMouseDown }) {
               className="brunson-image-popup-close"
               type="button"
               aria-label="Close image preview"
-              onClick={() => setOpenedImage(null)}
+              onClick={() => {
+                play("click_desktop");
+                setOpenedImage(null);
+              }}
             >
               ✕
             </button>

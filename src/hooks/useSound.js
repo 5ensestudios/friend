@@ -7,7 +7,7 @@ const SOUND_PATHS = {
   emailPopup: "/Friend SFX/Friend SFX - email popup.wav",
   bootScreenOn: "/Friend SFX/Friend SFX - boot screenon_off.wav",
   bootScreenOff: "/Friend SFX/Friend SFX - boot screenon_off.wav",
-  glitch: "/Friend SFX/Friend SFX - glitch effect.wav",
+  glitch: "/Friend SFX/Friend SFX - glitch effect .wav",
   dino: "/Friend SFX/Friend SFX - dino jump.wav",
   radioSiren: "/Friend SFX/Friend SFX - radio siren.wav",
 
