@@ -1,5 +1,5 @@
 import { createPortal } from "react-dom";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import FileItem from "./FileItem";
 import { useSound } from "../../hooks/useSound";
 import "../../styles/components/fileExplorer.css";
@@ -30,21 +30,22 @@ const EVIDENCE_FILES = [
   },
   {
     id: "evidence_03",
-    name: "dispatch_call.mp3",
+    name: "Dispatch Call.mp3",
     type: "file",
-    icon: "/icons/Music Player.png",
+    icon: "/icons/Audio Player.png",
+    asset_path: "/evidence/Dispatch%20Call.mp3",
     file_type: "MP3 Audio",
     file_size: "3.2 MB",
     created_date: "03-07-2016 01:12",
-    description: "Recorded dispatch call audio (placeholder, asset pending).",
+    description: "Recorded dispatch call audio.",
   },
   {
     id: "evidence_04",
-    name: "medical_examiner_report-1.png",
+    name: "medical_examiner_report.pdf",
     type: "file",
     icon: "/icons/Document.png",
     asset_path: "/evidence/medical_examiner_report.png",
-    file_type: "PNG Image",
+    file_type: "PDF Image",
     file_size: "2.4 MB",
     created_date: "03-07-2016 01:48",
     description: "Medical examiner report image (asset linked).",
@@ -62,7 +63,7 @@ const EVIDENCE_FILES = [
   },
   {
     id: "evidence_06",
-    name: "victim.png",
+    name: "scene_victim_chris.png",
     type: "file",
     icon: "/icons/Image.png",
     asset_path: "/evidence/scene_victim_chris.png",
@@ -98,10 +99,19 @@ const EVIDENCE_FILES = [
 export default function EvidenceFolder({ onClose, onDragMouseDown }) {
   const [selectedFile, setSelectedFile] = useState(EVIDENCE_FILES[0]);
   const [openedFile, setOpenedFile] = useState(null);
+  const [openedAudioFile, setOpenedAudioFile] = useState(null);
+  const [audioProgress, setAudioProgress] = useState(0);
+  const [audioDuration, setAudioDuration] = useState(1);
+  const [isAudioPlaying, setIsAudioPlaying] = useState(false);
+  const audioRef = useRef(null);
   const { play } = useSound();
 
   function isImageFile(file) {
     return /\.(png|jpe?g|gif|webp)$/i.test(file.asset_path || "");
+  }
+
+  function isAudioFile(file) {
+    return /\.(mp3|wav|ogg)$/i.test(file.asset_path || "");
   }
 
   function handleOpenFile(file) {
@@ -114,8 +124,89 @@ export default function EvidenceFolder({ onClose, onDragMouseDown }) {
       return;
     }
 
+    if (isAudioFile(file)) {
+      setOpenedAudioFile(file);
+      return;
+    }
+
     window.open(file.asset_path, "_blank", "noopener,noreferrer");
   }
+
+  function closeAudioPopup() {
+    if (audioRef.current) {
+      audioRef.current.pause();
+    }
+    setIsAudioPlaying(false);
+    setAudioProgress(0);
+    setOpenedAudioFile(null);
+  }
+
+  function toggleAudioPlayback() {
+    const audio = audioRef.current;
+    if (!audio) return;
+
+    if (audio.paused) {
+      audio.play().catch(() => {});
+      setIsAudioPlaying(true);
+      return;
+    }
+
+    audio.pause();
+    setIsAudioPlaying(false);
+  }
+
+  function handleAudioSeek(event) {
+    const nextTime = Number(event.target.value);
+    const audio = audioRef.current;
+    if (!audio) return;
+    audio.currentTime = nextTime;
+    setAudioProgress(nextTime);
+  }
+
+  useEffect(() => {
+    if (!openedAudioFile) return;
+
+    const audio = new Audio(openedAudioFile.asset_path);
+    audioRef.current = audio;
+    audio.preload = "auto";
+    audio.volume = 0.4;
+
+    function updateMetadata() {
+      setAudioDuration(audio.duration || 1);
+      setAudioProgress(audio.currentTime || 0);
+    }
+
+    function updateProgress() {
+      setAudioProgress(audio.currentTime || 0);
+    }
+
+    function handleEnded() {
+      setIsAudioPlaying(false);
+    }
+
+    audio.addEventListener("loadedmetadata", updateMetadata);
+    audio.addEventListener("timeupdate", updateProgress);
+    audio.addEventListener("ended", handleEnded);
+
+    audio.load();
+
+    return () => {
+      audio.pause();
+      audio.src = "";
+      audioRef.current = null;
+      setIsAudioPlaying(false);
+      setAudioProgress(0);
+      setAudioDuration(1);
+      audio.removeEventListener("loadedmetadata", updateMetadata);
+      audio.removeEventListener("timeupdate", updateProgress);
+      audio.removeEventListener("ended", handleEnded);
+    };
+  }, [openedAudioFile]);
+
+  const audioFillPercent = Math.min(100, (audioProgress / (audioDuration || 1)) * 100);
+  const audioProgressStyle = {
+    background: `linear-gradient(to right, #b33838 0%, #b33838 ${audioFillPercent}%, #ffffff ${audioFillPercent}%, #ffffff 100%)`,
+  };
 
   return (
     <>
@@ -214,8 +305,67 @@ export default function EvidenceFolder({ onClose, onDragMouseDown }) {
             <img
               src={openedFile.asset_path}
               alt={openedFile.name}
-              className="evidence-image-popup-photo"
+              className={`evidence-image-popup-photo${openedFile.id === "evidence_04" ? " medical-report" : ""}`}
             />
+          </div>
+        </div>,
+        document.body
+      )}
+
+      {openedAudioFile && typeof document !== "undefined" && createPortal(
+        <div
+          className="evidence-audio-popup-backdrop"
+          onClick={closeAudioPopup}
+          role="dialog"
+          aria-label="Evidence audio preview"
+        >
+          <div className="evidence-audio-popup" onClick={event => event.stopPropagation()}>
+            <div className="evidence-audio-popup-header">
+              <div className="evidence-audio-popup-title-group">
+                <img
+                  src="/icons/Audio Player.png"
+                  alt="Audio Player icon"
+                  className="evidence-audio-popup-icon"
+                />
+                <div className="evidence-audio-popup-title">Audio Player</div>
+              </div>
+              <button
+                className="evidence-audio-popup-close"
+                type="button"
+                aria-label="Close audio preview"
+                onClick={closeAudioPopup}
+              >
+                ✕
+              </button>
+            </div>
+            <div className="evidence-audio-popup-body">
+            </div>
+            <div className="evidence-audio-popup-footer">
+              <div className="evidence-audio-popup-filename-bar">
+                <span className="evidence-audio-popup-track-label">{openedAudioFile.name}</span>
+              </div>
+              <div className="evidence-audio-popup-controls">
+                <button
+                  className="evidence-audio-play"
+                  type="button"
+                  onClick={toggleAudioPlayback}
+                  aria-label={isAudioPlaying ? "Pause audio" : "Play audio"}
+                >
+                  {isAudioPlaying ? "❚❚" : "▶"}
+                </button>
+                <input
+                  className="evidence-audio-progress"
+                  type="range"
+                  min="0"
+                  max={audioDuration || 1}
+                  value={audioProgress}
+                  step="0.01"
+                  onChange={handleAudioSeek}
+                  onClick={e => e.stopPropagation()}
+                  style={audioProgressStyle}
+                />
+              </div>
+            </div>
           </div>
         </div>,
         document.body

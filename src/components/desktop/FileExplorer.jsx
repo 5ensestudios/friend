@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { createPortal } from "react-dom";
 import FileItem from "./FileItem";
 import { useSound } from "../../hooks/useSound";
 import "../../styles/components/fileExplorer.css";
@@ -72,6 +73,7 @@ export default function FileExplorer({
   const [currentFolder, setCurrentFolder] = useState(null);
   const [selectedFile, setSelectedFile] = useState(null);
   const [fileStructure, setFileStructure] = useState(null);
+  const [showLockedPopup, setShowLockedPopup] = useState(false);
   const { play } = useSound();
 
   useEffect(() => {
@@ -194,10 +196,13 @@ export default function FileExplorer({
     return null;
   }
 
+  function closeLockedPopup() {
+    setShowLockedPopup(false);
+  }
+
   function handleFileClick(file) {
     if (isFileLocked(file)) {
-      const lockMessage = getLockMessage(file);
-      alert(lockMessage);
+      setShowLockedPopup(true);
       return;
     }
 
@@ -219,8 +224,9 @@ export default function FileExplorer({
   }
 
   return (
-    <div className="file-explorer-window">
-      <div className="window-header">
+    <>
+      <div className="file-explorer-window">
+        <div className="window-header">
         <div className="window-title-bar" onMouseDown={onDragMouseDown} style={{ cursor: "grab" }}>
           <button
             className="window-nav-button"
@@ -304,5 +310,22 @@ export default function FileExplorer({
         </div>
       </div>
     </div>
+      {showLockedPopup && typeof document !== "undefined" && createPortal(
+        <div className="locked-popup-overlay" role="dialog" aria-modal="true">
+          <div className="locked-popup-box" onClick={(event) => event.stopPropagation()}>
+            <div className="locked-popup-title">Locked</div>
+            <div className="locked-popup-message">Complete current act first</div>
+            <button
+              className="locked-popup-button"
+              type="button"
+              onClick={closeLockedPopup}
+            >
+              OK
+            </button>
+          </div>
+        </div>,
+        document.body
+      )}
+    </>
   );
 }

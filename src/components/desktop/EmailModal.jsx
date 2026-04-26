@@ -72,7 +72,7 @@ export default function EmailModal({ emails = [], activeMailId = null, onClose }
         </div>
 
         <div className="email-modal-preview">
-          <div className="email-modal-preview-header">Corrupted files</div>
+          <div className="email-modal-preview-header">{selectedMail.subject}</div>
           <div className="email-modal-preview-body">
             <p><strong>{previewMetaLabel}:</strong> {previewMetaValue}</p>
 

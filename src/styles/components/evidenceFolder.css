@@ -36,6 +36,15 @@
 }
 
 .evidence-image-popup-photo {
+	max-width: min(600px, calc(100vw - 60px));
+	max-height: min(500px, calc(100vh - 120px));
+	width: auto;
+	height: auto;
+	object-fit: contain;
+	display: block;
+}
+
+.evidence-image-popup-photo.medical-report {
 	max-width: min(900px, calc(100vw - 40px));
 	max-height: min(750px, calc(100vh - 80px));
 	width: auto;
@@ -44,4 +53,145 @@
 	display: block;
 	box-shadow: none;
 	background: transparent;
+}
+
+.evidence-audio-popup-backdrop {
+	position: fixed;
+	inset: 0;
+	background: rgba(0, 0, 0, 0.55);
+	z-index: 1200;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	padding: 20px;
+}
+
+.evidence-audio-popup {
+	display: flex;
+	flex-direction: column;
+	gap: 0;
+	width: min(420px, calc(100vw - 40px));
+	max-width: 520px;
+	background: #232428;
+	box-shadow: 0 24px 60px rgba(0, 0, 0, 0.35);
+	border-radius: 10px;
+	overflow: hidden;
+}
+
+.evidence-audio-popup-header {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: 12px;
+	padding: 8px 12px;
+	background: var(--color-surface-raised);
+}
+
+.evidence-audio-popup-title-group {
+	display: flex;              /* switch from inline-flex → flex */
+	align-items: center;        /* vertical alignment */
+	gap: 8px;
+}
+
+.evidence-audio-popup-icon {
+	width: 18px;
+	height: 18px;
+	object-fit: contain;
+	display: block;             /* removes weird inline spacing */
+}
+
+
+.evidence-audio-popup-title {
+	font-size: 15px;
+	color: #ffff;
+	line-height: 1; 
+	letter-spacing: 0px;            /* prevents vertical offset */
+}
+
+.evidence-audio-popup-close {
+	width: 30px;
+	height: 24px;
+	background: transparent;
+	border: 0;
+	color: transparent;
+	font-size: 18px;
+	cursor: default;
+	border-radius: 4px;
+}
+
+
+
+.evidence-audio-popup-footer {
+	display: flex;
+	flex-direction: column;
+	gap: 0;
+	background: #191919;
+	border-top: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.evidence-audio-popup-filename-bar {
+	display: flex;
+	align-items: center;
+	padding: 0px 22px;
+	padding-bottom: 8px;
+	padding-top: 80px;
+	border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.evidence-audio-popup-track-label {
+	font-family: var(--font-body);
+	font-size: 15px;
+	color: #ffff;
+}
+
+.evidence-audio-popup-controls {
+	display: grid;
+	grid-template-columns: 32px 1fr;
+	gap: 10px;
+	align-items: center;
+	padding: 10px 14px;
+	background: var(--color-surface-raised);
+}
+
+.evidence-audio-play {
+	width: 32px;
+	height: 24px;
+	border: 0;
+	background: transparent;
+	color: #f0f0f0;
+	cursor: pointer;
+	font-size: 20px;
+	line-height: 1;
+	padding: 0;
+}
+
+
+.evidence-audio-progress {
+	width: 100%;
+	-webkit-appearance: none;
+	appearance: none;
+	height: 4px;
+	border-radius: 2px;
+	background: #555;
+	accent-color: #b33838;
+	cursor: pointer;
+}
+
+.evidence-audio-progress::-webkit-slider-thumb {
+	-webkit-appearance: none;
+	width: 16px;
+	height: 16px;
+	border-radius: 50%;
+	background: #b33838;
+	cursor: pointer;
+}
+
+.evidence-audio-progress::-moz-range-thumb {
+	width: 16px;
+	height: 16px;
+	border-radius: 50%;
+	background: #b33838;
+	border: 2px solid #fff;
+	box-shadow: 0 0 0 3px rgba(179, 56, 56, 0.15);
+	cursor: pointer;
 }

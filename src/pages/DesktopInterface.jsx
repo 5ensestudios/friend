@@ -20,7 +20,7 @@ import { useSound } from "../hooks/useSound";
 import { saveProgress } from "../firebase/progress";
 import "../styles/pages/desktop.css";
 
-const ACT3_AMBIENT_SRC = "/Friend SFX/Friend SFX - ambient scenes act.wav";
+const ACT3_AMBIENT_SRC = "/Friend SFX/Friend SFX - ambient act.mp3";
 const ACT3_AMBIENT_VOLUME = 0.2;
 
 const WISHLIST_DEFAULT_TEXT = `1.Ergonomic lumbar support pillow (current chair is killing my back)
@@ -185,7 +185,7 @@ function getSeenDesktopMails(progress) {
   return [...STATIC_INBOX_MAILS, ...unlockedProgressMails];
 }
 
-export default function DesktopInterface({ playerData, onReturnToMenu, onAct3Start, onShutdownToMenu }) {
+export default function DesktopInterface({ playerData, authUserId, onReturnToMenu, onAct3Start, onShutdownToMenu }) {
   const [view, setView] = useState("desktop"); // 'desktop', 'act-intro', or 'scene'
   const [currentAct, setCurrentAct] = useState(null);
   const [currentQuestion, setCurrentQuestion] = useState(null);
@@ -205,7 +205,7 @@ export default function DesktopInterface({ playerData, onReturnToMenu, onAct3Sta
   const [showStartMenu, setShowStartMenu] = useState(false);
   const [showVolumePopup, setShowVolumePopup] = useState(false);
   const [desktopVolume, setDesktopVolume] = useState(74);
-  const [bgmVolume] = useState(0.2);
+  const [bgmVolume] = useState(0.1);
   const [evidenceVisible, setEvidenceVisible] = useState(
     playerData.progress.acts_completed.includes(2)
   );
@@ -245,18 +245,7 @@ export default function DesktopInterface({ playerData, onReturnToMenu, onAct3Sta
   function destroyDesktopAmbient() {
     const audio = bgMusicRef.current;
     if (!audio) return;
-
-    audio.pause();
-    audio.currentTime = 0;
-    audio.loop = false;
-    audio.src = "";
-    audio.load();
-
-    if (window.__friendDesktopAmbient === audio) {
-      window.__friendDesktopAmbient = null;
-    }
-
-    bgMusicRef.current = null;
+    audio.pause(); // Only pause, do not null or destroy
   }
 
   function clearAct3ResumeHandler() {
@@ -290,26 +279,28 @@ export default function DesktopInterface({ playerData, onReturnToMenu, onAct3Sta
       return;
     }
 
-    let audio = bgMusicRef.current;
+    let audio = bgMusicRef.current || window.__friendDesktopAmbient;
     if (!audio) {
-      audio = new Audio("/Friend SFX/Friend SFX - ambient desktop.wav");
+      audio = new Audio("/Friend SFX/The Friend SFX - Desktop Bgm.mp3");
       audio.loop = true;
       bgMusicRef.current = audio;
       window.__friendDesktopAmbient = audio;
     }
 
     audio.volume = bgmVolume;
-    audio.play().catch(() => {
-      clearResumeHandler();
-      const resume = () => {
-        if (bgMusicRef.current !== audio) return;
-        audio.play();
-        window.removeEventListener("click", resume);
-        bgResumeHandlerRef.current = null;
-      };
-      bgResumeHandlerRef.current = resume;
-      window.addEventListener("click", resume);
-    });
+    if (audio.paused) {
+      audio.play().catch(() => {
+        clearResumeHandler();
+        const resume = () => {
+          if (bgMusicRef.current !== audio) return;
+          audio.play();
+          window.removeEventListener("click", resume);
+          bgResumeHandlerRef.current = null;
+        };
+        bgResumeHandlerRef.current = resume;
+        window.addEventListener("click", resume);
+      });
+    }
 
     return () => {
       clearResumeHandler();
@@ -427,6 +418,11 @@ export default function DesktopInterface({ playerData, onReturnToMenu, onAct3Sta
   }, [view]);
 
   function handleActSelect(actNumber, questionIndex = null) {
+    // Prevent replaying completed acts
+    if (playerProgress.acts_completed.includes(actNumber)) {
+      return;
+    }
+
     setCurrentAct(actNumber);
     setCurrentQuestion(typeof questionIndex === "number" ? questionIndex : null);
 
@@ -882,7 +878,11 @@ export default function DesktopInterface({ playerData, onReturnToMenu, onAct3Sta
             left: 0,
           }}
         >
-          <Notepad onClose={() => closeWindow("notes")} onDragMouseDown={notesDrag.onMouseDown} />
+          <Notepad
+            onClose={() => closeWindow("notes")}
+            onDragMouseDown={notesDrag.onMouseDown}
+            storageKey={`friEND_notes_${authUserId ?? "guest"}`}
+          />
         </div>
       )}
 
@@ -903,7 +903,7 @@ export default function DesktopInterface({ playerData, onReturnToMenu, onAct3Sta
             onDragMouseDown={notesDrag.onMouseDown}
             title="Wishlist"
             iconSrc="/icons/Notes.png"
-            storageKey="friEND_wishlist"
+            storageKey={`friEND_wishlist_${authUserId ?? "guest"}`}
             initialText={WISHLIST_DEFAULT_TEXT}
             placeholder=""
           />
@@ -927,7 +927,7 @@ export default function DesktopInterface({ playerData, onReturnToMenu, onAct3Sta
             onDragMouseDown={redditDraftDrag.onMouseDown}
             title="Reddit Draft"
             iconSrc="/icons/Notes.png"
-            storageKey="friEND_reddit_draft"
+            storageKey={`friEND_reddit_draft_${authUserId ?? "guest"}`}
             initialText={REDDIT_DRAFT_TEXT}
             placeholder=""
           />

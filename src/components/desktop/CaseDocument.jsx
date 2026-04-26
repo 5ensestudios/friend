@@ -25,7 +25,7 @@ export default function CaseDocument({ onClose }) {
     <div className={`case-doc-overlay${closing ? " closing" : ""}`} onClick={handleClose}>
       <div className={`case-doc-paper${closing ? " closing" : ""}`} onClick={e => e.stopPropagation()}>
         <div className="case-doc-image-wrap">
-          {!imageLoaded && <div className="case-doc-loading">Loading...</div>}
+          {!imageLoaded && <div className="case-doc-loading"></div>}
           <img
             src={CASE_FILE_SRC}
             alt="Case File"

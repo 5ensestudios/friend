@@ -157,6 +157,7 @@ export default function DinoGameModal({ onClose, onDragMouseDown }) {
       if (hit) {
         game.running = false;
         setIsOver(true);
+        play("dinoGameOver");
 
         const finalScore = Math.floor(game.score);
         if (finalScore > bestScore) {

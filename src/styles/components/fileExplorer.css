@@ -164,6 +164,11 @@
   display: block;
 }
 
+.item-icon-img.dispatch-call-icon {
+  width: 42px;
+  height: 42px;
+}
+
 .item-name {
   font-family: var(--font-system);
   font-size: 11px;
@@ -251,5 +256,74 @@
   background: #555;
 }
 
+.locked-popup-overlay {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0, 0, 0, 0.2);
+  z-index: 1300;
+  padding: 12px;
+}
+
+.locked-popup-box {
+  background: var(--color-surface-mid);
+  border: 1px solid var(--color-border);;
+  border-radius: 0px;
+  padding: 14px 18px;
+  width: min(320px, calc(100vw - 48px));
+  max-width: 320px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  text-align: center;
+  animation: lockedPopupFade 180ms ease-out;
+}
+
+.locked-popup-title {
+  font-family: var(--font-system);
+  font-size: 20px;
+  font-weight: bold;
+  color: #ffffff;
+}
+
+.locked-popup-message {
+  font-family: var(--font-system);
+  font-size: 12px;
+  color: #ffffff;
+  line-height: 1.4;
+  margin-bottom: 8px;
+}
+
+.locked-popup-button {
+  align-self: center;
+  min-width: 68px;
+  padding: 6px 12px;
+  border: 1px solid var(--color-border);
+  border-radius: 0;
+  background: transparent;
+  color: #ffffff;
+  font-size: 12px;
+  letter-spacing: 0.02em;
+  cursor: pointer;
+  transition: background 0.15s ease, transform 0.15s ease, border-color 0.15s ease;
+}
+
+.locked-popup-button:hover {
+  background: #333;
+  transform: scale(1.02);
+}
+
+@keyframes lockedPopupFade {
+  from {
+    opacity: 0;
+    transform: scale(0.96);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
 
 

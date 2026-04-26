@@ -1,7 +1,10 @@
 import { useEffect, useState } from "react";
 import "../styles/pages/tutorialPage.css";
+import { useSound } from "../hooks/useSound";
 
 export default function TutorialPage({ onBack }) {
+  const { play } = useSound(); 
+
   const [isLeaving, setIsLeaving] = useState(false);
   const [isVisible, setIsVisible] = useState(false);
 
@@ -61,9 +64,16 @@ export default function TutorialPage({ onBack }) {
           </p>
         </section>
 
-        <button className="tutorial-back" type="button" onClick={handleBack}>
-          BACK
-        </button>
+        <button
+        className="credits-page-back tutorial-back"
+        type="button"
+        onClick={() => {
+          play("click_game"); // ✅ SFX
+          handleBack();
+        }}
+      >
+        BACK
+      </button>
       </div>
     </div>
   );

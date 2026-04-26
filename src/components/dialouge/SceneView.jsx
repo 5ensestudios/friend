@@ -71,8 +71,8 @@ const QUESTION_PROMPT_SCREENS = {
 
 const QUESTION_PHASE_MS = 5000;
 const QUESTION_PHASE_FADE_OUT_MS = 900;
-const SCENE_BGM_SRC = "/Friend SFX/Friend SFX - ambient scenes act.wav";
-const SCENE_BGM_VOLUME = 0.2;
+const SCENE_BGM_SRC = "/Friend SFX/Friend SFX - ambient act.mp3";
+const SCENE_BGM_VOLUME = 0.04;
 
 /* ══════════════════════════════════════════════════════════
    ACT 0 — Intro (per-character full sequential interview)
@@ -338,7 +338,7 @@ function useVideoPreload(src) {
 }
 
 // CinematicStage: handles loop video, preloading, and seamless transition
-function CinematicStage({ loopSrc, actSrc, question, onDone, paused, onOpenPauseMenu, showProceed = false, onProceed, isProceedFading = false }) {
+function CinematicStage({ loopSrc, actSrc, question, onDone, paused, onOpenPauseMenu, showProceed = false, onProceed, isProceedFading = false, play }) {
   const [typingDone, setTypingDone] = useState(false);
   const [showAct, setShowAct] = useState(false);
   const [actStarted, setActStarted] = useState(false);
@@ -363,6 +363,25 @@ function CinematicStage({ loopSrc, actSrc, question, onDone, paused, onOpenPause
       actRef.current.play().catch(() => {});
     }
   }, [showAct, actStarted]);
+
+  // Pause and resume loop/act video when the pause menu opens
+  useEffect(() => {
+    if (paused) {
+      if (loopRef.current && !loopRef.current.paused) {
+        loopRef.current.pause();
+      }
+      if (actRef.current && !actRef.current.paused) {
+        actRef.current.pause();
+      }
+      return;
+    }
+
+    if (showAct) {
+      actRef.current?.play().catch(() => {});
+    } else {
+      loopRef.current?.play().catch(() => {});
+    }
+  }, [paused, showAct]);
 
   // Reset state if actSrc changes
   useEffect(() => {
@@ -390,6 +409,7 @@ function CinematicStage({ loopSrc, actSrc, question, onDone, paused, onOpenPause
   function handlePendingTap(event) {
     if (!shouldShowProceed) return;
     if (event.target.closest("button, a, input, textarea, select, label")) return;
+    play("click_game");
     handleProceed();
   }
 
@@ -459,7 +479,10 @@ function CinematicStage({ loopSrc, actSrc, question, onDone, paused, onOpenPause
             <button
               className="pending-proceed"
               type="button"
-              onClick={handleProceed}
+              onClick={(e) => {
+                play("click_game");
+                handleProceed(e);
+              }}
               disabled={awaitingQuestionProceed && !actReady}
             >
               Proceed
@@ -854,8 +877,8 @@ export default function SceneView({
           <div className="pause-overlay" onClick={() => setPaused(false)}>
             <div className="pause-menu" onClick={e => e.stopPropagation()}>
               <h2 className="pause-title">PAUSED</h2>
-              <button className="pause-option" onClick={() => setPaused(false)}>Resume</button>
-              <button className="pause-option" onClick={onClose}>Home</button>
+              <button className="pause-option" onClick={() => { play("click_game"); setPaused(false); }}>Resume</button>
+              <button className="pause-option" onClick={() => { play("click_game"); onClose(); }}>Home</button>
             </div>
           </div>
         )}
@@ -871,7 +894,10 @@ export default function SceneView({
           <p className="act-complete-copy">{subtitle}</p>
           <button
             className="act-complete-button"
-            onClick={onContinue || (() => onActComplete(actNumber))}
+            onClick={() => {
+              play("click_game");
+              (onContinue || (() => onActComplete(actNumber)))();
+            }}
           >
             Continue
           </button>
@@ -947,8 +973,14 @@ export default function SceneView({
         <div className="pause-overlay" onClick={() => setPaused(false)}>
           <div className="pause-menu" onClick={e => e.stopPropagation()}>
             <h2 className="pause-title">PAUSED</h2>
-            <button className="pause-option" onClick={() => setPaused(false)}>Resume</button>
-            <button className="pause-option" onClick={onClose}>Home</button>
+            <button className="pause-option" onClick={() => {
+                play("click_game");
+                setPaused(false);
+              }}>Resume</button>
+            <button className="pause-option" onClick={() => {
+                play("click_game");
+                onClose();
+              }}>Home</button>
           </div>
         </div>
       )}
@@ -972,6 +1004,7 @@ export default function SceneView({
               showProceed={phase === "pending"}
               onProceed={handleTapToContinue}
               isProceedFading={tapFading}
+              play={play}
             />
           </div>
         ) : (
@@ -983,7 +1016,10 @@ export default function SceneView({
                   <button
                     key={c.id}
                     disabled={done}
-                    onClick={() => handleIntroPickChar(c.id)}
+                    onClick={() => {
+                      play("click_game");
+                      handleIntroPickChar(c.id);
+                    }}
                     onMouseEnter={() => play("scene_hover")}
                   >
                     <img src={c.image} alt={c.name} className="suspect-card-img" />
@@ -1028,6 +1064,7 @@ export default function SceneView({
               showProceed={phase === "pending"}
               onProceed={handleTapToContinue}
               isProceedFading={tapFading}
+              play={play}
             />
           </div>
         ) : (
@@ -1039,7 +1076,10 @@ export default function SceneView({
                   <button
                     key={c.id}
                     disabled={picked}
-                    onClick={() => handlePickChar(c.id)}
+                    onClick={() => {
+                      play("click_game");
+                      handlePickChar(c.id);
+                    }}
                     onMouseEnter={() => play("scene_hover")}
                   >
                     <img src={c.image} alt={c.name} className="suspect-card-img" />

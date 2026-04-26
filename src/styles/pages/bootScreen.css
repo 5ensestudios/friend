@@ -84,14 +84,14 @@
 
 /* Phase 3: fades to the login/desktop bg color */
 .boot-screen.boot-bright {
-  background: #0a0a0a;
+  background: #141414;
   animation: bootFadeOut 0.8s ease forwards;
 }
 
 .boot-screen.boot-bright .boot-line {
   width: 100%;
   height: 100%;
-  background: #0a0a0a;
+  background: #141414;
 }
 
 @keyframes bootFadeOut {

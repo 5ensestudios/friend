@@ -2,18 +2,81 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { useSound } from "../hooks/useSound";
 import "../styles/pages/act3Prelude.css";
 
+/* Typewriter component with audio feedback */
+function TypewriterLine({ text, speed = 55, onDone, paused = false }) {
+  const [index, setIndex] = useState(0);
+  const audioRef = useRef(null);
+  const intervalRef = useRef(null);
+  const onDoneRef = useRef(onDone);
+
+  useEffect(() => {
+    onDoneRef.current = onDone;
+  }, [onDone]);
+
+  useEffect(() => {
+    if (paused) {
+      clearInterval(intervalRef.current);
+      if (audioRef.current) { audioRef.current.pause(); }
+      return;
+    }
+    // If already finished or no text, don't restart
+    if (!text || index >= text.length) return;
+    if (!audioRef.current) {
+      audioRef.current = new Audio("/sound/typewriter.mp3");
+      audioRef.current.volume = 0.35;
+    }
+    intervalRef.current = setInterval(() => {
+      setIndex(prev => {
+        const next = prev + 1;
+        const char = text[prev] ?? "";
+        if (audioRef.current && char.trim() !== "") {
+          audioRef.current.currentTime = 0;
+          audioRef.current.play().catch(() => {});
+        }
+        if (next >= text.length) {
+          clearInterval(intervalRef.current);
+          if (audioRef.current) {
+            audioRef.current.pause();
+            audioRef.current.currentTime = 0;
+          }
+          setTimeout(() => onDoneRef.current?.(), 0);
+        }
+        return next;
+      });
+    }, speed);
+    return () => {
+      clearInterval(intervalRef.current);
+    };
+  }, [text, speed, paused]);
+
+  // Reset index when text changes
+  useEffect(() => {
+    setIndex(0);
+  }, [text]);
+
+  // Handle empty text
+  useEffect(() => {
+    if (!text) {
+      const t = setTimeout(() => onDoneRef.current?.(), 50);
+      return () => clearTimeout(t);
+    }
+  }, [text]);
+
+  return <>{text.slice(0, index)}</>;
+}
+
 const SLIDES = [
   {
     id: "act3",
     type: "title",
     text: "ACT III",
-    holdMs: 1700,
+    holdMs: 5000,
   },
   {
     id: "truth",
     type: "title",
     text: "The Truth",
-    holdMs: 2000,
+    holdMs: 5000,
   },
   {
     id: "story",
@@ -50,9 +113,17 @@ const SLIDES = [
 const TITLE_FADE_MS = 900;
 const TITLE_HOLD_MS = 1100;
 
+/* Typewriter for multi-line paragraphs with audio support */
 function TypewriterParagraphs({ lines = [], speed = 22, onDone }) {
   const fullText = useMemo(() => lines.join("\n"), [lines]);
   const [index, setIndex] = useState(0);
+  const audioRef = useRef(null);
+  const intervalRef = useRef(null);
+  const onDoneRef = useRef(onDone);
+
+  useEffect(() => {
+    onDoneRef.current = onDone;
+  }, [onDone]);
 
   useEffect(() => {
     setIndex(0);
@@ -60,21 +131,38 @@ function TypewriterParagraphs({ lines = [], speed = 22, onDone }) {
 
   useEffect(() => {
     if (!fullText) {
-      const done = setTimeout(() => onDone?.(), 80);
+      const done = setTimeout(() => onDoneRef.current?.(), 80);
       return () => clearTimeout(done);
     }
 
     if (index >= fullText.length) {
-      onDone?.();
+      if (audioRef.current) {
+        audioRef.current.pause();
+        audioRef.current.currentTime = 0;
+      }
+      onDoneRef.current?.();
       return;
     }
 
-    const tick = setTimeout(() => {
-      setIndex(prev => prev + 1);
+    if (!audioRef.current) {
+      audioRef.current = new Audio("/sound/typewriter.mp3");
+      audioRef.current.volume = 0.35;
+    }
+
+    intervalRef.current = setInterval(() => {
+      setIndex(prev => {
+        const next = prev + 1;
+        const char = fullText[prev] ?? "";
+        if (audioRef.current && char.trim() !== "") {
+          audioRef.current.currentTime = 0;
+          audioRef.current.play().catch(() => {});
+        }
+        return next;
+      });
     }, speed);
 
-    return () => clearTimeout(tick);
-  }, [fullText, index, onDone, speed]);
+    return () => clearInterval(intervalRef.current);
+  }, [fullText, index, speed]);
 
   return (
     <div className="act3-prelude-text-content">

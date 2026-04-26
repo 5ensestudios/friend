@@ -73,7 +73,12 @@ export default function LoginScreen({
         }
 
         const user = await signUpUser(email.trim(), password, ign.trim());
-        const gameState = await createPlayerDocument(user.uid, user.email, ign.trim());
+        const gameState = await createPlayerDocument(
+          user.uid,
+          user.email,
+          ign.trim()
+        );
+
         onAuthSuccess(gameState, user);
         return;
       }
@@ -92,7 +97,10 @@ export default function LoginScreen({
       let gameState = await loadProgress(user.uid);
 
       if (!gameState) {
-        gameState = createDefaultGameState(user.uid, user.displayName || "Detective");
+        gameState = createDefaultGameState(
+          user.uid,
+          user.displayName || "Detective"
+        );
         await saveProgress(user.uid, gameState);
       }
 
@@ -110,10 +118,18 @@ export default function LoginScreen({
 
       <div className="login-clock">
         <div className="login-time">
-          {new Date().toLocaleTimeString([], { hour: "2-digit", minute: "2-digit", hour12: false })}
+          {new Date().toLocaleTimeString([], {
+            hour: "2-digit",
+            minute: "2-digit",
+            hour12: false,
+          })}
         </div>
         <div className="login-date">
-          {new Date().toLocaleDateString("en-US", { weekday: "long", month: "long", day: "numeric" })}
+          {new Date().toLocaleDateString("en-US", {
+            weekday: "long",
+            month: "long",
+            day: "numeric",
+          })}
         </div>
       </div>
 
@@ -128,44 +144,68 @@ export default function LoginScreen({
         {mode === "register" ? (
           <>
             <p className="login-mode-label">Create Your Profile</p>
+
             <div className="login-fields">
               <input
                 className="login-input"
                 type="text"
                 placeholder="Username"
                 value={ign}
-                onChange={e => { setIgn(e.target.value); setError(""); }}
+                onChange={(e) => {
+                  setIgn(e.target.value);
+                  setError("");
+                }}
                 maxLength={20}
+                onMouseEnter={() => play("hover_ui")}
               />
+
               <input
                 className="login-input"
                 type="email"
                 placeholder="E-mail"
                 value={email}
-                onChange={e => { setEmail(e.target.value); setError(""); }}
+                onChange={(e) => {
+                  setEmail(e.target.value);
+                  setError("");
+                }}
+                onMouseEnter={() => play("hover_ui")}
               />
+
               <input
                 className="login-input"
                 type="password"
                 placeholder="Password"
                 value={password}
-                onChange={e => { setPassword(e.target.value); setError(""); }}
+                onChange={(e) => {
+                  setPassword(e.target.value);
+                  setError("");
+                }}
+                onMouseEnter={() => play("hover_ui")}
               />
             </div>
+
             {error && <p className="login-error">{error}</p>}
-            <button className="login-signin-btn" onClick={() => {
-              play("click_game");
-              handleSubmit();
-            }} disabled={isLoading}>
+
+            <button
+              className="login-signin-btn"
+              onMouseEnter={() => play("scene_hover")}
+              onClick={() => {
+                play("click_game");
+                handleSubmit();
+              }}
+              disabled={isLoading}
+            >
               {isLoading ? "Creating..." : "Continue"}
             </button>
           </>
         ) : (
           <>
             <p className="login-mode-label">Welcome back</p>
+
             {isPasswordOnlyLogin && (
               <div className="login-username">{currentUsername}</div>
             )}
+
             <div className="login-fields">
               {!isPasswordOnlyLogin && (
                 <input
@@ -173,22 +213,38 @@ export default function LoginScreen({
                   type="email"
                   placeholder="Email"
                   value={email}
-                  onChange={e => { setEmail(e.target.value); setError(""); }}
+                  onChange={(e) => {
+                    setEmail(e.target.value);
+                    setError("");
+                  }}
+                  onMouseEnter={() => play("scene_hove")}
                 />
               )}
+
               <input
                 className="login-input"
                 type="password"
                 placeholder="Password"
                 value={password}
-                onChange={e => { setPassword(e.target.value); setError(""); }}
+                onChange={(e) => {
+                  setPassword(e.target.value);
+                  setError("");
+                }}
+                onMouseEnter={() => play("scene_hove")}
               />
             </div>
+
             {error && <p className="login-error">{error}</p>}
-            <button className="login-signin-btn" onClick={() => {
-              play("click_game");
-              handleSubmit();
-            }} disabled={isLoading}>
+
+            <button
+              className="login-signin-btn"
+              onMouseEnter={() => play("scene_hover")}
+              onClick={() => {
+                play("click_game");
+                handleSubmit();
+              }}
+              disabled={isLoading}
+            >
               {isLoading ? "Signing In..." : "Continue"}
             </button>
           </>
@@ -201,6 +257,7 @@ export default function LoginScreen({
             className="login-bottom-icon"
             title="Power"
             type="button"
+            onMouseEnter={() => play("scene_hover")}
             onClick={() => {
               play("click_game");
               onReturnToMenu?.();

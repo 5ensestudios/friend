@@ -29,6 +29,8 @@ export default function App() {
   const [shutdownTarget, setShutdownTarget] = useState("ending"); // 'menu' | 'credits' | 'act3-ending' | 'ending'
   const [isMobile, setIsMobile] = useState(() => window.innerWidth < 1024);
   const wasMobileRef = useRef(isMobile);
+  const desktopBgmRef = useRef(null);
+  const bgResumeHandlerRef = useRef(null);
   const { progress: preloadProgress, isDone: isPreloadDone } = useAssetPreloader({ enabled: !isMobile });
 
   useEffect(() => {
@@ -127,21 +129,44 @@ export default function App() {
   }, [currentPage, isMobile]);
 
   useEffect(() => {
-    if (currentPage === "game") {
-      return;
-    }
-
     const ambient = window.__friendDesktopAmbient;
-    if (!ambient) {
+    if (ambient && !["game", "login"].includes(currentPage)) {
+      ambient.pause();
+    }
+  }, [currentPage]);
+
+  useEffect(() => {
+    if (!["game", "login"].includes(currentPage)) {
       return;
     }
 
-    ambient.pause();
-    ambient.currentTime = 0;
-    ambient.loop = false;
-    ambient.src = "";
-    ambient.load();
-    window.__friendDesktopAmbient = null;
+    // Only play desktop ambient when the actual game is active
+    let audio = window.__friendDesktopAmbient;
+    if (!audio) {
+      audio = new Audio("/Friend SFX/The Friend SFX - Desktop Bgm.mp3");
+      audio.loop = true;
+      window.__friendDesktopAmbient = audio;
+    }
+
+    audio.volume = 0.1;
+    audio.play().catch((error) => {
+      const resume = () => {
+        if (window.__friendDesktopAmbient !== audio) return;
+        audio.play().finally(() => {
+          window.removeEventListener("click", resume);
+          bgResumeHandlerRef.current = null;
+        });
+      };
+      bgResumeHandlerRef.current = resume;
+      window.addEventListener("click", resume);
+    });
+
+    return () => {
+      if (bgResumeHandlerRef.current) {
+        window.removeEventListener("click", bgResumeHandlerRef.current);
+        bgResumeHandlerRef.current = null;
+      }
+    };
   }, [currentPage]);
 
   function handleStartIntro() {
@@ -284,6 +309,7 @@ export default function App() {
           {currentPage === "game" && (
             <DesktopInterface
               playerData={playerData}
+              authUserId={authUser?.uid}
               onReturnToMenu={handleReturnToMenu}
               onAct3Start={handleAct3Start}
               onShutdownToMenu={handleDesktopShutdown}

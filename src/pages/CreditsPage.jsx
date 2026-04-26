@@ -53,7 +53,7 @@ export default function CreditsPage({ onBack }) {
         className="credits-page-back tutorial-back"
         type="button"
         onClick={() => {
-          play("click_desktop"); // ✅ SFX
+          play("click_game"); // ✅ SFX
           handleBack();
         }}
       >

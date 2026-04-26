@@ -39,7 +39,11 @@ export default function FileItem({
       title={file.description || file.name}
     >
       <div className="item-icon">
-        <img src={iconSrc} alt="" className="item-icon-img" />
+        <img
+          src={iconSrc}
+          alt=""
+          className={`item-icon-img${file.id === "evidence_03" ? " dispatch-call-icon" : ""}`}
+        />
       </div>
       <div className="item-name">{file.name}</div>
     </div>

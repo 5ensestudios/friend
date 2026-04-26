@@ -91,7 +91,7 @@
 .email-notification-from,
 .email-notification-line,
 .email-notification-attachment {
-  margin-top: 12px;
+  margin-top: 14px;
 }
 
 .email-notification-line,
@@ -102,6 +102,3 @@
   line-height: 1.45;
 }
 
-.email-notification-gap {
-  height: 10px;
-}

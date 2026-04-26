@@ -10,9 +10,12 @@ const SOUND_PATHS = {
   static: "/Friend SFX/Friend SFX - boot screenon_off.wav",
   glitch: "/Friend SFX/Friend SFX - glitch effect .wav",
   dino: "/Friend SFX/Friend SFX - dino jump.wav",
-  radioSiren: "/Friend SFX/Friend SFX - radio siren.wav",
+  dinoGameOver: "/Friend SFX/bgm - dino game over.wav",
+  radioSiren: "/Friend SFX/Case Intro.mp3",
 
 };
+
+const activeSounds = new Set();
 
 export function useSound() {
   const play = useCallback((soundKey, options = {}) => {
@@ -26,7 +29,14 @@ export function useSound() {
       const audio = new Audio(path);
       audio.volume = options.volume ?? 0.7;
       audio.currentTime = 0;
+      activeSounds.add(audio);
+      const cleanup = () => {
+        activeSounds.delete(audio);
+      };
+      audio.addEventListener("ended", cleanup);
+      audio.addEventListener("pause", cleanup);
       audio.play().catch((err) => {
+        cleanup();
         console.warn(`Failed to play sound "${soundKey}":`, err);
       });
     } catch (err) {
@@ -35,4 +45,16 @@ export function useSound() {
   }, []);
 
   return { play };
+}
+
+export function stopAllSoundEffects() {
+  activeSounds.forEach((audio) => {
+    try {
+      audio.pause();
+      audio.currentTime = 0;
+    } catch (error) {
+      // ignore bad audio state
+    }
+  });
+  activeSounds.clear();
 }

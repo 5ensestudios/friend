@@ -27,6 +27,18 @@ const ACT_SLIDES = {
       subtitle: "Motives begin to surface. Who had reason to want Chris gone?",
     },
   ],
+  3: [
+    {
+      type: "part",
+      title: "ACT III",
+      part: "PART 3",
+    },
+    {
+      type: "title",
+      title: "THE TRUTH",
+      subtitle: "Uncover the final secrets and confront the truth.",
+    },
+  ],
 };
 
 const HOLD_MS = 3200;
