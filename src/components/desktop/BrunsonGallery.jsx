@@ -40,7 +40,7 @@ function buildImageEntries() {
     file_type: "PNG image",
     file_size: generateFakeSize(),
     created_date: randomDateInRange(dateStart, dateEnd),
-    description: "Brunson photo",
+    description: name, 
     src: encodeURI(`/Brunson-pics/Brunson/${name}`),
   }));
 }

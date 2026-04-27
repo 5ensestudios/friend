@@ -435,6 +435,7 @@ function CinematicStage({ loopSrc, actSrc, question, onDone, paused, onOpenPause
             autoPlay
             controls={false}
             playsInline
+            volume={1}
             onEnded={onDone}
           />
         )}
@@ -527,6 +528,9 @@ export default function SceneView({
 
   const actKey = `act${actNumber}`;
   const saved = playerProgress?.scenes_visited?.[actKey] || {};
+  const totalQuestions = Boolean(ACTS[actNumber]) ? (ACTS[actNumber].questions?.length || 0) : 0;
+  const savedCompletedQuestions = saved.completedQuestions || [];
+  const isActFullyCompleted = actNumber !== 0 && Boolean(ACTS[actNumber]) && (savedCompletedQuestions.length >= totalQuestions);
   const isAct0 = actNumber === 0;
   const { play } = useSound();
   const sceneBgmRef = useRef(null);
@@ -632,6 +636,15 @@ export default function SceneView({
     }
     setPhase("question-intro-act");
   }, [questionIndex, actNumber, saved.completedQuestions]);
+
+  // If opening an act (no questionIndex) and the act is already fully completed,
+  // show the act-complete / error page immediately.
+  useEffect(() => {
+    if (typeof questionIndex === "number") return;
+    if (isActFullyCompleted) {
+      setPhase("complete");
+    }
+  }, [questionIndex, isActFullyCompleted]);
 
   useEffect(() => {
     if (isAct0) return;
@@ -1048,10 +1061,10 @@ export default function SceneView({
         ) : phase === "question-complete" ? (
           renderQuestionCompleteError()
         ) : phase === "complete" ? (
-          renderActComplete(
+          (isActFullyCompleted ? renderQuestionCompleteError() : renderActComplete(
             "ACT COMPLETE",
             `${ACT_TITLES[actNumber]} has been finished. Continue to the next act.`
-          )
+          ))
         ) : activePick ? (
           <div className="scene-content scene-content--cinematic">
             <CinematicStage

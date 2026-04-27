@@ -111,10 +111,9 @@ const SLIDES = [
 ];
 
 const TITLE_FADE_MS = 900;
-const TITLE_HOLD_MS = 1100;
 
 /* Typewriter for multi-line paragraphs with audio support */
-function TypewriterParagraphs({ lines = [], speed = 22, onDone }) {
+function TypewriterParagraphs({ lines = [], speed = 35, onDone }) {
   const fullText = useMemo(() => lines.join("\n"), [lines]);
   const [index, setIndex] = useState(0);
   const audioRef = useRef(null);
@@ -185,6 +184,7 @@ export default function Act3Prelude({ onDone }) {
   const onDoneRef = useRef(onDone);
 
   const current = SLIDES[slideIndex];
+  const showGlitch = current?.type === "title" && slideIndex < 2;
 
   useEffect(() => {
     onDoneRef.current = onDone;
@@ -202,14 +202,14 @@ export default function Act3Prelude({ onDone }) {
 
     if (current.type === "title") {
       const fadeIn = setTimeout(() => setPhase("hold"), TITLE_FADE_MS);
-      const fadeOut = setTimeout(() => setPhase("out"), TITLE_FADE_MS + TITLE_HOLD_MS);
+      const fadeOut = setTimeout(() => setPhase("out"), current.holdMs - 900);
       const next = setTimeout(() => {
         if (slideIndex + 1 >= SLIDES.length) {
           onDoneRef.current?.();
           return;
         }
         setSlideIndex(prev => prev + 1);
-      }, TITLE_FADE_MS + TITLE_HOLD_MS + TITLE_FADE_MS);
+      }, current.holdMs);
 
       return () => {
         clearTimeout(fadeIn);
@@ -245,12 +245,14 @@ export default function Act3Prelude({ onDone }) {
 
   return (
     <div
-      className={`act3-prelude act3-prelude--${current.type === "title" ? "title" : "text"} act3-prelude--${phase}`}
+      className={`act3-prelude act3-prelude--${current.type === "title" ? "title" : "text"} act3-prelude--phase ${phase === "out" ? "act3-prelude--phase-out" : ""}`}
       role="dialog"
       aria-label="Act 3 intro"
     >
       {current.type === "title" ? (
-        <h1 className="act3-prelude-title">{current.text}</h1>
+        <h1 className={`act3-prelude-title ${showGlitch ? "act3-prelude-title--crash" : ""}`}>
+          {current.text}
+        </h1>
       ) : (
         <TypewriterParagraphs lines={current.lines} onDone={() => setTypingDone(true)} />
       )}

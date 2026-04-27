@@ -159,10 +159,18 @@ const SOURCE_EXTRACTED_ASSETS = [
   ...extractAssetUrls(mainMenuSource),
 ];
 
+function isVideoAsset(src) {
+  const lower = src.toLowerCase().split("?")[0];
+  return lower.endsWith(".mp4") || lower.endsWith(".webm");
+}
+
 const DEFAULT_ASSETS = Array.from(new Set([
   ...STARTUP_ASSETS,
   ...SOURCE_EXTRACTED_ASSETS,
 ]));
+
+export const CRITICAL_ASSETS = DEFAULT_ASSETS.filter((src) => !isVideoAsset(src));
+export const DEFERRED_ASSETS = DEFAULT_ASSETS.filter((src) => isVideoAsset(src));
 
 function loadImage(src) {
   return new Promise(resolve => {
@@ -212,6 +220,29 @@ function loadAsset(src) {
   }
 
   return fetch(src, { method: "GET" }).then(() => undefined).catch(() => undefined);
+}
+
+export function preloadAssetsInBackground(assets, { concurrency = 3 } = {}) {
+  const uniqueAssets = Array.from(new Set((assets || []).filter(Boolean)));
+  if (!uniqueAssets.length) return;
+
+  let index = 0;
+  let active = 0;
+  const maxConcurrent = Math.max(1, concurrency || 1);
+
+  const runNext = () => {
+    if (index >= uniqueAssets.length) return;
+    while (active < maxConcurrent && index < uniqueAssets.length) {
+      const src = uniqueAssets[index++];
+      active += 1;
+      loadAsset(src).finally(() => {
+        active -= 1;
+        runNext();
+      });
+    }
+  };
+
+  runNext();
 }
 
 export function useAssetPreloader({ enabled = true, assets = DEFAULT_ASSETS } = {}) {

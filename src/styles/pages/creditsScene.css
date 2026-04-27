@@ -9,6 +9,12 @@
   z-index: 1600;
   overflow: hidden;
   padding: 4vh 3vw;
+  opacity: 1;
+  transition: opacity 700ms ease;
+}
+
+.credits-scene--out {
+  opacity: 0;
 }
 
 .credits-content {
@@ -39,9 +45,9 @@
 }
 
 .credits-logo {
-  width: 100%;
-  max-width: 980px;
-  max-height: 64vh;
+  width: var(--logo-splash-width);
+  max-width: var(--logo-splash-max);
+  height: auto;
   object-fit: contain;
   display: block;
 }

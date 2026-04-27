@@ -19,7 +19,7 @@ export default function ShutdownScreen({ onDone, variant = "default" }) {
 
     return {
       bg: "var(--color-accent-dark, #0d0d0d)",
-      exitBg: "var(--color-accent-dark, #0d0d0d)",
+      exitBg: "#141414",
       line: "var(--color-secondary, #3d655e)",
       glow: "rgba(61, 101, 94, 0.6)",
       shadow: "rgba(61, 101, 94, 0.3)",
@@ -28,7 +28,7 @@ export default function ShutdownScreen({ onDone, variant = "default" }) {
 
   useEffect(() => {
     const soundToPlay =
-      variant === "act3" ? "bootScreenOff_act3" : "bootScreenOff";
+      variant === "act3" ? "static" : "bootScreenOff";
 
     // =========================
     // SOUND TIMING

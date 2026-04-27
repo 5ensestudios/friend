@@ -42,7 +42,7 @@ function buildImageEntries() {
     file_type: "PNG image",
     file_size: generateFakeSize(),
     created_date: randomDateInRange(dateStart, dateEnd),
-    description: "Summer 2021 photo",
+    description: name,
     src: encodeURI(`/Summer 2021/${name}`),
   }));
 }

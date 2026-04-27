@@ -15,7 +15,7 @@ function buildImageEntries() {
       file_type: "PNG image",
       file_size: "1.2 MB",
       created_date: "01-12-2026 8:50",
-      description: "Game Design card",
+      description: name,
       src: encodeURI("/Images/Game Design.png"),
     },
   ];

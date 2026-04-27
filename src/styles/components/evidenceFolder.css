@@ -36,8 +36,8 @@
 }
 
 .evidence-image-popup-photo {
-	max-width: min(600px, calc(100vw - 60px));
-	max-height: min(500px, calc(100vh - 120px));
+	max-width: min(800px, calc(100vw - 60px));
+	max-height: min(700px, calc(108vh - 120px));
 	width: auto;
 	height: auto;
 	object-fit: contain;
@@ -45,8 +45,8 @@
 }
 
 .evidence-image-popup-photo.medical-report {
-	max-width: min(900px, calc(100vw - 40px));
-	max-height: min(750px, calc(100vh - 80px));
+	width: min(92vw, 800px);
+	max-height: calc(100vh - 32px);
 	width: auto;
 	height: auto;
 	object-fit: contain;
@@ -113,12 +113,15 @@
 	height: 24px;
 	background: transparent;
 	border: 0;
-	color: transparent;
+	color: #969696;
 	font-size: 18px;
-	cursor: default;
+	cursor: pointer;
 	border-radius: 4px;
 }
 
+.evidence-audio-popup-close:hover {
+	color: #fff;
+}
 
 
 .evidence-audio-popup-footer {
@@ -142,6 +145,9 @@
 	font-family: var(--font-body);
 	font-size: 15px;
 	color: #ffff;
+	white-space: normal;
+	overflow-wrap: anywhere;
+	word-break: break-word;
 }
 
 .evidence-audio-popup-controls {
@@ -194,4 +200,8 @@
 	border: 2px solid #fff;
 	box-shadow: 0 0 0 3px rgba(179, 56, 56, 0.15);
 	cursor: pointer;
+}
+
+.evidence-file-list .item-name {
+	white-space: pre-line;
 }

@@ -14,7 +14,7 @@ import TutorialPage from "./pages/TutorialPage";
 import CreditsPage from "./pages/CreditsPage";
 import DesktopInterface from "./pages/DesktopInterface";
 import MobileWarning from "./pages/MobileWarning";
-import { useAssetPreloader } from "./hooks/useAssetPreloader";
+import { useAssetPreloader, CRITICAL_ASSETS, DEFERRED_ASSETS, preloadAssetsInBackground } from "./hooks/useAssetPreloader";
 import { deleteUserAccount, subscribeToAuth, logoutUser } from "./firebase/auth";
 import { deletePlayerDocument, loadProgress } from "./firebase/progress";
 
@@ -31,7 +31,12 @@ export default function App() {
   const wasMobileRef = useRef(isMobile);
   const desktopBgmRef = useRef(null);
   const bgResumeHandlerRef = useRef(null);
-  const { progress: preloadProgress, isDone: isPreloadDone } = useAssetPreloader({ enabled: !isMobile });
+  const endgameCleanupStartedRef = useRef(false);
+  const deferredPreloadStartedRef = useRef(false);
+  const { progress: preloadProgress, isDone: isPreloadDone } = useAssetPreloader({
+    enabled: !isMobile,
+    assets: CRITICAL_ASSETS,
+  });
 
   useEffect(() => {
     if (isMobile || currentPage !== "preload") return;
@@ -43,6 +48,13 @@ export default function App() {
 
     return () => clearTimeout(holdAtFull);
   }, [currentPage, isMobile, isPreloadDone, preloadProgress]);
+
+  useEffect(() => {
+    if (isMobile || !isPreloadDone) return;
+    if (deferredPreloadStartedRef.current) return;
+    deferredPreloadStartedRef.current = true;
+    preloadAssetsInBackground(DEFERRED_ASSETS, { concurrency: 2 });
+  }, [isMobile, isPreloadDone]);
 
   useEffect(() => {
     const unsubscribe = subscribeToAuth(async (user) => {
@@ -202,6 +214,33 @@ export default function App() {
     setCurrentPage("booting");
   }
 
+  async function cleanupCompletedRunAccount() {
+    if (endgameCleanupStartedRef.current) return;
+    endgameCleanupStartedRef.current = true;
+
+    const activeUser = authUser;
+
+    if (activeUser?.uid) {
+      try {
+        await deletePlayerDocument(activeUser.uid);
+      } catch {
+        // Best effort cleanup; continue to auth cleanup.
+      }
+
+      try {
+        await deleteUserAccount(activeUser);
+      } catch {
+        // Fallback to sign out if account deletion requires re-auth.
+        await logoutUser().catch(() => {});
+      }
+    } else {
+      await logoutUser().catch(() => {});
+    }
+
+    setAuthUser(null);
+    setPlayerData(null);
+  }
+
   function handleBootDone() {
     setCurrentPage("login");
   }
@@ -255,10 +294,12 @@ export default function App() {
 
   function handleEndingDone() {
     setShutdownTarget("menu");
+    cleanupCompletedRunAccount();
     setCurrentPage("credits");
   }
 
-  function handleCreditsDone() {
+  async function handleCreditsDone() {
+    await cleanupCompletedRunAccount();
     setShutdownTarget("menu");
     setCurrentPage("menu");
   }

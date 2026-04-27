@@ -17,17 +17,20 @@ function randomRange(min, max) {
   return Math.random() * (max - min) + min;
 }
 
-export default function DinoGameModal({ onClose, onDragMouseDown }) {
+
+export default function DinoGameModal({ onClose, onDragMouseDown, authUserId }) {
   const { play } = useSound();
   const canvasRef = useRef(null);
   const frameRef = useRef(null);
   const gameRef = useRef(null);
   const dinoImageRef = useRef(null);
 
+  // Use a user-specific key for best score
+  const userKey = authUserId ? `friend_dino_best_${authUserId}` : "friend_dino_best_guest";
   const [score, setScore] = useState(0);
   const [isOver, setIsOver] = useState(false);
   const [bestScore, setBestScore] = useState(() => {
-    const saved = Number(localStorage.getItem("friend_dino_best") || 0);
+    const saved = Number(localStorage.getItem(userKey) || 0);
     return Number.isFinite(saved) ? saved : 0;
   });
 
@@ -162,7 +165,7 @@ export default function DinoGameModal({ onClose, onDragMouseDown }) {
         const finalScore = Math.floor(game.score);
         if (finalScore > bestScore) {
           setBestScore(finalScore);
-          localStorage.setItem("friend_dino_best", String(finalScore));
+          localStorage.setItem(userKey, String(finalScore));
         }
         return;
       }
@@ -193,7 +196,10 @@ export default function DinoGameModal({ onClose, onDragMouseDown }) {
 
   useEffect(() => {
     resetGame();
-  }, [resetGame]);
+    // When user changes, update bestScore from their key
+    const saved = Number(localStorage.getItem(userKey) || 0);
+    setBestScore(Number.isFinite(saved) ? saved : 0);
+  }, [resetGame, userKey]);
 
   useEffect(() => {
     const game = gameRef.current;

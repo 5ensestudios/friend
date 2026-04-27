@@ -6,11 +6,12 @@ export default function MainMenu({ onStartIntro, onContinue, onTutorial, onCredi
   const [selectedOption, setSelectedOption] = useState(0);
   const [isStarting, setIsStarting] = useState(false);
   const [showNewGameModal, setShowNewGameModal] = useState(false);
+  const [showExitModal, setShowExitModal] = useState(false);
   const { play } = useSound();
 
   const options = [
-    { label: "NEW GAME", action: "new_game", disabled: false },
     { label: "CONTINUE", action: "continue", disabled: false },
+    { label: "NEW GAME", action: "new_game", disabled: false },
     { label: "HOW TO PLAY", action: "tutorial", disabled: false },
     { label: "CREDITS", action: "credits", disabled: false },
     { label: "EXIT", action: "exit", disabled: false },
@@ -28,6 +29,15 @@ export default function MainMenu({ onStartIntro, onContinue, onTutorial, onCredi
 
         if (e.key === "Enter") {
           handleConfirmNewGame();
+        }
+
+        return;
+      }
+
+      if (showExitModal) {
+        if (e.key === "Escape" || e.key === "Enter") {
+          play("click_game");
+          setShowExitModal(false);
         }
 
         return;
@@ -55,7 +65,7 @@ export default function MainMenu({ onStartIntro, onContinue, onTutorial, onCredi
 
     window.addEventListener("keydown", handleKeyDown);
     return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [selectedOption, isStarting, play, showNewGameModal]);
+  }, [selectedOption, isStarting, play, showExitModal, showNewGameModal]);
 
   function handleConfirmNewGame() {
     play("click_game");
@@ -88,7 +98,7 @@ export default function MainMenu({ onStartIntro, onContinue, onTutorial, onCredi
     }
 
     if (action === "exit") {
-      alert("Thank you for playing THE FRIEND.");
+      setShowExitModal(true);
     }
   }
 
@@ -146,6 +156,27 @@ export default function MainMenu({ onStartIntro, onContinue, onTutorial, onCredi
               </button>
               <button type="button" className="menu-modal-btn menu-modal-btn--danger" onClick={handleConfirmNewGame}>
                 DELETE & CONTINUE
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {showExitModal && (
+        <div className="menu-modal-overlay" onClick={() => setShowExitModal(false)}>
+          <div className="menu-modal" onClick={(event) => event.stopPropagation()} role="dialog" aria-modal="true">
+            <h2 className="menu-modal-title">SYSTEM NOTICE:</h2>
+            <p className="menu-modal-copy">Session has been terminated. No further input will be processed.</p>
+            <div className="menu-modal-actions">
+              <button
+                type="button"
+                className="menu-modal-btn"
+                onClick={() => {
+                  play("click_game");
+                  setShowExitModal(false);
+                }}
+              >
+                Okay
               </button>
             </div>
           </div>

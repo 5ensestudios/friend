@@ -2,8 +2,8 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import "../styles/pages/creditsScene.css";
 
 const CONTENT_FADE_MS = 700;
-const CREDITS_BGM_SRC = "/Friend SFX/Black Static Halo.mp3";
-const CREDITS_BGM_DELAY_MS = 5000;
+const CREDITS_BGM_SRC = "/Friend SFX/Friend SFX - end credit song.mp3";
+const CREDITS_BGM_DELAY_MS = 5100;
 const CREDITS_BGM_VOLUME = 0.8;
 
 const SLIDES = [
@@ -64,7 +64,7 @@ const SLIDES = [
     type: "logo",
     src: "/Images/5ENSE Logo.png",
     alt: "5ENSE Studios logo",
-    holdMs: 30000,
+    holdMs: 10000,
   },
 ];
 
@@ -128,6 +128,7 @@ export default function CreditsScene({ onDone }) {
 
   const [slideIndex, setSlideIndex] = useState(0);
   const [phase, setPhase] = useState("in");
+  const [scenePhase, setScenePhase] = useState("in");
   const onDoneRef = useRef(onDone);
   const creditsBgmRef = useRef(null);
   const creditsBgmResumeRef = useRef(null);
@@ -181,6 +182,7 @@ export default function CreditsScene({ onDone }) {
   useEffect(() => {
     if (isPreviewMode) {
       setPhase("in");
+      setScenePhase("in");
       return;
     }
 
@@ -190,10 +192,17 @@ export default function CreditsScene({ onDone }) {
     }
 
     setPhase("in");
+    setScenePhase("in");
 
     const fadeOutTimer = setTimeout(() => {
       setPhase("out");
     }, slide.holdMs);
+
+    const sceneFadeOutTimer = slideIndex === SLIDES.length - 1
+      ? setTimeout(() => {
+          setScenePhase("out");
+        }, slide.holdMs + CONTENT_FADE_MS)
+      : null;
 
     const nextTimer = setTimeout(() => {
       if (slideIndex >= SLIDES.length - 1) {
@@ -205,6 +214,9 @@ export default function CreditsScene({ onDone }) {
 
     return () => {
       clearTimeout(fadeOutTimer);
+      if (sceneFadeOutTimer) {
+        clearTimeout(sceneFadeOutTimer);
+      }
       clearTimeout(nextTimer);
     };
   }, [isPreviewMode, slide, slideIndex]);
@@ -239,7 +251,7 @@ export default function CreditsScene({ onDone }) {
   }, [isPreviewMode]);
 
   return (
-    <div className="credits-scene" aria-label="End credits" role="dialog">
+    <div className={`credits-scene ${scenePhase === "out" ? "credits-scene--out" : ""}`} aria-label="End credits" role="dialog">
       <div className={`credits-content credits-content--${phase}`}>
         <SlideContent slide={slide} />
       </div>

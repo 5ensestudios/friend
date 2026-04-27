@@ -95,6 +95,7 @@
 .scene-content--complete {
   background: #141414;
   padding: 40px 24px;
+  z-index: 1000;
 }
 
 .scene-content--question-intro {
@@ -252,7 +253,7 @@
   justify-content: center;
   text-align: center;
   gap: 10px;
-  min-height: 100%;
+  min-height: auto;
 }
 
 .act-complete-title {
@@ -427,7 +428,7 @@
   font-weight: bold;
   letter-spacing: 0.5px;
   text-transform: uppercase;
-  color: #e8dcc8;
+  color: #ffffff;
   font-family: 'Brunson Rough', sans-serif;
   transition: transform 0.3s ease;
   transform-origin: center bottom;

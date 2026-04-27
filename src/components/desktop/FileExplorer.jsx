@@ -110,7 +110,7 @@ export default function FileExplorer({
           property_name: "4:00:37 AM",
           file_size: "400 MB",
           created_date: randomDateInRange(rootDateStart, rootDateEnd),
-          description: "Initial interview statements from all suspects",
+          description: "4:00:37 AM",
         },
         {
           id: "act1_folder",
@@ -124,7 +124,7 @@ export default function FileExplorer({
           property_name: "4:12:10 AM",
           file_size: "1 GB",
           created_date: randomDateInRange(rootDateStart, rootDateEnd),
-          description: "Detailed recounts of what happened last night",
+          description: "4:12:10 AM",
           children: buildQuestionFolders(1),
         },
         {
@@ -139,7 +139,7 @@ export default function FileExplorer({
           property_name: "5:08:07 AM",
           file_size: "600 MB",
           created_date: randomDateInRange(rootDateStart, rootDateEnd),
-          description: "Background and motivations of each suspect",
+          description: "5:08:07 AM",
           children: buildQuestionFolders(2),
         },
         {
@@ -154,7 +154,7 @@ export default function FileExplorer({
           property_name: "????",
           file_size: "300 MB",
           created_date: randomDateInRange(rootDateStart, rootDateEnd),
-          description: "Confrontation and truth revelation",
+          description: "???",
         },
       ],
     };
@@ -313,8 +313,8 @@ export default function FileExplorer({
       {showLockedPopup && typeof document !== "undefined" && createPortal(
         <div className="locked-popup-overlay" role="dialog" aria-modal="true">
           <div className="locked-popup-box" onClick={(event) => event.stopPropagation()}>
-            <div className="locked-popup-title">Locked</div>
-            <div className="locked-popup-message">Complete current act first</div>
+            <div className="locked-popup-title">Error: Parity_Mismatch</div>
+            <div className="locked-popup-message">Data stream unstable. File contains 0% valid headers. Waiting for cross-reference injection.</div>
             <button
               className="locked-popup-button"
               type="button"

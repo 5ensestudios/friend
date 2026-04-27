@@ -143,7 +143,7 @@ export default function LoginScreen({
 
         {mode === "register" ? (
           <>
-            <p className="login-mode-label">Create Your Profile</p>
+            <p className="login-mode-label">Create your profile</p>
 
             <div className="login-fields">
               <input

@@ -82,6 +82,8 @@ const DESKTOP_MAILS = {
       "I'm also sending something else. I got into the archive and pulled ACTUAL evidence logs before it wiped. They’re attached below.",
       "",
       "Do NOT open the final file until you've checked them.",
+      "",
+      "Check your desktop for the evidence folder. It's there.",
     ],
   },
 };
@@ -418,8 +420,11 @@ export default function DesktopInterface({ playerData, authUserId, onReturnToMen
   }, [view]);
 
   function handleActSelect(actNumber, questionIndex = null) {
-    // Prevent replaying completed acts
+    // If act is completed, still open scene view so SceneView can render completion/error page
     if (playerProgress.acts_completed.includes(actNumber)) {
+      setCurrentAct(actNumber);
+      setCurrentQuestion(null);
+      setView("scene");
       return;
     }
 
@@ -1048,6 +1053,7 @@ export default function DesktopInterface({ playerData, authUserId, onReturnToMen
           <DinoGameModal
             onClose={() => closeWindow("dino")}
             onDragMouseDown={dinoDrag.onMouseDown}
+            authUserId={authUserId}
           />
         </div>
       )}

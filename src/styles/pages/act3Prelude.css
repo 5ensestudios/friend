@@ -20,13 +20,42 @@
   background: #141414;
 }
 
-.act3-prelude--in,
-.act3-prelude--hold {
+.act3-prelude--phase {
   opacity: 1;
 }
 
-.act3-prelude--out {
-  opacity: 0;
+@keyframes questionPhaseFadeIn {
+  from {
+    opacity: 0;
+    filter: blur(2px);
+  }
+  to {
+    opacity: 1;
+    filter: blur(0);
+  }
+}
+
+@keyframes questionPhaseTextFadeOut {
+  from {
+    opacity: 1;
+    filter: blur(0);
+  }
+  to {
+    opacity: 0;
+    filter: blur(2px);
+  }
+}
+
+.act3-prelude--phase:not(.act3-prelude--phase-out) .act3-prelude-title,
+.act3-prelude--phase:not(.act3-prelude--phase-out) .act3-prelude-text-content {
+  will-change: opacity, filter;
+  animation: questionPhaseFadeIn 1.2s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+.act3-prelude--phase-out .act3-prelude-title,
+.act3-prelude--phase-out .act3-prelude-text-content {
+  will-change: opacity, filter;
+  animation: questionPhaseTextFadeOut 0.9s cubic-bezier(0.4, 0, 0.2, 1) forwards;
 }
 
 .act3-prelude-title {
@@ -36,6 +65,56 @@
   letter-spacing: 0.1em;
   text-transform: uppercase;
   text-shadow: 0 8px 30px rgba(0, 0, 0, 0.45);
+}
+
+.act3-prelude-title--crash {
+  animation: act3TitleCrash 0.82s cubic-bezier(0.22, 1, 0.36, 1) both;
+  transform-origin: center top;
+  will-change: transform, opacity, filter, text-shadow;
+}
+
+@keyframes act3TitleCrash {
+  0% {
+    opacity: 0;
+    transform: translate3d(14px, -62px, 0) skewX(-8deg) scale(0.995);
+    filter: blur(2px);
+    text-shadow:
+      -2px 0 rgba(255, 55, 55, 0.35),
+      2px 0 rgba(90, 200, 255, 0.25),
+      0 8px 30px rgba(0, 0, 0, 0.45);
+  }
+  14% {
+    opacity: 1;
+    transform: translate3d(-8px, -22px, 0) skewX(6deg) scale(1);
+    filter: blur(1px);
+  }
+  28% {
+    transform: translate3d(6px, 14px, 0) skewX(-4deg);
+    text-shadow:
+      -4px 0 rgba(255, 55, 55, 0.28),
+      4px 0 rgba(90, 200, 255, 0.22),
+      0 8px 30px rgba(0, 0, 0, 0.45);
+  }
+  42% {
+    transform: translate3d(-3px, 32px, 0) skewX(3deg);
+    filter: blur(0);
+  }
+  58% {
+    transform: translate3d(2px, 16px, 0) skewX(-1deg);
+  }
+  78% {
+    transform: translate3d(0, 0, 0) skewX(0);
+    text-shadow:
+      -1px 0 rgba(255, 55, 55, 0.12),
+      1px 0 rgba(90, 200, 255, 0.08),
+      0 8px 30px rgba(0, 0, 0, 0.45);
+  }
+  100% {
+    opacity: 1;
+    transform: translate3d(0, 0, 0) skewX(0);
+    filter: blur(0);
+    text-shadow: 0 8px 30px rgba(0, 0, 0, 0.45);
+  }
 }
 
 .act3-prelude-text-content {
