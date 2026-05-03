@@ -79,7 +79,10 @@ export default function LoginScreen({
           ign.trim()
         );
 
-        onAuthSuccess(gameState, user);
+        onAuthSuccess(gameState, user, {
+          email: email.trim(),
+          password,
+        });
         return;
       }
 
@@ -104,7 +107,10 @@ export default function LoginScreen({
         await saveProgress(user.uid, gameState);
       }
 
-      onAuthSuccess(gameState, user);
+      onAuthSuccess(gameState, user, {
+        email: email.trim(),
+        password,
+      });
     } catch (authError) {
       setError(getAuthErrorMessage(authError.code));
     } finally {

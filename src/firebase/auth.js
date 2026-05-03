@@ -1,6 +1,8 @@
 import {
   createUserWithEmailAndPassword,
   deleteUser,
+  EmailAuthProvider,
+  reauthenticateWithCredential,
   signInWithEmailAndPassword,
   signOut,
   onAuthStateChanged,
@@ -29,8 +31,14 @@ export async function logoutUser() {
   await signOut(auth);
 }
 
-export async function deleteUserAccount(user) {
+export async function deleteUserAccount(user, credentials = null) {
   if (!user) return;
+
+  if (credentials?.email && credentials?.password) {
+    const credential = EmailAuthProvider.credential(credentials.email, credentials.password);
+    await reauthenticateWithCredential(user, credential);
+  }
+
   await deleteUser(user);
 }
 

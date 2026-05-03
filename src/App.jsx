@@ -26,6 +26,7 @@ export default function App() {
   const [chosenSuspect, setChosenSuspect] = useState(null);
   const [loginMode, setLoginMode] = useState("login");
   const [authUser, setAuthUser] = useState(null);
+  const [authCredentials, setAuthCredentials] = useState(null);
   const [shutdownTarget, setShutdownTarget] = useState("ending"); // 'menu' | 'credits' | 'act3-ending' | 'ending'
   const [isMobile, setIsMobile] = useState(() => window.innerWidth < 1024);
   const wasMobileRef = useRef(isMobile);
@@ -62,6 +63,7 @@ export default function App() {
 
       if (!user) {
         setPlayerData(null);
+        setAuthCredentials(null);
         return;
       }
 
@@ -203,7 +205,7 @@ export default function App() {
       }
 
       try {
-        await deleteUserAccount(activeUser);
+        await deleteUserAccount(activeUser, authCredentials);
       } catch {
         // Fallback to signing out if account deletion is blocked by provider rules.
         await logoutUser();
@@ -228,7 +230,7 @@ export default function App() {
       }
 
       try {
-        await deleteUserAccount(activeUser);
+        await deleteUserAccount(activeUser, authCredentials);
       } catch {
         // Fallback to sign out if account deletion requires re-auth.
         await logoutUser().catch(() => {});
@@ -245,8 +247,9 @@ export default function App() {
     setCurrentPage("login");
   }
 
-  function handleAuthSuccess(gameState, user) {
+  function handleAuthSuccess(gameState, user, credentials = null) {
     setAuthUser(user);
+    setAuthCredentials(credentials);
     setPlayerData(gameState);
     setCurrentPage("game");
   }
