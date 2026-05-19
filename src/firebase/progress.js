@@ -2,6 +2,42 @@ import { deleteDoc, doc, getDoc, setDoc, serverTimestamp } from "firebase/firest
 import { db } from "./config";
 
 const PLAYERS_COLLECTION = "players";
+const LOCAL_STORAGE_KEY_PREFIX = "friEND_gameState_";
+
+function getLocalStorageKey(userId) {
+  return `${LOCAL_STORAGE_KEY_PREFIX}${userId}`;
+}
+
+function readLocalGameState(userId) {
+  if (!userId || typeof window === "undefined") return null;
+
+  try {
+    const raw = window.localStorage.getItem(getLocalStorageKey(userId));
+    return raw ? JSON.parse(raw) : null;
+  } catch {
+    return null;
+  }
+}
+
+function writeLocalGameState(userId, gameState) {
+  if (!userId || typeof window === "undefined") return;
+
+  try {
+    window.localStorage.setItem(getLocalStorageKey(userId), JSON.stringify(gameState));
+  } catch {
+    // Ignore storage failures and continue with Firestore if available.
+  }
+}
+
+function removeLocalGameState(userId) {
+  if (!userId || typeof window === "undefined") return;
+
+  try {
+    window.localStorage.removeItem(getLocalStorageKey(userId));
+  } catch {
+    // Ignore storage failures.
+  }
+}
 
 export function createDefaultGameState(userId, username = "Detective") {
   return {
@@ -26,41 +62,68 @@ export function createDefaultGameState(userId, username = "Detective") {
 export async function createPlayerDocument(userId, email, username) {
   const gameState = createDefaultGameState(userId, username);
 
-  await setDoc(doc(db, PLAYERS_COLLECTION, userId), {
-    email,
-    username,
-    gameState,
-    createdAt: serverTimestamp(),
-    updatedAt: serverTimestamp(),
-  });
+  writeLocalGameState(userId, gameState);
+
+  try {
+    await setDoc(doc(db, PLAYERS_COLLECTION, userId), {
+      email,
+      username,
+      gameState,
+      createdAt: serverTimestamp(),
+      updatedAt: serverTimestamp(),
+    });
+  } catch {
+    // If Firestore rules block the write, keep the account usable with local progress.
+  }
 
   return gameState;
 }
 
 export async function saveProgress(userId, gameState) {
-  await setDoc(
-    doc(db, PLAYERS_COLLECTION, userId),
-    {
-      username: gameState.username,
-      gameState,
-      updatedAt: serverTimestamp(),
-    },
-    { merge: true }
-  );
+  writeLocalGameState(userId, gameState);
+
+  try {
+    await setDoc(
+      doc(db, PLAYERS_COLLECTION, userId),
+      {
+        username: gameState.username,
+        gameState,
+        updatedAt: serverTimestamp(),
+      },
+      { merge: true }
+    );
+  } catch {
+    // Ignore Firestore permission failures and keep the local copy.
+  }
 }
 
 export async function loadProgress(userId) {
-  const snapshot = await getDoc(doc(db, PLAYERS_COLLECTION, userId));
+  try {
+    const snapshot = await getDoc(doc(db, PLAYERS_COLLECTION, userId));
 
-  if (!snapshot.exists()) {
-    return null;
+    if (!snapshot.exists()) {
+      return readLocalGameState(userId);
+    }
+
+    const data = snapshot.data();
+    const gameState = data.gameState || null;
+    if (gameState) {
+      writeLocalGameState(userId, gameState);
+    }
+    return gameState;
+  } catch {
+    return readLocalGameState(userId);
   }
-
-  const data = snapshot.data();
-  return data.gameState || null;
 }
 
 export async function deletePlayerDocument(userId) {
   if (!userId) return;
-  await deleteDoc(doc(db, PLAYERS_COLLECTION, userId));
+
+  removeLocalGameState(userId);
+
+  try {
+    await deleteDoc(doc(db, PLAYERS_COLLECTION, userId));
+  } catch {
+    // Ignore permission failures during cleanup.
+  }
 }
